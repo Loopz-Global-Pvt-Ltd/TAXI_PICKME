@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 48 100% 50%;        /* Taxi Yellow - vibrant, recognizable */
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 15%;         /* Dark Gray - modern, sleek */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 210 80% 50%;         /* Bright Blue - technology, trust */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89%;
+    --input: 0 0% 89%;
+    --ring: 48 100% 50%;           /* Yellow ring for focus states */
+    --chart-1: 48 100% 50%;        /* Yellow */
+    --chart-2: 210 80% 50%;        /* Blue */
+    --chart-3: 0 0% 15%;           /* Dark Gray */
+    --chart-4: 142 71% 45%;        /* Green for success */
+    --chart-5: 280 65% 60%;        /* Purple for variety */
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 48 100% 55%;        /* Slightly brighter yellow for dark mode */
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 25%;         /* Lighter gray for dark mode */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 210 80% 60%;         /* Brighter blue for dark mode */
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 48 100% 55%;
+    --chart-1: 48 100% 55%;        /* Yellow */
+    --chart-2: 210 80% 60%;        /* Blue */
+    --chart-3: 0 0% 80%;           /* Light Gray */
+    --chart-4: 142 71% 55%;        /* Green */
+    --chart-5: 280 65% 70%;        /* Purple */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
