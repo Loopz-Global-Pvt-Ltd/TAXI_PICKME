@@ -67,15 +67,17 @@ export default function HomePage() {
       <Navbar />
 
       <section className="relative h-[600px] flex items-center justify-center bg-gradient-to-br from-teal-600 via-cyan-600 to-sky-500 overflow-hidden">
-        <div className="absolute inset-0 bg-black/30" />
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: 'url(https://images.pexels.com/photos/2166559/pexels-photo-2166559.jpeg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+      <div className="absolute inset-0 bg-black/30" />
+      <video
+        className="absolute inset-0 w-full h-[calc(100%+2px)] object-cover opacity-70"
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{ marginBottom: '-1px' }} // This helps eliminate the bottom stripe
+      >
+        <source src="/taxipickme_bg_video.mp4" type="video/mp4" />
+      </video>
         <div className="container mx-auto px-4 relative z-10 text-center text-white">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             Explore Sri Lanka
