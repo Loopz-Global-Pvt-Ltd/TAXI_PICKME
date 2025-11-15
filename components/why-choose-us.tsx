@@ -69,9 +69,10 @@ export default function WhyChooseUs() {
 
   return (
     <section ref={sectionRef} className="relative py-16 md:py-32 overflow-hidden">
-      <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-        <source src="/sri-taxi-background-video.mp4" type="video/mp4" />
-      </video>
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: "url('/images/TaxiPickme-Why-choose-us.png')" }}
+      />
 
       {/* Dark overlay for text readability */}
       <div className="absolute inset-0 bg-black/50" />

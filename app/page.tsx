@@ -16,7 +16,7 @@ export default function Home() {
       <Header />
       <Hero />
       <TrustBadges />
-      <FeaturedTours />
+      {/* <FeaturedTours /> */}
       <Testimonials />
       <WhyChooseUs />
       <PopularRoutes />

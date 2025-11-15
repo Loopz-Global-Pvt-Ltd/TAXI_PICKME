@@ -11,22 +11,22 @@ export default function Hero() {
 
   const slides = [
     {
-      image: "/sri-lanka-beautiful-landscape-tea-plantations-moun.jpg",
+      image: "/images/TaxiPickme-Slider-1.png",
       title: "Taxi Pickme Service",
       subtitle: "Your Trusted Transportation Partner Across Sri Lanka",
     },
     {
-      image: "/pexels-freestockpro-19612439.jpg",
+      image: "/images/TaxiPickme-Slider-2.png",
       title: "Sri Lanka Tourism",
       subtitle: "Explore Paradise with Professional Local Drivers",
     },
     {
-      image: "/sri-lanka-sigiriya-ancient-rock-fortress-travel.jpg",
+      image: "/images/TaxiPickme-Slider-3.png",
       title: "Adventure Awaits",
       subtitle: "Book Now and Discover Sri Lanka's Hidden Gems",
     },
     {
-      image: "/sri-lanka-coastal-views-sea-beaches-sunset-tourism.jpg",
+      image: "/images/TaxiPickme-Slider-4.png",
       title: "Coastal Wonders",
       subtitle: "Experience the Beauty of Island Life",
     },
@@ -91,30 +91,30 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: index === currentSlide ? 1 : 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <motion.div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url(${slide.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+          backgroundImage: `url(${slide.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
               }}
               initial={{ scale: 1 }}
               animate={{ 
-                scale: index === currentSlide ? [1, 1.1] : 1 
+          scale: index === currentSlide && index !== 0 ? [1, 1.1] : 1 
               }}
               transition={{ 
-                duration: 5,
-                ease: "easeInOut"
+          duration: 5,
+          ease: "easeInOut"
               }}
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
+          className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ duration: 1 }}
               ></motion.div>
             </motion.div>
           </motion.div>
@@ -123,8 +123,8 @@ export default function Hero() {
 
       <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-12">
         {/* Top section - Title and Subtitle */}
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <motion.div
+        {/* <div className="flex-1 flex flex-col items-center justify-center"> */}
+          {/* <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -141,9 +141,9 @@ export default function Hero() {
                 {slides[currentSlide].title}
               </motion.h1>
               <motion.div className="w-24 h-1 bg-yellow-400 mx-auto mb-4 rounded-full"></motion.div>
-            </motion.div>
+            </motion.div> */}
 
-            <motion.p
+            {/* <motion.p
               key={`subtitle-${currentSlide}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -152,25 +152,25 @@ export default function Hero() {
               className="text-xl md:text-2xl text-gray-100 text-balance"
             >
               {slides[currentSlide].subtitle}
-            </motion.p>
-          </motion.div>
-        </div>
+            </motion.p> */}
+          {/* </motion.div> */}
+        {/* </div> */}
 
         {/* Middle section - Search Form */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 160 }}
+          animate={{ opacity: 1, y: 100 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex-1 flex items-center justify-center w-full max-w-5xl z-10"
         >
-          <div className="w-full bg-white/50 backdrop-blur rounded-2xl shadow-2xl p-6 md:p-8 border border-yellow-400">
-            <h2 className="text-2xl md:text-3xl font-bold text-black mb-6">Find Your Ride</h2>
+            <div className="w-full bg-white backdrop-blur rounded-2xl shadow-2xl p-2 md:p-5 border-6 border-yellow-400">
+            <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">Find Your Ride</h2>
             <SearchForm />
-          </div>
+            </div>
         </motion.div>
 
         {/* Bottom section - Badges and Controls */}
-        <div className="flex-1 flex flex-col items-center justify-end gap-8 w-full">
+        <div className="flex-1 flex flex-col items-center mt-1 justify-end gap-8 w-full">
           <motion.div variants={itemVariants} className="flex gap-4 flex-wrap justify-center">
             {["✓ Professional Drivers", "✓ 24/7 Support", "✓ Best Rates", "✓ Safe Travel"].map((badge, index) => (
               <motion.div
@@ -187,7 +187,7 @@ export default function Hero() {
 
           {/* Navigation Controls */}
           <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4 z-20">
-            <motion.button
+            {/* <motion.button
               onClick={prevSlide}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -204,7 +204,7 @@ export default function Hero() {
               aria-label="Next slide"
             >
               <ChevronRight size={24} />
-            </motion.button>
+            </motion.button> */}
           </div>
 
           <div className="absolute bottom-6 right-6 flex gap-2 z-20">

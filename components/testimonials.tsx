@@ -55,7 +55,7 @@ export default function Testimonials() {
   }
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
@@ -64,7 +64,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section ref={sectionRef} className="relative py-16 md:py-32 overflow-hidden">
+    <section ref={sectionRef} className="relative py-10 md:py-22 overflow-hidden">
       <motion.div style={{ y: backgroundY }} className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-primary/10" />
         <div className="absolute inset-0 bg-gradient-to-r from-secondary/15 via-transparent to-secondary/15" />
@@ -85,7 +85,7 @@ export default function Testimonials() {
             viewport={{ once: true }}
             className="h-1 w-16 bg-secondary mx-auto mb-6 rounded-full"
           />
-          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">What Our Customers Say</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-2">What Our Customers Say</h2>
           <div className="flex items-center justify-center gap-2 mb-4">
             {[...Array(5)].map((_, i) => (
               <motion.div
@@ -115,7 +115,7 @@ export default function Testimonials() {
               key={testimonial.id}
               variants={cardVariants}
               whileHover={{ y: -12, boxShadow: "0 25px 50px -12px rgba(250, 204, 21, 0.15)" }}
-              className="relative bg-card/80 backdrop-blur-sm border border-secondary/30 rounded-xl p-8 transition-all cursor-pointer prefers-reduced-motion:hover:y-0"
+              className="relative bg-card/80 backdrop-blur-sm border border-secondary/30 rounded-xl p-4 transition-all cursor-pointer prefers-reduced-motion:hover:y-0"
             >
               {testimonial.verified && (
                 <motion.div
@@ -139,7 +139,7 @@ export default function Testimonials() {
                 </span>
               </div>
 
-              <div className="flex gap-1 mb-6">
+              <div className="flex gap-1 mb-3">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <motion.div
                     key={i}
