@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import Header from "@/components/header"
+import Header from "@/components/Header"
 import SearchFilters from "@/components/search-filters"
 import VehicleCard from "@/components/vehicle-card"
 import Footer from "@/components/footer"

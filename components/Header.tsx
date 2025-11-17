@@ -15,7 +15,7 @@ export default function Header() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">SP</span>
             </div>
-            <span className="font-bold text-lg text-white hidden sm:inline">Taxi Pickme</span>
+            <span className="font-bold text-lg text-white hidden sm:inline">TaxiPickMe</span>
           </Link>
 
           <nav className="hidden md:flex gap-8">
