@@ -6,6 +6,7 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api"
 import { Button } from "@/components/ui/button"
 import { Calendar, MapPin, Users, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import MapPreview from "./mapPreview"
 
 const libraries: ("places")[] = ["places"]
 
@@ -161,7 +162,7 @@ export default function SearchForm() {
               type="text"
               placeholder="Where are you?"
               defaultValue={pickupLocation.address}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-black"
+              className="w-full px-4 py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-400 text-black"
             />
           </Autocomplete>
         </motion.div>
@@ -184,7 +185,7 @@ export default function SearchForm() {
               type="text"
               placeholder="Where to?"
               defaultValue={dropoffLocation.address}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-black"
+              className="w-full px-4 py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-400 text-black"
             />
           </Autocomplete>
         </motion.div>
@@ -202,7 +203,7 @@ export default function SearchForm() {
             value={pickupDate}
             onChange={(e) => setPickupDate(e.target.value)}
             min={new Date().toISOString().split("T")[0]}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full px-4 py-2 border border-gray-600  rounded-lg focus:outline-none focus:ring-2 focus:ring-black-400"
             required
           />
         </motion.div>
@@ -214,7 +215,7 @@ export default function SearchForm() {
             type="time"
             value={pickupTime}
             onChange={(e) => setPickupTime(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full px-4 py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-400"
             required
           />
         </motion.div>
@@ -228,7 +229,7 @@ export default function SearchForm() {
           <select
             value={passengers}
             onChange={(e) => setPassengers(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full px-4 py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-400"
           >
             <option value="1">1 Passenger</option>
             <option value="2">2 Passengers</option>
@@ -242,7 +243,7 @@ export default function SearchForm() {
       <motion.div variants={itemVariants}>
         <Button
           type="submit"
-          className="w-full bg-black hover:bg-black/90 text-white py-6 text-lg font-semibold rounded-lg transition-all hover:shadow-lg"
+          className="w-full bg-black hover:bg-black/90 text-white py-6 mb-1 text-lg font-semibold rounded-lg transition-all hover:shadow-lg"
         >
           Search Available Taxis
         </Button>

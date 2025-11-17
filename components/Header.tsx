@@ -18,7 +18,7 @@ export default function Header() {
             <span className="font-bold text-lg text-white hidden sm:inline">TaxiPickMe</span>
           </Link>
 
-          <nav className="hidden md:flex gap-8">
+          <nav className="hidden md:flex gap-10">
             <Link href="/" className="text-white font-bold hover:text-white transition">
               Home
             </Link>
@@ -42,7 +42,7 @@ export default function Header() {
         </div>
 
         {isOpen && (
-          <nav className="md:hidden pb-4 flex flex-col gap-4">
+          <nav className="md:hidden pb-4 flex flex-col gap-5">
             <Link href="/" className="text-gray-300 hover:text-white transition">
               Home
             </Link>

@@ -16,7 +16,7 @@ export default function Hero() {
       subtitle: "Your Trusted Transportation Partner Across Sri Lanka",
     },
     {
-      image: "/images/TaxiPickme-Slider-2.png",
+      image: "/images/TaxiPickme-Slider-2.jpg",
       title: "Sri Lanka Tourism",
       subtitle: "Explore Paradise with Professional Local Drivers",
     },
@@ -83,7 +83,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative min-h-screen p-5 overflow-hidden">
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <motion.div
@@ -94,34 +94,34 @@ export default function Hero() {
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
-            <motion.div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-          backgroundImage: `url(${slide.image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-              }}
-              initial={{ scale: 1 }}
-              animate={{ 
-          scale: index === currentSlide && index !== 0 ? [1, 1.1] : 1 
-              }}
-              transition={{ 
-          duration: 5,
-          ease: "easeInOut"
-              }}
-            >
-              <motion.div
+          <motion.div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${slide.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            initial={{ scale: 1.1 }}
+            animate={{ 
+              scale: index === currentSlide ? [1.1, 1] : 1.1 
+            }}
+            transition={{ 
+              duration: 5,
+              ease: "easeInOut"
+            }}
+          >
+        <motion.div
           className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          transition={{ duration: 1 }}
-              ></motion.div>
-            </motion.div>
+          animate={{ opacity: 0.4 }}
+          transition={{ duration: 5 }}
+        ></motion.div>
+      </motion.div>
           </motion.div>
         ))}
       </div>
 
-      <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-12">
+      <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-20">
         {/* Top section - Title and Subtitle */}
         {/* <div className="flex-1 flex flex-col items-center justify-center"> */}
           {/* <motion.div
@@ -159,12 +159,12 @@ export default function Hero() {
         {/* Middle section - Search Form */}
         <motion.div
           initial={{ opacity: 0, y: 160 }}
-          animate={{ opacity: 1, y: 100 }}
+          animate={{ opacity: 1, y: 130 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex-1 flex items-center justify-center w-full max-w-5xl z-10"
         >
-            <div className="w-full bg-white backdrop-blur rounded-2xl shadow-2xl p-2 md:p-5 border-6 border-yellow-400">
-            <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">Find Your Ride</h2>
+            <div className="w-full bg-white/70 overflow-hidden backdrop-blur  rounded-2xl shadow-2xl p-5 md:p-5 border-6 border-yellow-400">
+            <h2 className="text-2xl md:text-3xl font-bold text-black mb-3 p-3">Find Your Ride</h2>
             <SearchForm />
             </div>
         </motion.div>
@@ -186,7 +186,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Navigation Controls */}
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4 z-20">
+          {/* <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4 z-20"> */}
             {/* <motion.button
               onClick={prevSlide}
               whileHover={{ scale: 1.1 }}
@@ -205,7 +205,7 @@ export default function Hero() {
             >
               <ChevronRight size={24} />
             </motion.button> */}
-          </div>
+          {/* </div> */}
 
           <div className="absolute bottom-6 right-6 flex gap-2 z-20">
             {slides.map((_, index) => (
