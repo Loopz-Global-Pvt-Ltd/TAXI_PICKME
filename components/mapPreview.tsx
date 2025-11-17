@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { useLoadScript } from "@react-google-maps/api"
 import { motion } from "framer-motion"
 import { Loader2 } from "lucide-react"
+import { useMaps } from "./providers/maps-provider"
+
 
 const libraries: ("places" | "geometry" | "drawing")[] = ["places", "geometry"]
 
@@ -15,6 +17,7 @@ interface MapPreviewProps {
 }
 
 export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLng }: MapPreviewProps) {
+  const { isLoaded } = useMaps()
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
   const pickupMarkerRef = useRef<google.maps.Marker | null>(null)
@@ -23,10 +26,10 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
   const [distance, setDistance] = useState<string>("")
   const [duration, setDuration] = useState<string>("")
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries,
-  })
+  // const { isLoaded } = useLoadScript({
+  //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+  //   libraries,
+  // })
 
   // Initialize map
   useEffect(() => {
