@@ -1,39 +1,100 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useCallback } from "react"
+import { useLoadScript, Autocomplete } from "@react-google-maps/api"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Users } from "lucide-react"
+import { Calendar, MapPin, Users, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 
-const POPULAR_DESTINATIONS = [
-  "Colombo Airport (CMB)",
-  "Galle",
-  "Kandy",
-  "Sigiriya",
-  "Ella",
-  "Nuwara Eliya",
-  "Mirissa",
-  "Negombo",
-]
+const libraries: ("places")[] = ["places"]
+
+interface LocationData {
+  address: string
+  lat: number | null
+  lng: number | null
+}
 
 export default function SearchForm() {
-  const [pickupLocation, setPickupLocation] = useState("")
-  const [dropoffLocation, setDropoffLocation] = useState("")
+  const [pickupLocation, setPickupLocation] = useState<LocationData>({
+    address: "",
+    lat: null,
+    lng: null,
+  })
+  const [dropoffLocation, setDropoffLocation] = useState<LocationData>({
+    address: "",
+    lat: null,
+    lng: null,
+  })
   const [pickupDate, setPickupDate] = useState("")
   const [pickupTime, setPickupTime] = useState("")
   const [passengers, setPassengers] = useState("1")
-  const [showPickupSuggestions, setShowPickupSuggestions] = useState(false)
-  const [showDropoffSuggestions, setShowDropoffSuggestions] = useState(false)
 
-  const filteredDestinations = (input: string) => {
-    return POPULAR_DESTINATIONS.filter((dest) => dest.toLowerCase().includes(input.toLowerCase()))
-  }
+  const [pickupAutocomplete, setPickupAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
+  const [dropoffAutocomplete, setDropoffAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    libraries,
+  })
+
+  const onPickupLoad = useCallback((autocomplete: google.maps.places.Autocomplete) => {
+    setPickupAutocomplete(autocomplete)
+  }, [])
+
+  const onDropoffLoad = useCallback((autocomplete: google.maps.places.Autocomplete) => {
+    setDropoffAutocomplete(autocomplete)
+  }, [])
+
+  const onPickupPlaceChanged = useCallback(() => {
+    if (pickupAutocomplete) {
+      const place = pickupAutocomplete.getPlace()
+      if (place.geometry?.location) {
+        setPickupLocation({
+          address: place.formatted_address || "",
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        })
+      }
+    }
+  }, [pickupAutocomplete])
+
+  const onDropoffPlaceChanged = useCallback(() => {
+    if (dropoffAutocomplete) {
+      const place = dropoffAutocomplete.getPlace()
+      if (place.geometry?.location) {
+        setDropoffLocation({
+          address: place.formatted_address || "",
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        })
+      }
+    }
+  }, [dropoffAutocomplete])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    window.location.href = `/search?pickup=${pickupLocation}&dropoff=${dropoffLocation}&date=${pickupDate}&time=${pickupTime}&passengers=${passengers}`
+    
+    // Validate that locations are selected
+    if (!pickupLocation.lat || !dropoffLocation.lat) {
+      alert("Please select valid pickup and dropoff locations")
+      return
+    }
+
+    // Navigate to search results with location data
+    const queryParams = new URLSearchParams({
+      pickup: pickupLocation.address,
+      pickupLat: pickupLocation.lat.toString(),
+      pickupLng: pickupLocation.lng.toString(),
+      dropoff: dropoffLocation.address,
+      dropoffLat: dropoffLocation.lat.toString(),
+      dropoffLng: dropoffLocation.lng.toString(),
+      date: pickupDate,
+      time: pickupTime,
+      passengers: passengers,
+    })
+
+    window.location.href = `/search?${queryParams.toString()}`
   }
 
   const containerVariants = {
@@ -56,6 +117,23 @@ export default function SearchForm() {
     },
   }
 
+  if (loadError) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        Error loading Google Maps API. Please check your API key.
+      </div>
+    )
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-yellow-500" />
+        <span className="ml-2 text-gray-600">Loading search form...</span>
+      </div>
+    )
+  }
+
   return (
     <motion.form
       onSubmit={handleSearch}
@@ -71,34 +149,21 @@ export default function SearchForm() {
             <MapPin className="inline mr-2" size={16} />
             Pickup Location
           </label>
-          <input
-            type="text"
-            value={pickupLocation}
-            onChange={(e) => {
-              setPickupLocation(e.target.value)
-              setShowPickupSuggestions(true)
+          <Autocomplete
+            onLoad={onPickupLoad}
+            onPlaceChanged={onPickupPlaceChanged}
+            options={{
+              componentRestrictions: { country: "lk" }, // Restrict to Sri Lanka
+              fields: ["formatted_address", "geometry", "name"],
             }}
-            onBlur={() => setTimeout(() => setShowPickupSuggestions(false), 200)}
-            placeholder="Where are you?"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-          {showPickupSuggestions && pickupLocation && (
-            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 z-20 shadow-lg">
-              {filteredDestinations(pickupLocation).map((dest) => (
-                <button
-                  key={dest}
-                  type="button"
-                  onClick={() => {
-                    setPickupLocation(dest)
-                    setShowPickupSuggestions(false)
-                  }}
-                  className="w-full text-left px-4 py-2 hover:bg-yellow-100 first:rounded-t-lg last:rounded-b-lg text-black"
-                >
-                  {dest}
-                </button>
-              ))}
-            </div>
-          )}
+          >
+            <input
+              type="text"
+              placeholder="Where are you?"
+              defaultValue={pickupLocation.address}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-black"
+            />
+          </Autocomplete>
         </motion.div>
 
         {/* Dropoff Location */}
@@ -107,34 +172,21 @@ export default function SearchForm() {
             <MapPin className="inline mr-2" size={16} />
             Dropoff Location
           </label>
-          <input
-            type="text"
-            value={dropoffLocation}
-            onChange={(e) => {
-              setDropoffLocation(e.target.value)
-              setShowDropoffSuggestions(true)
+          <Autocomplete
+            onLoad={onDropoffLoad}
+            onPlaceChanged={onDropoffPlaceChanged}
+            options={{
+              componentRestrictions: { country: "lk" }, // Restrict to Sri Lanka
+              fields: ["formatted_address", "geometry", "name"],
             }}
-            onBlur={() => setTimeout(() => setShowDropoffSuggestions(false), 200)}
-            placeholder="Where to?"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-          {showDropoffSuggestions && dropoffLocation && (
-            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 z-20 shadow-lg">
-              {filteredDestinations(dropoffLocation).map((dest) => (
-                <button
-                  key={dest}
-                  type="button"
-                  onClick={() => {
-                    setDropoffLocation(dest)
-                    setShowDropoffSuggestions(false)
-                  }}
-                  className="w-full text-left px-4 py-2 hover:bg-yellow-100 first:rounded-t-lg last:rounded-b-lg text-black"
-                >
-                  {dest}
-                </button>
-              ))}
-            </div>
-          )}
+          >
+            <input
+              type="text"
+              placeholder="Where to?"
+              defaultValue={dropoffLocation.address}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-black"
+            />
+          </Autocomplete>
         </motion.div>
       </div>
 
@@ -151,6 +203,7 @@ export default function SearchForm() {
             onChange={(e) => setPickupDate(e.target.value)}
             min={new Date().toISOString().split("T")[0]}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           />
         </motion.div>
 
@@ -162,6 +215,7 @@ export default function SearchForm() {
             value={pickupTime}
             onChange={(e) => setPickupTime(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           />
         </motion.div>
 
