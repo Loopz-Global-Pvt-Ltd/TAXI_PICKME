@@ -145,7 +145,7 @@ export default function SearchForm() {
         <div className="grid grid-cols-1 gap-1">
           {/* Pickup Location */}
           <motion.div variants={itemVariants} className="relative">
-            <label className="block text-sm font-medium text-black mb-2">
+            <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={16} />
               Pickup Location
             </label>
@@ -161,14 +161,14 @@ export default function SearchForm() {
                 type="text"
                 placeholder="Where are you?"
                 defaultValue={pickupLocation.address}
-                className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black"
+                className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold"
               />
             </Autocomplete>
           </motion.div>
 
           {/* Dropoff Location */}
           <motion.div variants={itemVariants} className="relative">
-            <label className="block text-sm font-medium text-black mb-2">
+            <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={16} />
               Dropoff Location
             </label>
@@ -184,7 +184,7 @@ export default function SearchForm() {
                 type="text"
                 placeholder="Where to?"
                 defaultValue={dropoffLocation.address}
-                className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black"
+                className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold placeholder:font-normal"
               />
             </Autocomplete>
           </motion.div>
@@ -193,7 +193,7 @@ export default function SearchForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Pickup Date */}
           <motion.div variants={itemVariants}>
-            <label className="block text-sm font-medium text-black mb-2">
+            <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <Calendar className="inline mr-2" size={16} />
               Pickup Date
             </label>
@@ -209,7 +209,7 @@ export default function SearchForm() {
 
           {/* Pickup Time */}
           <motion.div variants={itemVariants}>
-            <label className="block text-sm font-medium text-black mb-2">Pickup Time</label>
+            <label className="block text-sm font-medium text-black mb-2 font-semibold">Pickup Time</label>
             <input
               type="time"
               value={pickupTime}
@@ -222,8 +222,8 @@ export default function SearchForm() {
 
         {/* Passengers */}
         <motion.div variants={itemVariants}>
-          <label className="block text-sm font-medium text-black mb-2">
-            <Users className="inline mr-2" size={16} />
+          <label className="block text-sm font-medium text-black mb-2 font-semibold">
+            <Users className="inline mr-2 " size={16} />
             Passengers
           </label>
           <select
@@ -240,12 +240,12 @@ export default function SearchForm() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Button
+            <Button
             type="submit"
-            className="w-full bg-black hover:bg-black/90 text-white py-4 text-lg font-semibold rounded-lg transition-all hover:shadow-lg"
-          >
+            className="w-full bg-black/80 hover:bg-black/90 text-white py-5 text-lg font-semibold rounded-lg transition-all hover:shadow-lg cursor-pointer"
+            >
             Search Available Taxis
-          </Button>
+            </Button>
         </motion.div>
       </motion.form>
 

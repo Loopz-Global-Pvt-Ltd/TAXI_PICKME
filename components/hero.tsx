@@ -123,7 +123,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-20">
+      <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-10">
         
         {/* Search Form Section */}
         <motion.div
@@ -132,14 +132,13 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex-1 flex items-center justify-center w-full max-w-7xl z-10"
         >
-          <div className="w-full bg-white/50 backdrop-blur rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-yellow-400">
-            {/* <h2 className="text-3xl md:text-4xl font-bold text-black mb-6 text-left">Find Your Ride</h2> */}
+          <div className="w-full bg-white/70 backdrop-blur rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-yellow-400">
             <SearchForm />
           </div>
         </motion.div>
 
         {/* Badges Section */}
-        <div className="flex-1 flex flex-col items-center mt-1 justify-end gap-8 w-full">
+        <div className="flex-1 flex flex-col items-center justify-end gap-8 mt-20 w-full">
           <motion.div variants={itemVariants} className="flex gap-4 flex-wrap justify-center">
             {["✓ Professional Drivers", "✓ 24/7 Support", "✓ Best Rates", "✓ Safe Travel"].map((badge, index) => (
               <motion.div
