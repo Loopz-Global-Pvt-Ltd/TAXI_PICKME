@@ -83,7 +83,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen p-5 overflow-hidden">
+    <section className="relative min-h-screen p-2 overflow-hidden">
       {/* Background Slider */}
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
@@ -123,29 +123,29 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-10">
+      <div className="relative h-full flex flex-col items-center justify-between px-4 min-h-screen py-4">
         
         {/* Search Form Section */}
         <motion.div
           initial={{ opacity: 0, y: 150 }}
-          animate={{ opacity: 1, y: 100 }}
+          animate={{ opacity: 1, y: 90 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex-1 flex items-center justify-center w-full max-w-7xl z-10"
         >
-          <div className="w-full bg-white/70 backdrop-blur rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-yellow-400">
+          <div className="w-full bg-white/70 backdrop-blur rounded-2xl shadow-2xl p-1 md:p-5 border-4 border-yellow-400">
             <SearchForm />
           </div>
         </motion.div>
 
         {/* Badges Section */}
-        <div className="flex-1 flex flex-col items-center justify-end gap-8 mt-20 w-full">
+        <div className="flex-1 flex flex-col items-center justify-end gap-8 mt-2 w-full">
           <motion.div variants={itemVariants} className="flex gap-4 flex-wrap justify-center">
             {["✓ Professional Drivers", "✓ 24/7 Support", "✓ Best Rates", "✓ Safe Travel"].map((badge, index) => (
               <motion.div
                 key={index}
                 variants={badgeVariants}
                 transition={{ delay: 0.5 + index * 0.1 }}
-                className="flex items-center gap-2 bg-yellow-400/20 backdrop-blur border border-yellow-400/50 px-4 py-2 rounded-lg hover:bg-yellow-400/30 transition-colors"
+                className="flex items-center gap-2 bg-yellow-400/20 backdrop-blur border border-yellow-400/50 px-4 py-1 rounded-lg hover:bg-yellow-400/30 transition-colors"
                 whileHover={{ scale: 1.05 }}
               >
                 <span className="text-sm text-yellow-300 font-medium">{badge}</span>
