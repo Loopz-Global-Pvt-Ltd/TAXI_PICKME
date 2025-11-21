@@ -1,119 +1,43 @@
+// app/search/page.tsx
 "use client"
 
-import { useState, useMemo } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Header from "@/components/Header"
-import SearchFilters from "@/components/search-filters"
-import VehicleCard from "@/components/vehicle-card"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { ChevronDown } from "lucide-react"
-
-// Mock vehicle data
-const MOCK_VEHICLES = [
-  {
-    id: 1,
-    name: "Toyota Corolla",
-    category: "Economy",
-    price: 5500,
-    image: "/toyota-corolla-taxi.jpg",
-    seats: 4,
-    luggage: 2,
-    rating: 4.8,
-    reviews: 145,
-    features: ["Air Conditioning", "Power Steering", "Automatic"],
-  },
-  {
-    id: 2,
-    name: "Toyota Prius",
-    category: "Budget",
-    price: 3500,
-    image: "/toyota-prius-hybrid-taxi.jpg",
-    seats: 4,
-    luggage: 2,
-    rating: 4.6,
-    reviews: 89,
-    features: ["Eco-Friendly", "Air Conditioning", "Manual"],
-  },
-  {
-    id: 3,
-    name: "Honda Civic",
-    category: "Comfort",
-    price: 6500,
-    image: "/honda-civic-taxi-comfortable.jpg",
-    seats: 4,
-    luggage: 3,
-    rating: 4.7,
-    reviews: 156,
-    features: ["Leather Seats", "Climate Control", "Automatic"],
-  },
-  {
-    id: 4,
-    name: "Toyota Prado",
-    category: "Premium",
-    price: 9500,
-    image: "/toyota-prado-luxury-suv.jpg",
-    seats: 7,
-    luggage: 4,
-    rating: 4.9,
-    reviews: 203,
-    features: ["Luxury Interior", "WiFi", "Premium Sound"],
-  },
-  {
-    id: 5,
-    name: "Hiace Van",
-    category: "Van",
-    price: 8500,
-    image: "/hiace-van-group-transport.jpg",
-    seats: 10,
-    luggage: 6,
-    rating: 4.5,
-    reviews: 67,
-    features: ["Spacious", "Air Conditioning", "Comfortable"],
-  },
-  {
-    id: 6,
-    name: "Suzuki Swift",
-    category: "Budget",
-    price: 4200,
-    image: "/suzuki-swift-compact-car.jpg",
-    seats: 4,
-    luggage: 2,
-    rating: 4.4,
-    reviews: 112,
-    features: ["Fuel Efficient", "Manual", "Compact"],
-  },
-  {
-    id: 7,
-    name: "Nissan X-Trail",
-    category: "Premium",
-    price: 10500,
-    image: "/nissan-xtrail-premium-suv.jpg",
-    seats: 5,
-    luggage: 4,
-    rating: 4.8,
-    reviews: 178,
-    features: ["All-Wheel Drive", "Panoramic Roof", "Leather Seats"],
-  },
-  {
-    id: 8,
-    name: "Toyota Fortuner",
-    category: "Premium",
-    price: 12500,
-    image: "/toyota-fortuner-executive-suv.jpg",
-    seats: 7,
-    luggage: 5,
-    rating: 4.9,
-    reviews: 234,
-    features: ["Executive Interior", "WiFi", "Premium Entertainment"],
-  },
-]
+import SearchFilters from "@/components/search-filters"
+import VehicleCard from "@/components/vehicle-card"
+import { ChevronDown, Loader2 } from "lucide-react"
 
 type SortOption = "price-low" | "price-high" | "rating" | "popularity"
 
+interface Vehicle {
+  id: number
+  name: string
+  category: string
+  base_price: number
+  price_per_km: number
+  image: string
+  seats: number
+  luggage: number
+  rating: number
+  reviews: number
+  features: string[]
+  description: string
+  fuel_type: string
+  transmission: string
+}
+
+interface VehicleWithPrice extends Vehicle {
+  estimatedTotalPrice: number
+}
+
 export default function SearchPage() {
   const searchParams = useSearchParams()
+  const [vehicles, setVehicles] = useState<VehicleWithPrice[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("")
   const [priceRange, setPriceRange] = useState<[number, number]>([3500, 12500])
   const [sortBy, setSortBy] = useState<SortOption>("price-low")
@@ -121,28 +45,64 @@ export default function SearchPage() {
   // Get search parameters
   const pickup = searchParams.get("pickup") || ""
   const dropoff = searchParams.get("dropoff") || ""
+  const distance = parseFloat(searchParams.get("distance") || "0")
+  const duration = parseInt(searchParams.get("duration") || "0")
   const date = searchParams.get("date") || ""
+  const time = searchParams.get("time") || ""
   const passengers = searchParams.get("passengers") || "1"
 
+  // Fetch vehicles and calculate prices
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const params = new URLSearchParams({
+          passengers: passengers,
+        })
+
+        const response = await fetch(`/api/vehicles?${params}`)
+        const data = await response.json()
+
+        if (data.success) {
+          // Calculate estimated price for each vehicle
+          const vehiclesWithPrices = data.data.map((vehicle: Vehicle) => {
+            const distancePrice = distance * vehicle.price_per_km
+            const estimatedTotalPrice = vehicle.base_price + distancePrice
+
+            return {
+              ...vehicle,
+              estimatedTotalPrice,
+            }
+          })
+
+          setVehicles(vehiclesWithPrices)
+        }
+      } catch (error) {
+        console.error('Error fetching vehicles:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchVehicles()
+  }, [distance, passengers])
+
   const filteredVehicles = useMemo(() => {
-    let result = MOCK_VEHICLES
+    let result = vehicles
 
     // Filter by category
     if (selectedCategory) {
       result = result.filter((v) => v.category === selectedCategory)
     }
 
-    // Filter by price range
-    result = result.filter((v) => v.price >= priceRange[0] && v.price <= priceRange[1])
-
-    // Filter by passenger count
-    const passengerCount = Number.parseInt(passengers)
-    result = result.filter((v) => v.seats >= passengerCount)
+    // Filter by price range (using estimated total price)
+    result = result.filter(
+      (v) => v.estimatedTotalPrice >= priceRange[0] && v.estimatedTotalPrice <= priceRange[1]
+    )
 
     // Sort
     switch (sortBy) {
       case "price-high":
-        result.sort((a, b) => b.price - a.price)
+        result.sort((a, b) => b.estimatedTotalPrice - a.estimatedTotalPrice)
         break
       case "rating":
         result.sort((a, b) => b.rating - a.rating)
@@ -152,11 +112,19 @@ export default function SearchPage() {
         break
       case "price-low":
       default:
-        result.sort((a, b) => a.price - b.price)
+        result.sort((a, b) => a.estimatedTotalPrice - b.estimatedTotalPrice)
     }
 
     return result
-  }, [selectedCategory, priceRange, passengers, sortBy])
+  }, [vehicles, selectedCategory, priceRange, sortBy])
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-background">
@@ -168,10 +136,17 @@ export default function SearchPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Available Taxis</h1>
-              <p className="text-muted-foreground">
-                <span className="font-semibold">{pickup}</span> → <span className="font-semibold">{dropoff}</span> •{" "}
-                {date} • {passengers} Passenger{passengers !== "1" ? "s" : ""}
-              </p>
+              <div className="text-muted-foreground space-y-1">
+                <p>
+                  <span className="font-semibold">{pickup}</span> → <span className="font-semibold">{dropoff}</span>
+                </p>
+                <p className="text-sm">
+                  Distance: <span className="font-semibold">{distance.toFixed(1)} km</span> • 
+                  Duration: <span className="font-semibold">{Math.round(duration)} mins</span> • 
+                  Date: <span className="font-semibold">{date}</span> • 
+                  {passengers} Passenger{passengers !== "1" ? "s" : ""}
+                </p>
+              </div>
             </div>
             <Link href="/">
               <Button variant="outline">Modify Search</Button>
@@ -228,9 +203,7 @@ export default function SearchPage() {
                       <button
                         key={option.value}
                         onClick={() => setSortBy(option.value)}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-primary/10 ${
-                          sortBy === option.value ? "bg-primary/10 text-primary font-semibold" : "text-foreground"
-                        }`}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-muted transition"
                       >
                         {option.label}
                       </button>
@@ -242,7 +215,20 @@ export default function SearchPage() {
               {/* Vehicle List */}
               <div className="space-y-4">
                 {filteredVehicles.length > 0 ? (
-                  filteredVehicles.map((vehicle) => <VehicleCard key={vehicle.id} vehicle={vehicle} />)
+                  filteredVehicles.map((vehicle) => (
+                    <VehicleCard 
+                      key={vehicle.id} 
+                      vehicle={vehicle}
+                      estimatedDistance={distance}
+                      searchParams={{
+                        pickup,
+                        dropoff,
+                        date,
+                        time,
+                        distance: distance.toString(),
+                      }}
+                    />
+                  ))
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 bg-muted rounded-lg">
                     <p className="text-foreground font-semibold mb-2">No vehicles found</p>

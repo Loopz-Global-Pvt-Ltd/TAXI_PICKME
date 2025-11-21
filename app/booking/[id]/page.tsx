@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState , useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -169,6 +169,27 @@ export default function BookingPage() {
       router.push("/payment")
     }, 1500)
   }
+
+  useEffect(() => {
+    // Get distance from URL params if available
+    const searchParams = new URLSearchParams(window.location.search)
+    const urlDistance = searchParams.get('estimatedDistance')
+    const urlPickup = searchParams.get('pickup')
+    const urlDropoff = searchParams.get('dropoff')
+    const urlDate = searchParams.get('date')
+    const urlTime = searchParams.get('time')
+  
+    if (urlDistance) {
+      setFormData(prev => ({
+        ...prev,
+        estimatedDistanceKm: urlDistance,
+        pickupLocation: urlPickup || prev.pickupLocation,
+        dropoffLocation: urlDropoff || prev.dropoffLocation,
+        pickupDate: urlDate || prev.pickupDate,
+        pickupTime: urlTime || prev.pickupTime,
+      }))
+    }
+  }, [])
 
   if (!vehicle) {
     return (
