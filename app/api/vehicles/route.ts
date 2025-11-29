@@ -3,24 +3,35 @@ import { query } from '@/lib/db'
 import { z } from 'zod'
 
 const vehicleSearchSchema = z.object({
-  category: z.string().optional(),
-  minPrice: z.string().optional().transform(val => val ? parseFloat(val) : undefined),
-  maxPrice: z.string().optional().transform(val => val ? parseFloat(val) : undefined),
-  passengers: z.string().optional().transform(val => val ? parseInt(val) : undefined),
-  sortBy: z.enum(['price-low', 'price-high', 'rating', 'popularity']).optional().default('price-low'),
+  category: z.string().nullable().optional(),
+  minPrice: z.string().nullable().optional().transform(val => val ? parseFloat(val) : undefined),
+  maxPrice: z.string().nullable().optional().transform(val => val ? parseFloat(val) : undefined),
+  passengers: z.string().nullable().optional().transform(val => val ? parseInt(val) : undefined),
+  sortBy: z.enum(['price-low', 'price-high', 'rating', 'popularity']).nullable().optional().default('price-low'),
 })
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🚗 Fetching vehicles...')
     const { searchParams } = new URL(request.url)
     
-    const validatedParams = vehicleSearchSchema.parse({
+    console.log('📋 Raw search params:', {
       category: searchParams.get('category'),
       minPrice: searchParams.get('minPrice'),
       maxPrice: searchParams.get('maxPrice'),
       passengers: searchParams.get('passengers'),
       sortBy: searchParams.get('sortBy'),
     })
+    
+    const validatedParams = vehicleSearchSchema.parse({
+      category: searchParams.get('category'),
+      minPrice: searchParams.get('minPrice'),
+      maxPrice: searchParams.get('maxPrice'),
+      passengers: searchParams.get('passengers'),
+      sortBy: searchParams.get('sortBy') as 'price-low' | 'price-high' | 'rating' | 'popularity' | null,
+    })
+
+    console.log('✅ Validated params:', validatedParams)
 
     let queryText = `
       SELECT 
@@ -42,20 +53,20 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter by base price range
-    if (validatedParams.minPrice) {
+    if (validatedParams.minPrice !== undefined) {
       queryText += ` AND base_price >= $${paramIndex}`
       queryParams.push(validatedParams.minPrice)
       paramIndex++
     }
 
-    if (validatedParams.maxPrice) {
+    if (validatedParams.maxPrice !== undefined) {
       queryText += ` AND base_price <= $${paramIndex}`
       queryParams.push(validatedParams.maxPrice)
       paramIndex++
     }
 
     // Filter by passenger capacity
-    if (validatedParams.passengers) {
+    if (validatedParams.passengers !== undefined) {
       queryText += ` AND seats >= $${paramIndex}`
       queryParams.push(validatedParams.passengers)
       paramIndex++
@@ -77,7 +88,12 @@ export async function GET(request: NextRequest) {
         queryText += ' ORDER BY base_price ASC, price_per_km ASC'
     }
 
+    console.log('🔍 Executing query:', queryText)
+    console.log('📊 Query params:', queryParams)
+
     const result = await query(queryText, queryParams)
+
+    console.log(`✅ Found ${result.rowCount} vehicles`)
 
     // Transform JSONB features field
     const vehicles = result.rows.map(vehicle => ({
@@ -97,7 +113,12 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error: any) {
-    console.error('Error fetching vehicles:', error)
+    console.error('❌ Error fetching vehicles:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+    })
     
     if (error.name === 'ZodError') {
       return NextResponse.json(
@@ -111,7 +132,12 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch vehicles' },
+      { 
+        success: false, 
+        error: 'Failed to fetch vehicles',
+        details: error.message,
+        code: error.code 
+      },
       { status: 500 }
     )
   }

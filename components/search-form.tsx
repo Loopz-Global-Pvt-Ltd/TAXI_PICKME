@@ -2,7 +2,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { Autocomplete } from "@react-google-maps/api"
 import { Button } from "@/components/ui/button"
 import { Calendar, MapPin, Users, Loader2, Navigation } from "lucide-react"
@@ -18,6 +18,8 @@ interface LocationData {
 
 export default function SearchForm() {
   const { isLoaded } = useMaps()
+  const formRef = useRef<HTMLFormElement>(null)
+  const [formHeight, setFormHeight] = useState<number>(0)
   const [pickupLocation, setPickupLocation] = useState<LocationData>({
     address: "",
     lat: null,
@@ -147,18 +149,35 @@ export default function SearchForm() {
     )
   }
 
+  useEffect(() => {
+    if (formRef.current) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setFormHeight(entry.contentRect.height)
+        }
+      })
+      
+      resizeObserver.observe(formRef.current)
+      
+      return () => {
+        resizeObserver.disconnect()
+      }
+    }
+  }, [])
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
       {/* Left Side - Search Form */}
       <form
+        ref={formRef}
         onSubmit={handleSearch}
-        className="space-y-3 sm:space-y-4"
+        className="space-y-2 sm:space-y-3"
       >
-        <div className="grid grid-cols-1 gap-1">
+        <div className="grid grid-cols-1 gap-2 sm:gap-2.5">
           {/* Pickup Location */}
           <div className="relative">
-            <label className="block text-sm font-medium text-black mb-2 font-semibold">
-              <MapPin className="inline mr-2" size={16} />
+            <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-1.5 font-semibold">
+              <MapPin className="inline mr-1" size={14} />
               Pickup Location
             </label>
             <Autocomplete
@@ -173,15 +192,15 @@ export default function SearchForm() {
                 type="text"
                 placeholder="Where are you?"
                 defaultValue={pickupLocation.address}
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold text-sm sm:text-base"
+                className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold text-xs sm:text-sm"
               />
             </Autocomplete>
           </div>
 
           {/* Dropoff Location */}
           <div className="relative">
-            <label className="block text-sm font-medium text-black mb-2 font-semibold">
-              <MapPin className="inline mr-2" size={16} />
+            <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-1.5 font-semibold">
+              <MapPin className="inline mr-1" size={14} />
               Dropoff Location
             </label>
             <Autocomplete
@@ -196,7 +215,7 @@ export default function SearchForm() {
                 type="text"
                 placeholder="Where to?"
                 defaultValue={dropoffLocation.address}
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold placeholder:font-normal text-sm sm:text-base"
+                className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold placeholder:font-normal text-xs sm:text-sm"
               />
             </Autocomplete>
           </div>
@@ -204,26 +223,26 @@ export default function SearchForm() {
 
         {/* Distance Information */}
         {isCalculatingDistance && (
-          <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-            <span className="text-sm text-blue-900 font-medium">Calculating distance...</span>
+          <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+            <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin text-blue-600" />
+            <span className="text-xs sm:text-sm text-blue-900 font-medium">Calculating distance...</span>
           </div>
         )}
 
         {distanceInfo && !isCalculatingDistance && (
-          <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <Navigation className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+          <div className="p-2 sm:p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-start gap-2">
+              <Navigation className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-semibold text-green-900 mb-2">Route Information</h4>
-                <div className="grid grid-cols-2 gap-2 sm:gap-3 text-sm">
+                <h4 className="text-xs sm:text-sm font-semibold text-green-900 mb-1.5">Route Information</h4>
+                <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
                   <div>
-                    <p className="text-green-700 font-medium text-xs sm:text-sm">Distance</p>
-                    <p className="text-green-900 font-bold text-sm sm:text-base">{distanceInfo.distanceText}</p>
+                    <p className="text-green-700 font-medium text-xs">Distance</p>
+                    <p className="text-green-900 font-bold text-sm">{distanceInfo.distanceText}</p>
                   </div>
                   <div>
-                    <p className="text-green-700 font-medium text-xs sm:text-sm">Estimated Time</p>
-                    <p className="text-green-900 font-bold text-sm sm:text-base">{distanceInfo.durationText}</p>
+                    <p className="text-green-700 font-medium text-xs">Estimated Time</p>
+                    <p className="text-green-900 font-bold text-sm">{distanceInfo.durationText}</p>
                   </div>
                 </div>
               </div>
@@ -232,16 +251,16 @@ export default function SearchForm() {
         )}
 
         {distanceError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-900">{distanceError}</p>
+          <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-xs sm:text-sm text-red-900">{distanceError}</p>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
           {/* Pickup Date */}
           <div>
-            <label className="block text-sm font-medium text-black mb-2 font-semibold">
-              <Calendar className="inline mr-2" size={16} />
+            <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-1.5 font-semibold">
+              <Calendar className="inline mr-1" size={14} />
               Pickup Date
             </label>
             <input
@@ -249,19 +268,19 @@ export default function SearchForm() {
               value={pickupDate}
               onChange={(e) => setPickupDate(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base"
+              className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm"
               required
             />
           </div>
 
           {/* Pickup Time */}
           <div>
-            <label className="block text-sm font-medium text-black mb-2 font-semibold">Pickup Time</label>
+            <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-1.5 font-semibold">Pickup Time</label>
             <input
               type="time"
               value={pickupTime}
               onChange={(e) => setPickupTime(e.target.value)}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base"
+              className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm"
               required
             />
           </div>
@@ -269,14 +288,14 @@ export default function SearchForm() {
 
         {/* Passengers */}
         <div>
-          <label className="block text-sm font-medium text-black mb-2 font-semibold">
-            <Users className="inline mr-2" size={16} />
+          <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-1.5 font-semibold">
+            <Users className="inline mr-1" size={14} />
             Passengers
           </label>
           <select
             value={passengers}
             onChange={(e) => setPassengers(e.target.value)}
-            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base"
+            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm"
           >
             <option value="1">1 Passenger</option>
             <option value="2">2 Passengers</option>
@@ -290,11 +309,11 @@ export default function SearchForm() {
           <Button
             type="submit"
             disabled={!distanceInfo || isCalculatingDistance}
-            className="w-full bg-black/80 hover:bg-black/90 text-white py-4 sm:py-5 text-base sm:text-lg font-semibold rounded-lg transition-all hover:shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-black/80 hover:bg-black/90 text-white py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-lg transition-all hover:shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isCalculatingDistance ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                 Calculating...
               </>
             ) : (
@@ -305,7 +324,13 @@ export default function SearchForm() {
       </form>
 
       {/* Right Side - Map Preview (visible on all screen sizes) */}
-      <div className="h-[300px] sm:h-[350px] lg:h-[400px] w-full rounded-lg overflow-hidden">
+      <div 
+        className="w-full rounded-lg overflow-hidden"
+        style={{ 
+          height: formHeight > 0 ? `${formHeight}px` : 'auto',
+          minHeight: '250px'
+        }}
+      >
         <MapPreview
           pickupLat={pickupLocation.lat ?? undefined}
           pickupLng={pickupLocation.lng ?? undefined}

@@ -155,8 +155,8 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
 
   if (!isLoaded) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[400px] bg-gray-100 rounded-xl">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      <div className="flex items-center justify-center h-full min-h-[250px] bg-gray-100 rounded-xl">
+        <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-blue-600" />
       </div>
     )
   }
@@ -168,26 +168,26 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
       transition={{ duration: 0.5 }}
       className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl"
     >
-      <div ref={mapRef} className="w-full h-full min-h-[400px]" />
+      <div ref={mapRef} className="w-full h-full min-h-[250px]" />
 
       {/* Route Info Overlay */}
       {distance && duration && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 space-y-2"
+          className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-white rounded-lg shadow-lg p-2 sm:p-3 space-y-1 sm:space-y-1.5"
         >
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-sm font-medium">Pickup</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
+            <span className="text-xs sm:text-sm font-medium">Pickup</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span className="text-sm font-medium">Drop-off</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
+            <span className="text-xs sm:text-sm font-medium">Drop-off</span>
           </div>
-          <div className="pt-2 border-t">
-            <p className="text-xs text-gray-600">Distance: <strong>{distance}</strong></p>
-            <p className="text-xs text-gray-600">Duration: <strong>{duration}</strong></p>
+          <div className="pt-1 sm:pt-1.5 border-t">
+            <p className="text-[10px] sm:text-xs text-gray-600">Distance: <strong>{distance}</strong></p>
+            <p className="text-[10px] sm:text-xs text-gray-600">Duration: <strong>{duration}</strong></p>
           </div>
         </motion.div>
       )}
