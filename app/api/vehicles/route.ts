@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server' 
 import { query } from '@/lib/db'
 import { z } from 'zod'
 
@@ -88,12 +88,8 @@ export async function GET(request: NextRequest) {
         queryText += ' ORDER BY base_price ASC, price_per_km ASC'
     }
 
-    console.log('🔍 Executing query:', queryText)
-    console.log('📊 Query params:', queryParams)
-
     const result = await query(queryText, queryParams)
 
-    console.log(`✅ Found ${result.rowCount} vehicles`)
 
     // Transform JSONB features field
     const vehicles = result.rows.map(vehicle => ({

@@ -20,7 +20,6 @@ pool.on('connect', (client) => {
 })
 
 pool.on('error', (err, client) => {
-  console.error('❌ Unexpected error on idle database client:', err)
   process.exit(-1)
 })
 
@@ -28,11 +27,9 @@ pool.on('error', (err, client) => {
 pool.connect()
   .then(client => {
     console.log('✅ Database connection pool initialized successfully')
-    console.log(`📊 Database: ${process.env.DATABASE_URL?.split('@')[1]?.split('/')[1] || 'Unknown'}`)
     client.release()
   })
   .catch(err => {
-    console.error('❌ Failed to initialize database connection pool:', err.message)
     console.error('Stack:', err.stack)
   })
 
@@ -44,23 +41,13 @@ export const query = async <T = any>(
   let client
   
   try {
-    console.log('🔍 Acquiring database client...')
     client = await pool.connect()
-    console.log('✅ Database client acquired')
     
-    console.log('📤 Executing query:', { 
-      sql: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
-      params: params?.map(p => typeof p === 'string' && p.length > 50 ? p.substring(0, 50) + '...' : p)
-    })
+
     
     const result = await client.query<T>(text, params)
     const duration = Date.now() - start
     
-    console.log('✅ Query executed successfully', { 
-      duration: `${duration}ms`, 
-      rowCount: result.rowCount,
-      command: result.command 
-    })
     
     return result
   } catch (error: any) {
@@ -76,9 +63,7 @@ export const query = async <T = any>(
     throw error
   } finally {
     if (client) {
-      client.release()
-      console.log('🔓 Database client released back to pool')
-    }
+      client.release()    }
   }
 }
 
@@ -112,10 +97,7 @@ export const transaction = async <T>(
 export const checkConnection = async (): Promise<boolean> => {
   try {
     const result = await query('SELECT NOW() as current_time, version() as db_version')
-    console.log('✅ Database health check passed:', {
-      timestamp: result.rows[0].current_time,
-      version: result.rows[0].db_version.split(',')[0]
-    })
+
     return true
   } catch (error: any) {
     console.error('❌ Database health check failed:', error.message)

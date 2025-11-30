@@ -129,19 +129,43 @@ export default function BookingPage() {
 
   const vehicle = MOCK_VEHICLES.find((v) => v.id === vehicleId)
 
+  const [tripData, setTripData] = useState({
+    pickupLocation: "",
+    dropoffLocation: "",
+    pickupDate: "",
+    pickupTime: "",
+    estimatedDistanceKm: "",
+    numberOfDays: "1"
+  })
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
-    pickupDate: "",
-    pickupTime: "",
-    pickupLocation: "",
-    dropoffLocation: "",
-    numberOfDays: "1",
     specialRequests: "",
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    // Get trip data from URL params
+    const searchParams = new URLSearchParams(window.location.search)
+    const urlDistance = searchParams.get('estimatedDistance')
+    const urlPickup = searchParams.get('pickup')
+    const urlDropoff = searchParams.get('dropoff')
+    const urlDate = searchParams.get('date')
+    const urlTime = searchParams.get('time')
+    const urlDays = searchParams.get('days')
+  
+    setTripData({
+      estimatedDistanceKm: urlDistance || "",
+      pickupLocation: urlPickup || "",
+      dropoffLocation: urlDropoff || "",
+      pickupDate: urlDate || "",
+      pickupTime: urlTime || "",
+      numberOfDays: urlDays || "1"
+    })
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -155,41 +179,25 @@ export default function BookingPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
+    // Simulate API call and then redirect to payment gateway
     setTimeout(() => {
-      // Store booking data in localStorage for demonstration
-      localStorage.setItem(
-        "bookingData",
-        JSON.stringify({
-          vehicle,
-          ...formData,
-          totalPrice: vehicle ? vehicle.price * Number.parseInt(formData.numberOfDays) : 0,
-        }),
-      )
-      router.push("/payment")
+      // Store booking data in localStorage
+      const bookingData = {
+        vehicle,
+        ...tripData,
+        ...formData,
+        totalPrice: vehicle ? vehicle.price * Number.parseInt(tripData.numberOfDays) : 0,
+      }
+      localStorage.setItem("bookingData", JSON.stringify(bookingData))
+      
+      // TODO: Redirect to OnePay payment gateway
+      // For now, show alert
+      alert('Payment gateway integration pending. Booking data saved.')
+      setIsSubmitting(false)
+      
+      // router.push("https://onepay-gateway-url.com/checkout")
     }, 1500)
   }
-
-  useEffect(() => {
-    // Get distance from URL params if available
-    const searchParams = new URLSearchParams(window.location.search)
-    const urlDistance = searchParams.get('estimatedDistance')
-    const urlPickup = searchParams.get('pickup')
-    const urlDropoff = searchParams.get('dropoff')
-    const urlDate = searchParams.get('date')
-    const urlTime = searchParams.get('time')
-  
-    if (urlDistance) {
-      setFormData(prev => ({
-        ...prev,
-        estimatedDistanceKm: urlDistance,
-        pickupLocation: urlPickup || prev.pickupLocation,
-        dropoffLocation: urlDropoff || prev.dropoffLocation,
-        pickupDate: urlDate || prev.pickupDate,
-        pickupTime: urlTime || prev.pickupTime,
-      }))
-    }
-  }, [])
 
   if (!vehicle) {
     return (
@@ -200,7 +208,7 @@ export default function BookingPage() {
             <div className="text-center py-12">
               <h1 className="text-2xl font-bold text-foreground mb-4">Vehicle Not Found</h1>
               <p className="text-muted-foreground mb-6">The vehicle you're looking for doesn't exist.</p>
-              <Link href="/search">
+              <Link href="/">
                 <Button>Back to Search</Button>
               </Link>
             </div>
@@ -211,7 +219,7 @@ export default function BookingPage() {
     )
   }
 
-  const totalPrice = vehicle.price * Number.parseInt(formData.numberOfDays)
+  const totalPrice = vehicle.price * Number.parseInt(tripData.numberOfDays)
 
   return (
     <main className="min-h-screen bg-background">
@@ -219,186 +227,98 @@ export default function BookingPage() {
 
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link href="/search" className="text-primary hover:underline text-sm mb-6 inline-block">
+          <Link href="/" className="text-primary hover:underline text-sm mb-6 inline-block">
             ← Back to Search
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Vehicle Details */}
+            {/* Order Summary Sidebar */}
             <div className="lg:col-span-1">
-              <Card className="overflow-hidden">
-                <div className="relative w-full h-64 bg-muted">
-                  <Image src={vehicle.image || "/placeholder.svg"} alt={vehicle.name} fill className="object-cover" />
-                </div>
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">{vehicle.name}</h2>
-                  <p className="text-sm text-muted-foreground mb-4">{vehicle.category}</p>
-                  <p className="text-foreground text-sm mb-6">{vehicle.description}</p>
+              <Card className="p-6 sticky top-4">
+                <h2 className="text-xl font-bold text-foreground mb-6">Order Summary</h2>
 
-                  {/* Features */}
-                  <div className="mb-6">
-                    <h3 className="font-semibold text-foreground mb-3">Features</h3>
-                    <div className="space-y-2">
-                      {vehicle.features.map((feature) => (
-                        <div key={feature} className="flex items-center gap-2 text-sm text-foreground">
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
+                {/* Vehicle Info */}
+                <div className="mb-6 pb-6 border-b border-border">
+                  <div className="relative w-full h-40 bg-muted rounded-lg mb-4 overflow-hidden">
+                    <Image src={vehicle.image || "/placeholder.svg"} alt={vehicle.name} fill className="object-cover" />
                   </div>
-
+                  <p className="text-sm text-muted-foreground mb-2">Vehicle</p>
+                  <p className="font-semibold text-foreground">{vehicle.name}</p>
+                  <p className="text-xs text-muted-foreground">{vehicle.category}</p>
+                  
                   {/* Specs */}
-                  <div className="grid grid-cols-2 gap-4 p-4 bg-muted rounded-lg mb-6">
+                  <div className="grid grid-cols-2 gap-2 mt-3 p-3 bg-muted rounded-lg">
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Seats</p>
-                      <p className="text-lg font-semibold text-foreground">{vehicle.seats}</p>
+                      <p className="text-xs text-muted-foreground">Seats</p>
+                      <p className="text-sm font-semibold text-foreground">{vehicle.seats}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Luggage</p>
-                      <p className="text-lg font-semibold text-foreground">{vehicle.luggage}</p>
-                    </div>
-                  </div>
-
-                  {/* Rating */}
-                  <div className="p-4 bg-primary/10 rounded-lg">
-                    <p className="text-sm text-muted-foreground mb-1">Customer Rating</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-primary">{vehicle.rating}</span>
-                      <span className="text-xs text-muted-foreground">({vehicle.reviews} reviews)</span>
+                      <p className="text-xs text-muted-foreground">Luggage</p>
+                      <p className="text-sm font-semibold text-foreground">{vehicle.luggage}</p>
                     </div>
                   </div>
                 </div>
-              </Card>
 
-              {/* Price Summary */}
-              <Card className="p-6 mt-6">
-                <h3 className="font-semibold text-foreground mb-4">Price Summary</h3>
-                <div className="space-y-3 mb-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Daily Rate</span>
-                    <span className="text-foreground font-semibold">Rs. {vehicle.price.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Number of Days</span>
-                    <span className="text-foreground font-semibold">{formData.numberOfDays}</span>
-                  </div>
-                  <div className="border-t border-border pt-3 flex justify-between">
-                    <span className="font-semibold text-foreground">Total Price</span>
-                    <span className="text-2xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</span>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground">*Prices are inclusive of fuel and insurance</p>
+
               </Card>
             </div>
 
             {/* Booking Form */}
             <div className="lg:col-span-2">
+              <Card className="mb-8 p-6 md:p-8">
+                <h2 className="text-2xl font-bold text-foreground mb-2">Booking Details</h2>
+                {/* Trip Details */}
+                <div className="space-y-4 mb-6 pb-6 border-b border-border">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                      <MapPin size={12} />
+                      Pickup
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">{tripData.pickupLocation || "Not specified"}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {tripData.pickupDate && tripData.pickupTime 
+                        ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
+                        : "Date & time not specified"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                      <MapPin size={12} />
+                      Dropoff
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">{tripData.dropoffLocation || "Not specified"}</p>
+                  </div>
+                  {tripData.estimatedDistanceKm && (
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Estimated Distance</p>
+                      <p className="text-sm font-semibold text-foreground">{tripData.estimatedDistanceKm} km</p>
+                    </div>
+                  )}
+                </div>
+
+
+                {/* Total */}
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-foreground font-semibold">Total Amount</span>
+                  <span className="text-3xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</span>
+                </div>
+
+                {/* Rating */}
+                {/* <div className="mt-6 p-4 bg-primary/10 rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-1">Customer Rating</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-bold text-primary">{vehicle.rating}</span>
+                    <span className="text-xs text-muted-foreground">({vehicle.reviews} reviews)</span>
+                  </div>
+                </div> */}
+              </Card>
               <Card className="p-6 md:p-8">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Booking Details</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-2">Customer Details</h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Need to change trip details? <Link href="/" className="text-primary hover:underline">Go back to search</Link>
+                </p>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Trip Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <MapPin size={20} className="text-primary" />
-                      Trip Information
-                    </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="pickupLocation" className="text-sm font-medium text-foreground">
-                          Pickup Location
-                        </Label>
-                        <Input
-                          id="pickupLocation"
-                          name="pickupLocation"
-                          value={formData.pickupLocation}
-                          onChange={handleChange}
-                          placeholder="Enter pickup location"
-                          required
-                          className="mt-2"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="dropoffLocation" className="text-sm font-medium text-foreground">
-                          Dropoff Location
-                        </Label>
-                        <Input
-                          id="dropoffLocation"
-                          name="dropoffLocation"
-                          value={formData.dropoffLocation}
-                          onChange={handleChange}
-                          placeholder="Enter dropoff location"
-                          required
-                          className="mt-2"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Date & Time */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Calendar size={20} className="text-primary" />
-                      Date & Time
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="pickupDate" className="text-sm font-medium text-foreground">
-                          Pickup Date
-                        </Label>
-                        <Input
-                          id="pickupDate"
-                          name="pickupDate"
-                          type="date"
-                          value={formData.pickupDate}
-                          onChange={handleChange}
-                          min={new Date().toISOString().split("T")[0]}
-                          required
-                          className="mt-2"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="pickupTime" className="text-sm font-medium text-foreground">
-                          Pickup Time
-                        </Label>
-                        <Input
-                          id="pickupTime"
-                          name="pickupTime"
-                          type="time"
-                          value={formData.pickupTime}
-                          onChange={handleChange}
-                          required
-                          className="mt-2"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Duration */}
-                  <div>
-                    <Label
-                      htmlFor="numberOfDays"
-                      className="text-sm font-medium text-foreground flex items-center gap-2"
-                    >
-                      <Users size={16} className="text-primary" />
-                      Duration (Number of Days)
-                    </Label>
-                    <select
-                      id="numberOfDays"
-                      name="numberOfDays"
-                      value={formData.numberOfDays}
-                      onChange={handleChange}
-                      className="w-full mt-2 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-background"
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 10, 14, 21, 30].map((day) => (
-                        <option key={day} value={day}>
-                          {day} Day{day > 1 ? "s" : ""}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
                   {/* Passenger Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
@@ -408,7 +328,7 @@ export default function BookingPage() {
                     <div className="space-y-4">
                       <div>
                         <Label htmlFor="fullName" className="text-sm font-medium text-foreground">
-                          Full Name
+                          Full Name *
                         </Label>
                         <Input
                           id="fullName"
@@ -423,11 +343,30 @@ export default function BookingPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label
+                            htmlFor="phone"
+                            className="text-sm font-medium text-foreground flex items-center gap-2"
+                          >
+                            <Phone size={16} />
+                            Phone Number (WhatsApp) *
+                          </Label>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="+94 XX XXX XXXX"
+                            required
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label
                             htmlFor="email"
                             className="text-sm font-medium text-foreground flex items-center gap-2"
                           >
                             <Mail size={16} />
-                            Email Address
+                            Email Address (Optional)
                           </Label>
                           <Input
                             id="email"
@@ -436,26 +375,6 @@ export default function BookingPage() {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="your.email@example.com"
-                            required
-                            className="mt-2"
-                          />
-                        </div>
-                        <div>
-                          <Label
-                            htmlFor="phone"
-                            className="text-sm font-medium text-foreground flex items-center gap-2"
-                          >
-                            <Phone size={16} />
-                            Phone Number
-                          </Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="+94 (WhatsApp enabled)"
-                            required
                             className="mt-2"
                           />
                         </div>
@@ -484,7 +403,7 @@ export default function BookingPage() {
                     <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-blue-900 dark:text-blue-100">
                       By proceeding, you agree to our terms and conditions, cancellation policy, and privacy policy.
-                      You'll receive a confirmation email with booking details.
+                      You'll receive a confirmation via WhatsApp with booking details.
                     </p>
                   </div>
 
@@ -494,7 +413,7 @@ export default function BookingPage() {
                     disabled={isSubmitting}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg font-semibold rounded-lg"
                   >
-                    {isSubmitting ? "Processing..." : "Continue to Payment"}
+                    {isSubmitting ? "Processing..." : "Proceed to Payment"}
                   </Button>
                 </form>
               </Card>

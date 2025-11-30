@@ -119,7 +119,7 @@ export default function VehicleCard({ vehicle, estimatedDistance = 0, searchPara
               <p className="text-xs text-muted-foreground mb-1">Estimated Total</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-primary">
-                  Rs. {totalEstimate.toLocaleString()}
+                  Rs. {Number(totalEstimate).toFixed(2)}
                 </span>
               </div>
               <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
