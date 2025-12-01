@@ -12,7 +12,6 @@ import {
   Loader2,
   Package,
   Users,
-  Clock,
   DollarSign,
   Check,
   X
@@ -26,11 +25,8 @@ interface TaxiPackage {
   package_code: string
   description: string
   category: string
-  base_price: number
   price_per_km: number
-  included_km: number
   max_passengers: number
-  duration_hours: number
   features: string[]
   popular: boolean
   is_active: boolean
@@ -200,21 +196,13 @@ export default function PackagesPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="flex items-center gap-2 text-sm">
                       <DollarSign className="h-4 w-4 text-gray-400" />
-                      <span className="text-2xl font-bold text-gray-900">
-                        LKR {Number(pkg.base_price).toFixed(2)}
+                      <span className="font-semibold text-gray-900">
+                        LKR {Number(pkg.price_per_km).toFixed(2)}/km
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Users className="h-4 w-4 text-gray-400" />
                       <span className="text-gray-700">{pkg.max_passengers} passengers</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-700">{pkg.duration_hours} hours</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Package className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-700">{pkg.included_km} km</span>
                     </div>
                   </div>
 
@@ -223,6 +211,18 @@ export default function PackagesPage() {
                     <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded capitalize">
                       {pkg.category}
                     </span>
+                  </div>
+
+                  <div className="pt-3 border-t">
+                    <p className="text-xs text-gray-500 mb-2">Pricing Model</p>
+                    <div className="bg-blue-50 border border-blue-200 rounded px-2 py-1">
+                      <p className="text-xs text-blue-900 font-medium">
+                        Distance-based pricing only
+                      </p>
+                      <p className="text-xs text-blue-700">
+                        Total = {Number(pkg.price_per_km).toFixed(2)} × Distance (km)
+                      </p>
+                    </div>
                   </div>
                 </div>
 

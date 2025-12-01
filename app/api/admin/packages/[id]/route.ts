@@ -7,11 +7,8 @@ const updatePackageSchema = z.object({
   packageName: z.string().min(3).max(255).optional(),
   description: z.string().optional(),
   category: z.enum(['economy', 'standard', 'luxury', 'van']).optional(),
-  basePrice: z.number().positive().optional(),
   pricePerKm: z.number().positive().optional(),
-  includedKm: z.number().int().min(0).optional(),
   maxPassengers: z.number().int().positive().optional(),
-  durationHours: z.number().int().positive().optional(),
   features: z.array(z.string()).optional(),
   vehicleTypes: z.array(z.union([z.number(), z.string()])).optional(),
   popular: z.boolean().optional(),
@@ -58,11 +55,8 @@ export async function PUT(
     const fieldMapping: Record<string, string> = {
       packageName: 'package_name',
       packageCode: 'package_code',
-      basePrice: 'base_price',
       pricePerKm: 'price_per_km',
-      includedKm: 'included_km',
       maxPassengers: 'max_passengers',
-      durationHours: 'duration_hours',
       vehicleTypes: 'vehicle_types',
       isActive: 'is_active',
       termsConditions: 'terms_conditions',
@@ -107,15 +101,8 @@ export async function PUT(
       )
     }
 
-    // const updatedPackage = {
-    //   ...result.rows[0],
-    //   features: JSON.parse(result.rows[0].features || '[]'),
-    //   vehicleTypes: JSON.parse(result.rows[0].vehicle_types || '[]'),
-    // }
-
     return NextResponse.json({
       success: true,
-    //   data: updatedPackage,
       message: 'Package updated successfully',
     })
   } catch (error: any) {
@@ -134,6 +121,7 @@ export async function PUT(
     )
   }
 }
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

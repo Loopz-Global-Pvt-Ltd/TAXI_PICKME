@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Card } from "@/components/ui/card"
 
-const CATEGORIES = ["Budget", "Economy", "Comfort", "Premium", "Van"]
+const CATEGORIES = ["Economy", "Sedan", "SUV", "Van", "Luxury"]
 
 interface SearchFiltersProps {
   selectedCategory: string
@@ -53,7 +53,7 @@ export default function SearchFilters({
         </div>
       </Card>
 
-      <Card className="p-4">
+      {/* <Card className="p-4">
         <h3 className="font-semibold text-foreground mb-4">Price Range</h3>
         <div className="space-y-4">
           <Slider
@@ -69,7 +69,7 @@ export default function SearchFilters({
             <span>Rs. {priceRange[1].toLocaleString()}</span>
           </div>
         </div>
-      </Card>
+      </Card> */}
 
       <Card className="p-4">
         <h3 className="font-semibold text-foreground mb-4">Features</h3>

@@ -8,11 +8,8 @@ const createPackageSchema = z.object({
   packageCode: z.string().min(3).max(50),
   description: z.string().optional(),
   category: z.enum(['economy', 'standard', 'luxury', 'van']),
-  basePrice: z.number().positive(),
   pricePerKm: z.number().positive(),
-  includedKm: z.number().int().min(0),
   maxPassengers: z.number().int().positive(),
-  durationHours: z.number().int().positive(),
   features: z.array(z.string()).default([]),
   vehicleTypes: z.array(z.union([z.number(), z.string()])).default([]),
   popular: z.boolean().default(false),
@@ -95,21 +92,17 @@ export async function POST(request: NextRequest) {
     const result = await query(
       `INSERT INTO taxi_packages (
         package_name, package_code, description, category,
-        base_price, price_per_km, included_km, max_passengers,
-        duration_hours, features, vehicle_types, popular,
-        is_active, image, terms_conditions
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        price_per_km, max_passengers, features, vehicle_types, 
+        popular, is_active, image, terms_conditions
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *`,
       [
         validatedData.packageName,
         validatedData.packageCode,
         validatedData.description || null,
         validatedData.category,
-        validatedData.basePrice,
         validatedData.pricePerKm,
-        validatedData.includedKm,
         validatedData.maxPassengers,
-        validatedData.durationHours,
         JSON.stringify(validatedData.features),
         JSON.stringify(validatedData.vehicleTypes),
         validatedData.popular,

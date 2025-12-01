@@ -10,7 +10,6 @@ interface VehicleCardProps {
     id: number
     name: string
     category: string
-    base_price: number
     price_per_km: number
     image: string
     seats: number
@@ -34,7 +33,7 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle, estimatedDistance = 0, searchParams }: VehicleCardProps) {
   const distancePrice = estimatedDistance * vehicle.price_per_km
-  const totalEstimate = vehicle.base_price + distancePrice
+  const totalEstimate =  distancePrice
 
   // Build booking URL with all params
   const bookingUrl = searchParams
@@ -123,7 +122,7 @@ export default function VehicleCard({ vehicle, estimatedDistance = 0, searchPara
                 </span>
               </div>
               <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
-                <p>Base: Rs. {vehicle.base_price.toLocaleString()}</p>
+              
                 <p>Distance ({estimatedDistance.toFixed(1)}km): Rs. {distancePrice.toLocaleString()}</p>
               </div>
             </div>

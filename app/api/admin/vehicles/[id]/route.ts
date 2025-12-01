@@ -6,7 +6,6 @@ import { z } from 'zod'
 const updateVehicleSchema = z.object({
   name: z.string().min(2).max(255).optional(),
   category: z.enum(['economy', 'standard', 'luxury', 'van']).optional(),
-  basePrice: z.number().positive().optional(),
   pricePerKm: z.number().positive().optional(),
   seats: z.number().int().positive().optional(),
   luggage: z.number().int().min(0).optional(),
@@ -28,7 +27,7 @@ function verifyAdmin(request: NextRequest) {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const admin = verifyAdmin(request)
@@ -39,7 +38,8 @@ export async function PUT(
       )
     }
 
-    const vehicleId = parseInt(params.id)
+    const { id } = await params
+    const vehicleId = parseInt(id)
     if (isNaN(vehicleId)) {
       return NextResponse.json(
         { success: false, error: 'Invalid vehicle ID' },
@@ -55,7 +55,6 @@ export async function PUT(
     let paramIndex = 1
 
     const fieldMapping: Record<string, string> = {
-      basePrice: 'base_price',
       pricePerKm: 'price_per_km',
       isAvailable: 'is_available',
       fuelType: 'fuel_type',

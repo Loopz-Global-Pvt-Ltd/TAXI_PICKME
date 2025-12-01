@@ -6,7 +6,6 @@ import { z } from 'zod'
 const createVehicleSchema = z.object({
   name: z.string().min(2).max(255),
   category: z.enum(['economy', 'standard', 'luxury', 'van']),
-  basePrice: z.number().positive(),
   pricePerKm: z.number().positive(),
   seats: z.number().int().positive(),
   luggage: z.number().int().min(0),
@@ -86,15 +85,14 @@ export async function POST(request: NextRequest) {
 
     const result = await query(
       `INSERT INTO vehicles (
-        name, category, base_price, price_per_km, seats, luggage,
+        name, category, price_per_km, seats, luggage,
         image, features, description, rating, reviews, is_available,
         fuel_type, transmission
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING *`,
       [
         validatedData.name,
         validatedData.category,
-        validatedData.basePrice,
         validatedData.pricePerKm,
         validatedData.seats,
         validatedData.luggage,

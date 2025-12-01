@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server' 
+import { NextRequest, NextResponse } from 'next/server'  
 import { query } from '@/lib/db'
 import { z } from 'zod'
 
@@ -35,39 +35,28 @@ export async function GET(request: NextRequest) {
 
     let queryText = `
       SELECT 
-        id, name, category, base_price, price_per_km, image,
+        id, name, category, price_per_km, image,
         seats, luggage, rating, reviews, features, description,
         is_available, fuel_type, transmission,
         created_at, updated_at
       FROM vehicles
-      WHERE is_available = true
+      WHERE 
     `
     const queryParams: any[] = []
     let paramIndex = 1
 
     // Filter by category
     if (validatedParams.category) {
-      queryText += ` AND category = $${paramIndex}`
+      queryText += `category = $${paramIndex}`
       queryParams.push(validatedParams.category)
       paramIndex++
     }
 
-    // Filter by base price range
-    if (validatedParams.minPrice !== undefined) {
-      queryText += ` AND base_price >= $${paramIndex}`
-      queryParams.push(validatedParams.minPrice)
-      paramIndex++
-    }
 
-    if (validatedParams.maxPrice !== undefined) {
-      queryText += ` AND base_price <= $${paramIndex}`
-      queryParams.push(validatedParams.maxPrice)
-      paramIndex++
-    }
 
     // Filter by passenger capacity
     if (validatedParams.passengers !== undefined) {
-      queryText += ` AND seats >= $${paramIndex}`
+      queryText += ` seats >= $${paramIndex}`
       queryParams.push(validatedParams.passengers)
       paramIndex++
     }
@@ -75,7 +64,7 @@ export async function GET(request: NextRequest) {
     // Sorting
     switch (validatedParams.sortBy) {
       case 'price-high':
-        queryText += ' ORDER BY base_price DESC, price_per_km DESC'
+        queryText += ' ORDER BY  price_per_km DESC'
         break
       case 'rating':
         queryText += ' ORDER BY rating DESC, reviews DESC'
@@ -85,10 +74,14 @@ export async function GET(request: NextRequest) {
         break
       case 'price-low':
       default:
-        queryText += ' ORDER BY base_price ASC, price_per_km ASC'
+        queryText += ' ORDER BY  price_per_km ASC'
     }
 
+    // console.log('🔍 Executing query:', { queryText, queryParams })
+
     const result = await query(queryText, queryParams)
+
+    console.log(`✅ Fetched ${result.rowCount} vehicles`)
 
 
     // Transform JSONB features field

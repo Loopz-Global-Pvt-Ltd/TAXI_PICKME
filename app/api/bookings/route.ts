@@ -18,17 +18,16 @@ const createBookingSchema = z.object({
     message: 'Pickup date must be today or in the future',
   }),
   pickupTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
-  numberOfDays: z.number().int().min(1).max(90),
-  estimatedDistanceKm: z.number().min(0).max(10000).optional().default(0),
+  estimatedDistanceKm: z.number().min(1).max(10000),
   specialRequests: z.string().max(1000).optional(),
 })
 
 const bookingSearchSchema = z.object({
-  email: z.string().email().optional(),
-  status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']).optional(),
-  bookingReference: z.string().optional(),
-  limit: z.string().optional().transform(val => val ? parseInt(val) : 50),
-  offset: z.string().optional().transform(val => val ? parseInt(val) : 0),
+  email: z.string().email().optional().nullable(),
+  status: z.string().optional().nullable(),
+  bookingReference: z.string().optional().nullable(),
+  limit: z.string().transform((val) => parseInt(val) || 10).pipe(z.number().min(1).max(100)).optional().default('10'),
+  offset: z.string().transform((val) => parseInt(val) || 0).pipe(z.number().min(0)).optional().default('0'),
 })
 
 function generateBookingReference(): string {
@@ -39,12 +38,10 @@ function generateBookingReference(): string {
 
 async function calculateBookingPrice(
   vehicleId: number,
-  numberOfDays: number,
   estimatedDistanceKm: number
 ) {
-  // Get vehicle pricing
   const vehicleResult = await query(
-    'SELECT base_price, price_per_km, category FROM vehicles WHERE id = $1',
+    'SELECT price_per_km, category, name FROM vehicles WHERE id = $1',
     [vehicleId]
   )
 
@@ -53,31 +50,12 @@ async function calculateBookingPrice(
   }
 
   const vehicle = vehicleResult.rows[0]
-  const basePrice = vehicle.base_price * numberOfDays
-  const distancePrice = estimatedDistanceKm * vehicle.price_per_km
-  const subtotal = basePrice + distancePrice
-
-  // Get discount
-  const discountResult = await query(
-    `SELECT discount_percentage FROM pricing_rules 
-     WHERE vehicle_category = $1 
-     AND $2 >= COALESCE(min_days, 0) 
-     AND $2 <= COALESCE(max_days, 999999)
-     ORDER BY discount_percentage DESC
-     LIMIT 1`,
-    [vehicle.category, numberOfDays]
-  )
-
-  const discountPercentage = discountResult.rows[0]?.discount_percentage || 0
-  const discount = (subtotal * discountPercentage) / 100
-  const totalPrice = subtotal - discount
+  const totalPrice = estimatedDistanceKm * vehicle.price_per_km
 
   return {
-    basePrice,
-    distancePrice,
-    discount,
-    totalPrice,
-    discountPercentage,
+    pricePerKm: vehicle.price_per_km,
+    distancePrice: totalPrice,
+    totalPrice: totalPrice,
   }
 }
 
@@ -86,25 +64,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = createBookingSchema.parse(body)
 
-    // Calculate pricing
     const pricing = await calculateBookingPrice(
       validatedData.vehicleId,
-      validatedData.numberOfDays,
       validatedData.estimatedDistanceKm
     )
 
-    // Create booking in transaction
     const booking = await transaction(async (client) => {
       const bookingReference = generateBookingReference()
 
-      // Insert booking
       const result = await client.query(
         `INSERT INTO bookings (
           booking_reference, vehicle_id, full_name, email, phone,
           pickup_location, dropoff_location, pickup_date, pickup_time,
-          number_of_days, estimated_distance_km, base_price, distance_price,
+          estimated_distance_km, distance_price,
           total_price, special_requests, status, payment_status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
         RETURNING *`,
         [
           bookingReference,
@@ -116,9 +90,7 @@ export async function POST(request: NextRequest) {
           validatedData.dropoffLocation,
           validatedData.pickupDate,
           validatedData.pickupTime,
-          validatedData.numberOfDays,
           validatedData.estimatedDistanceKm,
-          pricing.basePrice,
           pricing.distancePrice,
           pricing.totalPrice,
           validatedData.specialRequests || null,
@@ -127,7 +99,6 @@ export async function POST(request: NextRequest) {
         ]
       )
 
-      // Get vehicle details for response
       const vehicleResult = await client.query(
         'SELECT name, category, image FROM vehicles WHERE id = $1',
         [validatedData.vehicleId]
@@ -143,14 +114,10 @@ export async function POST(request: NextRequest) {
       success: true,
       data: booking,
       pricing: {
-        ...pricing,
-        breakdown: {
-          basePrice: pricing.basePrice,
-          distancePrice: pricing.distancePrice,
-          discount: pricing.discount,
-          discountPercentage: pricing.discountPercentage,
-          total: pricing.totalPrice,
-        },
+        pricePerKm: pricing.pricePerKm,
+        distanceKm: validatedData.estimatedDistanceKm,
+        distancePrice: pricing.distancePrice,
+        total: pricing.totalPrice,
       },
       message: 'Booking created successfully',
     }, { status: 201 })

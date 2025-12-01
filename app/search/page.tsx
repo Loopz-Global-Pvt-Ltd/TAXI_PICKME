@@ -1,4 +1,4 @@
-// app/search/page.tsx
+// app/search/page.tsx 
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
@@ -17,7 +17,6 @@ interface Vehicle {
   id: number
   name: string
   category: string
-  base_price: number
   price_per_km: number
   image: string
   seats: number
@@ -66,7 +65,7 @@ export default function SearchPage() {
           // Calculate estimated price for each vehicle
           const vehiclesWithPrices = data.data.map((vehicle: Vehicle) => {
             const distancePrice = distance * vehicle.price_per_km
-            const estimatedTotalPrice = vehicle.base_price + distancePrice
+            const estimatedTotalPrice =  distancePrice
 
             return {
               ...vehicle,
@@ -88,6 +87,7 @@ export default function SearchPage() {
 
   const filteredVehicles = useMemo(() => {
     let result = vehicles
+    console.log("All vehicles:", result)
 
     // Filter by category
     if (selectedCategory) {
@@ -95,9 +95,9 @@ export default function SearchPage() {
     }
 
     // Filter by price range (using estimated total price)
-    result = result.filter(
-      (v) => v.estimatedTotalPrice >= priceRange[0] && v.estimatedTotalPrice <= priceRange[1]
-    )
+    // result = result.filter(
+    //   (v) => v.estimatedTotalPrice >= priceRange[0] && v.estimatedTotalPrice <= priceRange[1]
+    // )
 
     // Sort
     switch (sortBy) {

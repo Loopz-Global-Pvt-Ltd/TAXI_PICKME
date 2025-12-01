@@ -1,4 +1,4 @@
-"use client"
+"use client" 
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -264,14 +264,14 @@ export default function VehiclesPage() {
                   </div>
 
                   <div className="pt-3 border-t">
-                  <div className="flex items-baseline gap-2">
+                    <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-bold text-gray-900">
-                        LKR {Number(vehicle.base_price).toFixed(2)}
+                        LKR {vehicle.price_per_km.toFixed(2)}
                       </span>
-                      <span className="text-sm text-gray-600">/day</span>
+                      <span className="text-sm text-gray-600">/km</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      + LKR {Number(vehicle.price_per_km).toFixed(2)}/km
+                    <p className="text-xs text-gray-500 mt-1 bg-blue-50 border border-blue-200 rounded px-2 py-1">
+                      Total = {vehicle.price_per_km.toFixed(2)} × Distance (km)
                     </p>
                   </div>
                 </div>

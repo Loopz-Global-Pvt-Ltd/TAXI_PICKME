@@ -117,7 +117,6 @@ const startPeriodicHealthCheck = () => {
   console.log('🏥 Starting periodic database health checks (every 5 minutes)...')
   
   healthCheckTimer = setInterval(async () => {
-    console.log('🏥 Running periodic database health check...')
     const isHealthy = await checkConnection()
     if (!isHealthy) {
       console.error('⚠️ Periodic health check failed - database may be down!')

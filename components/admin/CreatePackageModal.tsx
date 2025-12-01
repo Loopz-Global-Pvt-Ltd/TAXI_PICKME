@@ -10,11 +10,8 @@ interface TaxiPackage {
   package_code: string
   description: string
   category: string
-  base_price: number
   price_per_km: number
-  included_km: number
   max_passengers: number
-  duration_hours: number
   features: string[]
   popular: boolean
   is_active: boolean
@@ -36,11 +33,8 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
     package_code: '',
     description: '',
     category: 'economy',
-    base_price: 0,
     price_per_km: 0,
-    included_km: 0,
     max_passengers: 4,
-    duration_hours: 1,
     features: [],
     popular: false,
     is_active: true,
@@ -75,11 +69,8 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
           packageCode: formData.package_code,
           description: formData.description,
           category: formData.category,
-          basePrice: parseFloat(formData.base_price.toString()),
           pricePerKm: parseFloat(formData.price_per_km.toString()),
-          includedKm: parseInt(formData.included_km.toString()),
           maxPassengers: parseInt(formData.max_passengers.toString()),
-          durationHours: parseInt(formData.duration_hours.toString()),
           features: formData.features,
           popular: formData.popular,
           isActive: formData.is_active,
@@ -206,47 +197,6 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Base Price (LKR) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.base_price}
-                onChange={(e) => setFormData({ ...formData, base_price: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Price per KM (LKR) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.price_per_km}
-                onChange={(e) => setFormData({ ...formData, price_per_km: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Included KM *
-              </label>
-              <input
-                type="number"
-                value={formData.included_km}
-                onChange={(e) => setFormData({ ...formData, included_km: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Max Passengers *
               </label>
               <input
@@ -257,19 +207,24 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
                 required
               />
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Duration (Hours) *
-              </label>
-              <input
-                type="number"
-                value={formData.duration_hours}
-                onChange={(e) => setFormData({ ...formData, duration_hours: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
-              />
-            </div>
+          {/* Pricing - Only Per KM */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Price per KM (LKR) *
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={formData.price_per_km}
+              onChange={(e) => setFormData({ ...formData, price_per_km: parseFloat(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Total price will be calculated as: Price per KM × Distance
+            </p>
           </div>
 
           {/* Features */}

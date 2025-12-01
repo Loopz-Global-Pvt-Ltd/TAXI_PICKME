@@ -8,7 +8,6 @@ interface Vehicle {
   id?: number
   name: string
   category: string
-  base_price: number
   price_per_km: number
   seats: number
   luggage: number
@@ -34,7 +33,6 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
   const [formData, setFormData] = useState<Vehicle>({
     name: '',
     category: 'economy',
-    base_price: 0,
     price_per_km: 0,
     seats: 4,
     luggage: 2,
@@ -73,7 +71,6 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
         body: JSON.stringify({
           name: formData.name,
           category: formData.category,
-          basePrice: parseFloat(formData.base_price.toString()),
           pricePerKm: parseFloat(formData.price_per_km.toString()),
           seats: parseInt(formData.seats.toString()),
           luggage: parseInt(formData.luggage.toString()),
@@ -188,35 +185,22 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
             />
           </div>
 
-          {/* Pricing */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Base Price (LKR) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.base_price}
-                onChange={(e) => setFormData({ ...formData, base_price: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Price per KM (LKR) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.price_per_km}
-                onChange={(e) => setFormData({ ...formData, price_per_km: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
-              />
-            </div>
+          {/* Pricing - Only Per KM */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Price per KM (LKR) *
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={formData.price_per_km}
+              onChange={(e) => setFormData({ ...formData, price_per_km: parseFloat(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Total price will be calculated as: Price per KM × Distance
+            </p>
           </div>
 
           {/* Capacity */}

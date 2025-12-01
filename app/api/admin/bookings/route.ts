@@ -4,12 +4,12 @@ import { verifyToken } from '@/lib/auth/jwt'
 import { z } from 'zod'
 
 const bookingSearchSchema = z.object({
-  status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']).optional(),
-  paymentStatus: z.enum(['unpaid', 'paid', 'refunded']).optional(),
-  fromDate: z.string().optional(),
-  toDate: z.string().optional(),
-  limit: z.string().optional().transform(val => val ? parseInt(val) : 50),
-  offset: z.string().optional().transform(val => val ? parseInt(val) : 0),
+  status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']).nullable().optional(),
+  paymentStatus: z.enum(['unpaid', 'paid', 'refunded']).nullable().optional(),
+  fromDate: z.string().nullable().optional(),
+  toDate: z.string().nullable().optional(),
+  limit: z.string().nullable().optional().transform(val => val ? parseInt(val) : 50),
+  offset: z.string().nullable().optional().transform(val => val ? parseInt(val) : 0),
 })
 
 function verifyAdmin(request: NextRequest) {
@@ -31,12 +31,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     
     const validatedParams = bookingSearchSchema.parse({
-      status: searchParams.get('status'),
-      paymentStatus: searchParams.get('paymentStatus'),
-      fromDate: searchParams.get('fromDate'),
-      toDate: searchParams.get('toDate'),
-      limit: searchParams.get('limit'),
-      offset: searchParams.get('offset'),
+      status: searchParams.get('status') || null,
+      paymentStatus: searchParams.get('paymentStatus') || null,
+      fromDate: searchParams.get('fromDate') || null,
+      toDate: searchParams.get('toDate') || null,
+      limit: searchParams.get('limit') || null,
+      offset: searchParams.get('offset') || null,
     })
 
     let queryText = `
