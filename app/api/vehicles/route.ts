@@ -12,16 +12,10 @@ const vehicleSearchSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🚗 Fetching vehicles...')
+
     const { searchParams } = new URL(request.url)
     
-    console.log('📋 Raw search params:', {
-      category: searchParams.get('category'),
-      minPrice: searchParams.get('minPrice'),
-      maxPrice: searchParams.get('maxPrice'),
-      passengers: searchParams.get('passengers'),
-      sortBy: searchParams.get('sortBy'),
-    })
+
     
     const validatedParams = vehicleSearchSchema.parse({
       category: searchParams.get('category'),
@@ -31,7 +25,7 @@ export async function GET(request: NextRequest) {
       sortBy: searchParams.get('sortBy') as 'price-low' | 'price-high' | 'rating' | 'popularity' | null,
     })
 
-    console.log('✅ Validated params:', validatedParams)
+  
 
     let queryText = `
       SELECT 
@@ -40,7 +34,7 @@ export async function GET(request: NextRequest) {
         is_available, fuel_type, transmission,
         created_at, updated_at
       FROM vehicles
-      WHERE 
+      WHERE is_available = true AND
     `
     const queryParams: any[] = []
     let paramIndex = 1

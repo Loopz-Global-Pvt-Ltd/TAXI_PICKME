@@ -267,7 +267,7 @@ export default function BookingPage() {
                       <Image src={vehicle.image} alt={vehicle.name} fill className="object-cover" />
                     ) : (
                       <div className="flex items-center justify-center h-full">
-                        <Car className="h-16 w-16 text-gray-400" />
+                        <Card className="h-16 w-16 text-gray-400" />
                       </div>
                     )}
                   </div>
@@ -308,44 +308,49 @@ export default function BookingPage() {
               <Card className="mb-8 p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-foreground mb-2">Booking Details</h2>
                 
-                <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg mb-6">
+                <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-lg p-4 mb-6">
+                  <div className="flex items-start gap-2 mb-4">
+                  <Navigation className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Route Information</h3>
+                  </div>
+                  <div className="space-y-3">
                   <div className="flex items-start gap-2">
-                    <Navigation className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs sm:text-sm font-semibold text-green-900 mb-1.5">Route Information</h4>
-                      <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                            <MapPin size={12} />
-                            Pickup
-                          </p>
-                          <p className="text-sm font-semibold text-foreground">{tripData.pickupLocation || "Not specified"}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {tripData.pickupDate && tripData.pickupTime 
-                              ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
-                              : "Date & time not specified"}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                            <MapPin size={12} />
-                            Dropoff
-                          </p>
-                          <p className="text-sm font-semibold text-foreground">{tripData.dropoffLocation || "Not specified"}</p>
-                        </div>
-                      </div>
+                    <MapPin className="h-5 w-5 text-green-500 mt-0.5" />
+                    <div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Pickup Location</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{tripData.pickupLocation || "Not specified"}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                      {tripData.pickupDate && tripData.pickupTime 
+                      ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
+                      : "Date & time not specified"}
+                    </p>
                     </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-5 w-5 text-red-500 mt-0.5" />
+                    <div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Dropoff Location</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{tripData.dropoffLocation || "Not specified"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Navigation className="h-5 w-5 text-gray-400" />
+                    <div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Estimated Distance</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{distanceKm} km</p>
+                    </div>
+                  </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  {/* Base Rate */}
+                  {/*  Rate */}
                   <div className="flex justify-between items-center pb-4 border-b border-border">
                     <div>
                       <p className="text-sm font-medium text-foreground">Rate per KM</p>
                       <p className="text-xs text-muted-foreground capitalize">{vehicle.category} Vehicle</p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">Rs. {vehicle.price_per_km.toLocaleString()}</p>
+                    <p className="text-lg font-semibold text-foreground">Rs. {Number(vehicle.price_per_km).toFixed(2)}</p>
                   </div>
 
                   {/* Distance */}
@@ -369,7 +374,7 @@ export default function BookingPage() {
                         Rs. {vehicle.price_per_km.toLocaleString()} × {distanceKm} km
                       </p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">Rs. {totalPrice.toLocaleString()}</p>
+                    <p className="text-lg font-semibold text-foreground">Rs. {Number(totalPrice).toFixed(2)}</p>
                   </div>
 
                   {/* Total */}
@@ -378,7 +383,7 @@ export default function BookingPage() {
                       <p className="text-lg font-bold text-foreground">Total Amount</p>
                       <p className="text-xs text-muted-foreground">All inclusive</p>
                     </div>
-                    <p className="text-2xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-primary">Rs. {Number(totalPrice).toFixed(2)}</p>
                   </div>
                 </div>
               </Card>

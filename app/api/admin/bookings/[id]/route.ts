@@ -17,7 +17,7 @@ function verifyAdmin(request: NextRequest) {
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const admin = verifyAdmin(request)
@@ -28,7 +28,8 @@ export async function PATCH(
       )
     }
 
-    const bookingId = parseInt(params.id)
+    const { id } = await params
+    const bookingId = parseInt(id)
     
     if (isNaN(bookingId)) {
       return NextResponse.json(

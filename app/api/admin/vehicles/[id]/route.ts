@@ -82,13 +82,24 @@ export async function PUT(
       )
     }
 
+
     values.push(vehicleId)
 
-    const result = await query(
-      `UPDATE vehicles 
+    const sqlQuery = `UPDATE vehicles 
        SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP
        WHERE id = $${paramIndex}
-       RETURNING *`,
+       RETURNING *`
+    
+    // Print the query and values
+    console.log('SQL Query:', sqlQuery)
+    console.log('Values:', values)
+    console.log('Formatted Query:', sqlQuery.replace(/\$(\d+)/g, (_, i) => {
+      const value = values[parseInt(i) - 1]
+      return typeof value === 'string' ? `'${value}'` : value
+    }))
+
+    const result = await query(
+      sqlQuery,
       values
     )
 
@@ -101,7 +112,9 @@ export async function PUT(
 
     const updatedVehicle = {
       ...result.rows[0],
-      features: JSON.parse(result.rows[0].features || '[]'),
+      features: typeof result.rows[0].features === 'string' 
+        ? JSON.parse(result.rows[0].features) 
+        : result.rows[0].features || [],
     }
 
     return NextResponse.json({
