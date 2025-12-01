@@ -1,4 +1,4 @@
-"use client" 
+"use client"  
 
 import type React from "react"
 
@@ -13,121 +13,32 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import OnePayButton from "@/components/payment/OnePayButton"
-import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User, Loader2, CheckCircle , Navigation} from "lucide-react"
-// Mock vehicle data (same as in search page)
-const MOCK_VEHICLES = [
-  {
-    id: 1,
-    name: "Toyota Corolla",
-    category: "Economy",
-    price: 5500,
-    image: "/placeholder.svg?key=mpvw6",
-    seats: 4,
-    luggage: 2,
-    rating: 4.8,
-    reviews: 145,
-    features: ["Air Conditioning", "Power Steering", "Automatic"],
-    description: "Comfortable and reliable economy sedan perfect for airport transfers and city tours.",
-  },
-  {
-    id: 2,
-    name: "Toyota Prius",
-    category: "Budget",
-    price: 3500,
-    image: "/placeholder.svg?key=m7ius",
-    seats: 4,
-    luggage: 2,
-    rating: 4.6,
-    reviews: 89,
-    features: ["Eco-Friendly", "Air Conditioning", "Manual"],
-    description: "Eco-friendly hybrid vehicle with excellent fuel efficiency.",
-  },
-  {
-    id: 3,
-    name: "Honda Civic",
-    category: "Comfort",
-    price: 6500,
-    image: "/placeholder.svg?key=za5un",
-    seats: 4,
-    luggage: 3,
-    rating: 4.7,
-    reviews: 156,
-    features: ["Leather Seats", "Climate Control", "Automatic"],
-    description: "Premium comfort sedan with advanced features and smooth ride quality.",
-  },
-  {
-    id: 4,
-    name: "Toyota Prado",
-    category: "Premium",
-    price: 9500,
-    image: "/placeholder.svg?key=j3zqq",
-    seats: 7,
-    luggage: 4,
-    rating: 4.9,
-    reviews: 203,
-    features: ["Luxury Interior", "WiFi", "Premium Sound"],
-    description: "Executive luxury SUV perfect for business and premium travel experiences.",
-  },
-  {
-    id: 5,
-    name: "Hiace Van",
-    category: "Van",
-    price: 8500,
-    image: "/placeholder.svg?key=pxuvy",
-    seats: 10,
-    luggage: 6,
-    rating: 4.5,
-    reviews: 67,
-    features: ["Spacious", "Air Conditioning", "Comfortable"],
-    description: "Large capacity van ideal for group tours and family travel.",
-  },
-  {
-    id: 6,
-    name: "Suzuki Swift",
-    category: "Budget",
-    price: 4200,
-    image: "/placeholder.svg?key=f0jzp",
-    seats: 4,
-    luggage: 2,
-    rating: 4.4,
-    reviews: 112,
-    features: ["Fuel Efficient", "Manual", "Compact"],
-    description: "Compact and fuel-efficient vehicle perfect for budget travelers.",
-  },
-  {
-    id: 7,
-    name: "Nissan X-Trail",
-    category: "Premium",
-    price: 10500,
-    image: "/placeholder.svg?key=u9ye9",
-    seats: 5,
-    luggage: 4,
-    rating: 4.8,
-    reviews: 178,
-    features: ["All-Wheel Drive", "Panoramic Roof", "Leather Seats"],
-    description: "Premium SUV with all-wheel drive capabilities and luxury features.",
-  },
-  {
-    id: 8,
-    name: "Toyota Fortuner",
-    category: "Premium",
-    price: 12500,
-    image: "/placeholder.svg?key=5hboi",
-    seats: 7,
-    luggage: 5,
-    rating: 4.9,
-    reviews: 234,
-    features: ["Executive Interior", "WiFi", "Premium Entertainment"],
-    description: "Top-tier executive SUV with premium amenities and maximum comfort.",
-  },
-]
+import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User, Loader2, CheckCircle, Navigation} from "lucide-react"
+
+interface Vehicle {
+  id: number
+  name: string
+  category: string
+  price_per_km: number
+  image: string
+  seats: number
+  luggage: number
+  rating: number
+  reviews: number
+  features: string[]
+  description: string
+  is_available: boolean
+  fuel_type: string
+  transmission: string
+}
 
 export default function BookingPage() {
   const params = useParams()
   const router = useRouter()
   const vehicleId = Number.parseInt(params.id as string)
 
-  const vehicle = MOCK_VEHICLES.find((v) => v.id === vehicleId)
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null)
+  const [isLoadingVehicle, setIsLoadingVehicle] = useState(true)
 
   const [tripData, setTripData] = useState({
     pickupLocation: "",
@@ -150,8 +61,37 @@ export default function BookingPage() {
   const [bookingCreated, setBookingCreated] = useState(false)
   const [error, setError] = useState("")
 
+  // Fetch vehicle data
   useEffect(() => {
-    // Get trip data from URL params
+    const fetchVehicle = async () => {
+      try {
+        const response = await fetch(`/api/vehicles/${vehicleId}`)
+        const data = await response.json()
+
+        if (data.success) {
+          setVehicle({
+            ...data.data,
+            price_per_km: Number(data.data.price_per_km),
+            rating: Number(data.data.rating)
+          })
+        } else {
+          setError('Vehicle not found')
+        }
+      } catch (err) {
+        console.error('Error fetching vehicle:', err)
+        setError('Failed to load vehicle details')
+      } finally {
+        setIsLoadingVehicle(false)
+      }
+    }
+
+    if (vehicleId) {
+      fetchVehicle()
+    }
+  }, [vehicleId])
+
+  // Get trip data from URL params
+  useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
     const urlDistance = searchParams.get('estimatedDistance')
     const urlPickup = searchParams.get('pickup')
@@ -190,7 +130,7 @@ export default function BookingPage() {
 
       // Calculate total price based on distance
       const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
-      const totalPrice = vehicle.price * distanceKm
+      const totalPrice = vehicle.price_per_km * distanceKm
 
       // Create booking via API
       const response = await fetch('/api/bookings', {
@@ -207,6 +147,7 @@ export default function BookingPage() {
           pickupTime: tripData.pickupTime,
           estimatedDistanceKm: distanceKm,
           specialRequests: formData.specialRequests,
+
         }),
       })
 
@@ -240,6 +181,25 @@ export default function BookingPage() {
     setError('Payment failed. Please try again.')
   }
 
+  // Loading state
+  if (isLoadingVehicle) {
+    return (
+      <main className="min-h-screen bg-background">
+        <Header />
+        <section className="py-12">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center py-12">
+              <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+              <p className="text-muted-foreground">Loading vehicle details...</p>
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    )
+  }
+
+  // Vehicle not found
   if (!vehicle) {
     return (
       <main className="min-h-screen bg-background">
@@ -248,7 +208,7 @@ export default function BookingPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center py-12">
               <h1 className="text-2xl font-bold text-foreground mb-4">Vehicle Not Found</h1>
-              <p className="text-muted-foreground mb-6">The vehicle you're looking for doesn't exist.</p>
+              <p className="text-muted-foreground mb-6">The vehicle you're looking for doesn't exist or is no longer available.</p>
               <Link href="/">
                 <Button>Back to Search</Button>
               </Link>
@@ -260,8 +220,29 @@ export default function BookingPage() {
     )
   }
 
+  // Vehicle not available
+  if (!vehicle.is_available) {
+    return (
+      <main className="min-h-screen bg-background">
+        <Header />
+        <section className="py-12">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center py-12">
+              <h1 className="text-2xl font-bold text-foreground mb-4">Vehicle Unavailable</h1>
+              <p className="text-muted-foreground mb-6">This vehicle is currently not available for booking.</p>
+              <Link href="/">
+                <Button>Browse Other Vehicles</Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    )
+  }
+
   const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
-  const totalPrice = vehicle.price * distanceKm
+  const totalPrice = vehicle.price_per_km * distanceKm
 
   return (
     <main className="min-h-screen bg-background">
@@ -282,11 +263,17 @@ export default function BookingPage() {
                 {/* Vehicle Info */}
                 <div className="mb-6 pb-6 border-b border-border">
                   <div className="relative w-full h-40 bg-muted rounded-lg mb-4 overflow-hidden">
-                    <Image src={vehicle.image || "/placeholder.svg"} alt={vehicle.name} fill className="object-cover" />
+                    {vehicle.image ? (
+                      <Image src={vehicle.image} alt={vehicle.name} fill className="object-cover" />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <Car className="h-16 w-16 text-gray-400" />
+                      </div>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">Vehicle</p>
                   <p className="font-semibold text-foreground">{vehicle.name}</p>
-                  <p className="text-xs text-muted-foreground">{vehicle.category}</p>
+                  <p className="text-xs text-muted-foreground capitalize">{vehicle.category}</p>
                   
                   {/* Specs */}
                   <div className="grid grid-cols-2 gap-2 mt-3 p-3 bg-muted rounded-lg">
@@ -300,22 +287,6 @@ export default function BookingPage() {
                     </div>
                   </div>
                 </div>
-
-                {/* Pricing Breakdown */}
-                {/* <div className="space-y-3 mb-6 pb-6 border-b border-border">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Rate per KM</span>
-                    <span className="font-medium text-foreground">Rs. {vehicle.price.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Distance</span>
-                    <span className="font-medium text-foreground">{distanceKm} km</span>
-                  </div>
-                  <div className="flex justify-between items-center pt-3 border-t">
-                    <span className="text-foreground font-semibold">Total Amount</span>
-                    <span className="text-2xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</span>
-                  </div>
-                </div> */}
 
                 {/* Booking Status */}
                 {bookingCreated && (
@@ -337,44 +308,44 @@ export default function BookingPage() {
               <Card className="mb-8 p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-foreground mb-2">Booking Details</h2>
                 
-
-                <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Navigation className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-xs sm:text-sm font-semibold text-green-900 mb-1.5">Route Information</h4>
-                    <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
-                    <div>
-                        <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                          <MapPin size={12} />
-                          Pickup
-                        </p>
-                        <p className="text-sm font-semibold text-foreground">{tripData.pickupLocation || "Not specified"}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {tripData.pickupDate && tripData.pickupTime 
-                            ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
-                            : "Date & time not specified"}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                          <MapPin size={12} />
-                          Dropoff
-                        </p>
-                        <p className="text-sm font-semibold text-foreground">{tripData.dropoffLocation || "Not specified"}</p>
+                <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg mb-6">
+                  <div className="flex items-start gap-2">
+                    <Navigation className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs sm:text-sm font-semibold text-green-900 mb-1.5">Route Information</h4>
+                      <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+                        <div>
+                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                            <MapPin size={12} />
+                            Pickup
+                          </p>
+                          <p className="text-sm font-semibold text-foreground">{tripData.pickupLocation || "Not specified"}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {tripData.pickupDate && tripData.pickupTime 
+                              ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
+                              : "Date & time not specified"}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                            <MapPin size={12} />
+                            Dropoff
+                          </p>
+                          <p className="text-sm font-semibold text-foreground">{tripData.dropoffLocation || "Not specified"}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+
                 <div className="space-y-4">
                   {/* Base Rate */}
                   <div className="flex justify-between items-center pb-4 border-b border-border">
                     <div>
                       <p className="text-sm font-medium text-foreground">Rate per KM</p>
-                      <p className="text-xs text-muted-foreground">{vehicle.category} Vehicle</p>
+                      <p className="text-xs text-muted-foreground capitalize">{vehicle.category} Vehicle</p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">Rs. {vehicle.price.toLocaleString()}</p>
+                    <p className="text-lg font-semibold text-foreground">Rs. {vehicle.price_per_km.toLocaleString()}</p>
                   </div>
 
                   {/* Distance */}
@@ -390,23 +361,12 @@ export default function BookingPage() {
                     <p className="text-lg font-semibold text-foreground">{distanceKm} km</p>
                   </div>
 
-                  {/* Number of Days */}
-                  {/* {tripData.numberOfDays && parseInt(tripData.numberOfDays) > 1 && (
-                    <div className="flex justify-between items-center pb-4 border-b border-border">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Duration</p>
-                        <p className="text-xs text-muted-foreground">Trip duration</p>
-                      </div>
-                      <p className="text-lg font-semibold text-foreground">{tripData.numberOfDays} day(s)</p>
-                    </div>
-                  )} */}
-
                   {/* Calculation */}
                   <div className="flex justify-between items-center pb-4 border-b border-border">
                     <div>
                       <p className="text-sm font-medium text-foreground">Subtotal</p>
                       <p className="text-xs text-muted-foreground">
-                        Rs. {vehicle.price.toLocaleString()} × {distanceKm} km
+                        Rs. {vehicle.price_per_km.toLocaleString()} × {distanceKm} km
                       </p>
                     </div>
                     <p className="text-lg font-semibold text-foreground">Rs. {totalPrice.toLocaleString()}</p>
@@ -422,8 +382,6 @@ export default function BookingPage() {
                   </div>
                 </div>
               </Card>
-
-
 
               <Card className="p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-foreground mb-2">Customer Details</h2>

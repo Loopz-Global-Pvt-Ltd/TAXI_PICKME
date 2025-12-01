@@ -3,11 +3,14 @@ import { query } from '@/lib/db'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const vehicleId = parseInt(params.id)
-
+    const { id } = await params
+    console.log('Received vehicle ID:', id)
+    const vehicleId = parseInt(id)
+    console.log('Fetching vehicle with ID:', vehicleId)
+    
     if (isNaN(vehicleId)) {
       return NextResponse.json(
         { success: false, error: 'Invalid vehicle ID' },
@@ -17,7 +20,7 @@ export async function GET(
 
     const result = await query(
       `SELECT 
-        id, name, category, base_price, price_per_km, image,
+        id, name, category, price_per_km, image,
         seats, luggage, rating, reviews, features, description,
         is_available, fuel_type, transmission, created_at, updated_at
       FROM vehicles

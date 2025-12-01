@@ -33,7 +33,8 @@ const bookingSearchSchema = z.object({
 function generateBookingReference(): string {
   const timestamp = Date.now().toString(36).toUpperCase()
   const random = Math.random().toString(36).substring(2, 8).toUpperCase()
-  return `TPM-${timestamp}-${random}`
+  const dateTimestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14)
+  return `TPM-${dateTimestamp}-${random}`
 }
 
 async function calculateBookingPrice(
@@ -48,7 +49,7 @@ async function calculateBookingPrice(
   if (vehicleResult.rows.length === 0) {
     throw new Error('Vehicle not found')
   }
-
+  console.log("estimatedDistanceKM :" , estimatedDistanceKm , " vehicle:", vehicleResult.rows[0].price_per_km);
   const vehicle = vehicleResult.rows[0]
   const totalPrice = estimatedDistanceKm * vehicle.price_per_km
 
@@ -76,9 +77,9 @@ export async function POST(request: NextRequest) {
         `INSERT INTO bookings (
           booking_reference, vehicle_id, full_name, email, phone,
           pickup_location, dropoff_location, pickup_date, pickup_time,
-          estimated_distance_km, distance_price,
+          estimated_distance_km,
           total_price, special_requests, status, payment_status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         RETURNING *`,
         [
           bookingReference,
@@ -91,7 +92,6 @@ export async function POST(request: NextRequest) {
           validatedData.pickupDate,
           validatedData.pickupTime,
           validatedData.estimatedDistanceKm,
-          pricing.distancePrice,
           pricing.totalPrice,
           validatedData.specialRequests || null,
           'pending',
@@ -161,7 +161,8 @@ export async function GET(request: NextRequest) {
         v.category as vehicle_category,
         v.image as vehicle_image,
         v.seats as vehicle_seats,
-        v.luggage as vehicle_luggage
+        v.luggage as vehicle_luggage,
+        v.price_per_km as vehicle_price_per_km
       FROM bookings b
       LEFT JOIN vehicles v ON b.vehicle_id = v.id
       WHERE 1=1

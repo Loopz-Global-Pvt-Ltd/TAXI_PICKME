@@ -44,7 +44,8 @@ export async function GET(request: NextRequest) {
         b.*,
         v.name as vehicle_name,
         v.category as vehicle_category,
-        v.image as vehicle_image
+        v.image as vehicle_image,
+        v.price_per_km as vehicle_price_per_km
       FROM bookings b
       LEFT JOIN vehicles v ON b.vehicle_id = v.id
       WHERE 1=1

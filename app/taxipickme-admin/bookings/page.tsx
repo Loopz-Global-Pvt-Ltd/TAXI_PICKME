@@ -28,6 +28,7 @@ interface Booking {
   vehicle_name: string
   vehicle_category: string
   vehicle_image: string
+  vehicle_price_per_km: number
   full_name: string
   email: string
   phone: string
@@ -295,7 +296,7 @@ export default function BookingsPage() {
                 {booking.booking_reference}
                 </div>
                 <div className="text-xs text-gray-500">
-                {new Date(booking.created_at).toLocaleDateString()}
+                {new Date(booking.created_at).toLocaleDateString()} {new Date(booking.created_at).toLocaleTimeString()}
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
@@ -511,7 +512,7 @@ export default function BookingsPage() {
               <p className="text-gray-900 font-medium">Rate per KM</p>
               <p className="text-xs text-gray-500 capitalize">{selectedBooking.vehicle_category} Vehicle</p>
             </div>
-            <span className="font-semibold">Rs. {(selectedBooking.base_price || 0).toFixed(2)}</span>
+            <span className="font-semibold">Rs. {(Number(selectedBooking.vehicle_price_per_km) || 0).toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm pb-2 border-b">
             <div>
