@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
+import { Menu, X , Car} from "lucide-react"
 import { useState } from "react"
 
 export default function Header() {
@@ -13,7 +13,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-17">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">SP</span>
+                <Car className="text-white" size={20} />
             </div>
             <span className="font-bold text-lg text-black hidden sm:inline">TaxiPickMe</span>
           </Link>
