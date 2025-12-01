@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User } from "lucide-react"
-
+import OnePayButton from "@/components/payment/OnePayButton"
+import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User, Loader2, CheckCircle , Navigation} from "lucide-react"
 // Mock vehicle data (same as in search page)
 const MOCK_VEHICLES = [
   {
@@ -146,6 +146,9 @@ export default function BookingPage() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [bookingId, setBookingId] = useState<number | null>(null)
+  const [bookingCreated, setBookingCreated] = useState(false)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     // Get trip data from URL params
@@ -175,28 +178,66 @@ export default function BookingPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
     setIsSubmitting(true)
 
-    // Simulate API call and then redirect to payment gateway
-    setTimeout(() => {
-      // Store booking data in localStorage
-      const bookingData = {
-        vehicle,
-        ...tripData,
-        ...formData,
-        totalPrice: vehicle ? vehicle.price * Number.parseInt(tripData.numberOfDays) : 0,
+    try {
+      if (!vehicle) {
+        throw new Error("Vehicle not found")
       }
-      localStorage.setItem("bookingData", JSON.stringify(bookingData))
-      
-      // TODO: Redirect to OnePay payment gateway
-      // For now, show alert
-      alert('Payment gateway integration pending. Booking data saved.')
+
+      // Calculate total price based on distance
+      const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
+      const totalPrice = vehicle.price * distanceKm
+
+      // Create booking via API
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vehicleId: vehicle.id,
+          fullName: formData.fullName,
+          email: formData.email || 'customer@email.com',
+          phone: formData.phone,
+          pickupLocation: tripData.pickupLocation,
+          dropoffLocation: tripData.dropoffLocation,
+          pickupDate: tripData.pickupDate,
+          pickupTime: tripData.pickupTime,
+          estimatedDistanceKm: distanceKm,
+          specialRequests: formData.specialRequests,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to create booking')
+      }
+
+      // Set booking ID and show payment button
+      setBookingId(data.data.id)
+      setBookingCreated(true)
+
+      console.log('Booking created successfully:', data.data)
+    } catch (err: any) {
+      console.error('Booking error:', err)
+      setError(err.message || 'Failed to create booking')
+    } finally {
       setIsSubmitting(false)
-      
-      // router.push("https://onepay-gateway-url.com/checkout")
-    }, 1500)
+    }
+  }
+
+  const handlePaymentSuccess = (paymentData: any) => {
+    console.log('Payment successful:', paymentData)
+    // Redirect to success page
+    router.push(`/booking/success?ref=${paymentData.transaction_id || bookingId}`)
+  }
+
+  const handlePaymentFail = (failData: any) => {
+    console.log('Payment failed:', failData)
+    setError('Payment failed. Please try again.')
   }
 
   if (!vehicle) {
@@ -219,7 +260,8 @@ export default function BookingPage() {
     )
   }
 
-  const totalPrice = vehicle.price * Number.parseInt(tripData.numberOfDays)
+  const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
+  const totalPrice = vehicle.price * distanceKm
 
   return (
     <main className="min-h-screen bg-background">
@@ -259,7 +301,34 @@ export default function BookingPage() {
                   </div>
                 </div>
 
+                {/* Pricing Breakdown */}
+                {/* <div className="space-y-3 mb-6 pb-6 border-b border-border">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Rate per KM</span>
+                    <span className="font-medium text-foreground">Rs. {vehicle.price.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Distance</span>
+                    <span className="font-medium text-foreground">{distanceKm} km</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-3 border-t">
+                    <span className="text-foreground font-semibold">Total Amount</span>
+                    <span className="text-2xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</span>
+                  </div>
+                </div> */}
 
+                {/* Booking Status */}
+                {bookingCreated && (
+                  <div className="p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-lg flex gap-3 mb-4">
+                    <CheckCircle size={20} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-green-900 dark:text-green-100">Booking Created!</p>
+                      <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+                        Proceed with payment to confirm your booking.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </Card>
             </div>
 
@@ -267,56 +336,107 @@ export default function BookingPage() {
             <div className="lg:col-span-2">
               <Card className="mb-8 p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-foreground mb-2">Booking Details</h2>
-                {/* Trip Details */}
-                <div className="space-y-4 mb-6 pb-6 border-b border-border">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                      <MapPin size={12} />
-                      Pickup
-                    </p>
-                    <p className="text-sm font-semibold text-foreground">{tripData.pickupLocation || "Not specified"}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {tripData.pickupDate && tripData.pickupTime 
-                        ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
-                        : "Date & time not specified"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                      <MapPin size={12} />
-                      Dropoff
-                    </p>
-                    <p className="text-sm font-semibold text-foreground">{tripData.dropoffLocation || "Not specified"}</p>
-                  </div>
-                  {tripData.estimatedDistanceKm && (
+                
+
+                <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Navigation className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs sm:text-sm font-semibold text-green-900 mb-1.5">Route Information</h4>
+                    <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Estimated Distance</p>
-                      <p className="text-sm font-semibold text-foreground">{tripData.estimatedDistanceKm} km</p>
+                        <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                          <MapPin size={12} />
+                          Pickup
+                        </p>
+                        <p className="text-sm font-semibold text-foreground">{tripData.pickupLocation || "Not specified"}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {tripData.pickupDate && tripData.pickupTime 
+                            ? `${tripData.pickupDate} at ${tripData.pickupTime}` 
+                            : "Date & time not specified"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                          <MapPin size={12} />
+                          Dropoff
+                        </p>
+                        <p className="text-sm font-semibold text-foreground">{tripData.dropoffLocation || "Not specified"}</p>
+                      </div>
                     </div>
-                  )}
-                </div>
-
-
-                {/* Total */}
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-foreground font-semibold">Total Amount</span>
-                  <span className="text-3xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</span>
-                </div>
-
-                {/* Rating */}
-                {/* <div className="mt-6 p-4 bg-primary/10 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-1">Customer Rating</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-primary">{vehicle.rating}</span>
-                    <span className="text-xs text-muted-foreground">({vehicle.reviews} reviews)</span>
                   </div>
-                </div> */}
+                </div>
+              </div>
+                <div className="space-y-4">
+                  {/* Base Rate */}
+                  <div className="flex justify-between items-center pb-4 border-b border-border">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Rate per KM</p>
+                      <p className="text-xs text-muted-foreground">{vehicle.category} Vehicle</p>
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">Rs. {vehicle.price.toLocaleString()}</p>
+                  </div>
+
+                  {/* Distance */}
+                  <div className="flex justify-between items-center pb-4 border-b border-border">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Estimated Distance</p>
+                      <p className="text-xs text-muted-foreground">
+                        {tripData.pickupLocation && tripData.dropoffLocation 
+                          ? `${tripData.pickupLocation} → ${tripData.dropoffLocation}`
+                          : "Route distance"}
+                      </p>
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">{distanceKm} km</p>
+                  </div>
+
+                  {/* Number of Days */}
+                  {/* {tripData.numberOfDays && parseInt(tripData.numberOfDays) > 1 && (
+                    <div className="flex justify-between items-center pb-4 border-b border-border">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">Duration</p>
+                        <p className="text-xs text-muted-foreground">Trip duration</p>
+                      </div>
+                      <p className="text-lg font-semibold text-foreground">{tripData.numberOfDays} day(s)</p>
+                    </div>
+                  )} */}
+
+                  {/* Calculation */}
+                  <div className="flex justify-between items-center pb-4 border-b border-border">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Subtotal</p>
+                      <p className="text-xs text-muted-foreground">
+                        Rs. {vehicle.price.toLocaleString()} × {distanceKm} km
+                      </p>
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">Rs. {totalPrice.toLocaleString()}</p>
+                  </div>
+
+                  {/* Total */}
+                  <div className="flex justify-between items-center pt-2">
+                    <div>
+                      <p className="text-lg font-bold text-foreground">Total Amount</p>
+                      <p className="text-xs text-muted-foreground">All inclusive</p>
+                    </div>
+                    <p className="text-2xl font-bold text-primary">Rs. {totalPrice.toLocaleString()}</p>
+                  </div>
+                </div>
               </Card>
+
+
+
               <Card className="p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-foreground mb-2">Customer Details</h2>
                 <p className="text-sm text-muted-foreground mb-6">
                   Need to change trip details? <Link href="/" className="text-primary hover:underline">Go back to search</Link>
                 </p>
+
+                {error && (
+                  <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg flex gap-3">
+                    <AlertCircle size={20} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-900 dark:text-red-100">{error}</p>
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Passenger Information */}
@@ -337,6 +457,7 @@ export default function BookingPage() {
                           onChange={handleChange}
                           placeholder="Enter your full name"
                           required
+                          disabled={bookingCreated}
                           className="mt-2"
                         />
                       </div>
@@ -357,6 +478,7 @@ export default function BookingPage() {
                             onChange={handleChange}
                             placeholder="+94 XX XXX XXXX"
                             required
+                            disabled={bookingCreated}
                             className="mt-2"
                           />
                         </div>
@@ -375,6 +497,7 @@ export default function BookingPage() {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="your.email@example.com"
+                            disabled={bookingCreated}
                             className="mt-2"
                           />
                         </div>
@@ -394,7 +517,8 @@ export default function BookingPage() {
                       onChange={handleChange}
                       placeholder="Any special requirements or requests? (e.g., baby seat, extra luggage, specific route)"
                       rows={4}
-                      className="w-full mt-2 px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-background resize-none"
+                      disabled={bookingCreated}
+                      className="w-full mt-2 px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-background resize-none disabled:opacity-50"
                     />
                   </div>
 
@@ -407,14 +531,36 @@ export default function BookingPage() {
                     </p>
                   </div>
 
-                  {/* Submit Button */}
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg font-semibold rounded-lg"
-                  >
-                    {isSubmitting ? "Processing..." : "Proceed to Payment"}
-                  </Button>
+                  {/* Submit/Payment Buttons */}
+                  {!bookingCreated ? (
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg font-semibold rounded-lg"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Creating Booking...
+                        </>
+                      ) : (
+                        "Create Booking"
+                      )}
+                    </Button>
+                  ) : bookingId ? (
+                    <OnePayButton
+                      bookingId={bookingId}
+                      amount={totalPrice}
+                      customerData={{
+                        firstName: formData.fullName.split(' ')[0] || 'Customer',
+                        lastName: formData.fullName.split(' ').slice(1).join(' ') || 'Name',
+                        phone: formData.phone,
+                        email: formData.email || 'customer@email.com',
+                      }}
+                      onSuccess={handlePaymentSuccess}
+                      onFail={handlePaymentFail}
+                    />
+                  ) : null}
                 </form>
               </Card>
             </div>
