@@ -11,7 +11,7 @@ export default function Hero() {
 
   const slides = [
     {
-      image: "/images/TaxiPickme-Slider-1.webp",
+      image: "/images/TaxiPickme-Slider-1.jpg",
       title: "Sri Lanka's Premier Taxi Service",
       subtitle: "Professional Drivers • Luxury Comfort • Unbeatable Rates",
       highlight: "Book Now & Save 15%",
@@ -208,11 +208,11 @@ export default function Hero() {
           >
             <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl p-4 md:p-8 border-2 border-yellow-400">
               <div className="mb-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-1000 mb-2">
+                {/* <h2 className="text-2xl md:text-3xl font-bold text-gray-1000 mb-2">
                   Book Your Ride Now
-                </h2>
-                <p className="text-gray-700">
-                  Choose your destination and get instant pricing
+                </h2> */}
+                <p className="text-gray-900">
+                Book Your Ride Now
                 </p>
               </div>
               <SearchForm />
