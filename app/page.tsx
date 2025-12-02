@@ -19,7 +19,7 @@ export default function Home() {
       {/* <FeaturedTours /> */}
       <Testimonials />
       <WhyChooseUs />
-      <PopularRoutes />
+      {/* <PopularRoutes /> */}
       <SafetyCommitment />
       <Partnerships />
       <Statistics />

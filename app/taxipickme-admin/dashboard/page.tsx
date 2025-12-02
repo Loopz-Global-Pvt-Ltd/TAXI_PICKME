@@ -116,7 +116,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Link href="/taxipickme-admin/packages">
+            <Link href="">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
                 <Package className="h-8 w-8 text-yellow-500 mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-1">Manage Packages</h3>
