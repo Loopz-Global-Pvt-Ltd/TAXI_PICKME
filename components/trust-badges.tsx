@@ -209,7 +209,7 @@ export default function TrustBadges() {
                 Book Your Ride Now
               </motion.button>
               <motion.a
-                href="tel:+94123456789"
+                href="tel:+94 777 850 529"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-white border-2 border-gray-900 text-gray-900 font-bold rounded-xl shadow-lg hover:bg-gray-50 transition-all"

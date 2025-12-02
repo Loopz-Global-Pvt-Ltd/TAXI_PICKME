@@ -44,7 +44,7 @@ export default function Header() {
           <div className="flex justify-between items-center h-10 text-sm">
             <div className="flex items-center gap-6">
               <motion.a
-                href="tel:+94123456789"
+                href="tel:+94 777 850 529"
                 className="flex items-center gap-2 hover:text-yellow-400 transition-colors"
                 whileHover={{ scale: 1.05 }}
               >
@@ -212,7 +212,7 @@ export default function Header() {
                   {/* Mobile Contact Info */}
                   <div className="pt-4 mt-4 border-t border-gray-200 space-y-3">
                     <a
-                      href="tel:+94123456789"
+                      href="tel:+94 777 850 529"
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                         isScrolled
                           ? "text-gray-700 hover:bg-gray-100"

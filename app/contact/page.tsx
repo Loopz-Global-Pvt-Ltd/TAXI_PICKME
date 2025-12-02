@@ -67,7 +67,7 @@ export default function ContactPage() {
               <h3 className="text-lg font-semibold text-foreground mb-2">Phone</h3>
               <p className="text-muted-foreground mb-3">Call us anytime for immediate assistance</p>
               <a href="tel:+94112345678" className="text-primary font-semibold hover:underline">
-                +94 11 234 5678
+                +94 777 850 529
               </a>
             </Card>
 

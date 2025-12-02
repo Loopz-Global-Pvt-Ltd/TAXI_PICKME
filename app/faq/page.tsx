@@ -184,7 +184,7 @@ export default function FAQPage() {
                 href="tel:+94112345678"
                 className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition font-semibold"
               >
-                Call Us: +94 11 234 5678
+                Call Us: +94 777 850 529
               </a>
               <a
                 href="/contact"

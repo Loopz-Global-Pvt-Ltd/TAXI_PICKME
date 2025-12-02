@@ -14,7 +14,7 @@ const PARTNERS = [
 
 export default function Partnerships() {
   return (
-    <section className="py-16 md:py-24 bg-primary text-primary-foreground">
+    <section className="py-12 md:py-20 bg-primary text-primary-foreground">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -23,7 +23,7 @@ export default function Partnerships() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Trusted by Industry Leaders</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-2">Trusted by Industry Leaders</h2>
           <p className="text-lg opacity-90">Recognized partnerships and certifications</p>
         </motion.div>
 

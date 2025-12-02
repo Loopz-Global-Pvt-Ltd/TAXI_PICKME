@@ -9,6 +9,7 @@ import Statistics from "@/components/statistics"
 import Partnerships from "@/components/partnerships"
 import SafetyCommitment from "@/components/safety-commitment"
 import Footer from "@/components/footer"
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 export default function Home() {
   return (
@@ -21,9 +22,15 @@ export default function Home() {
       <WhyChooseUs />
       {/* <PopularRoutes /> */}
       <SafetyCommitment />
-      <Partnerships />
+      {/* <Partnerships /> */}
       <Statistics />
       <Footer />
+      <WhatsAppButton 
+          phoneNumber="94777850529" // Replace with your actual WhatsApp number
+          message="Hello! I'm interested in learning more about DD Academy Could you please provide more information?"
+          position="bottom-right"
+          showTooltip={true}
+        />
     </main>
   )
 }

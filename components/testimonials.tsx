@@ -107,7 +107,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="relative py-16 md:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-50 overflow-hidden">
+    <section className="relative py-10 md:py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 overflow-hidden">
       {/* Background Decorations */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
