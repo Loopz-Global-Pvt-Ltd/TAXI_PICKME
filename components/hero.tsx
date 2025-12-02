@@ -20,7 +20,7 @@ export default function Hero() {
       image: "/images/TaxiPickme-Slider-4.webp",
       title: "Explore Sri Lanka In Style",
       subtitle: "Island-Wide Coverage • 24/7 Availability • Licensed & Insured",
-      highlight: "Trusted by 10,000+ Travelers",
+      highlight: "Trusted by 1000+ Travelers",
     },
   ]
 

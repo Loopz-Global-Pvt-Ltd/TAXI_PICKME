@@ -177,7 +177,7 @@ export default function SearchForm() {
           {/* Pickup Location */}
           <div className="relative">
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
-              <MapPin className="inline mr-2" size={16} />
+              <MapPin className="inline mr-2" size={20} />
               Pickup Location
             </label>
             <Autocomplete
@@ -200,7 +200,7 @@ export default function SearchForm() {
           {/* Dropoff Location */}
           <div className="relative">
           <label className="block text-sm font-medium text-black mb-2 font-semibold">
-              <MapPin className="inline mr-2" size={16} />
+              <MapPin className="inline mr-2" size={20} />
               Dropoff Location
             </label>
             <Autocomplete
@@ -260,7 +260,7 @@ export default function SearchForm() {
           {/* Pickup Date */}
           <div>
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
-              <Calendar className="inline mr-2" size={16} />
+              <Calendar className="inline mr-2" size={20}/>
               Pickup Date
             </label>
             <input
