@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, X, Car, Phone, Mail, Star, Shield } from "lucide-react"
+import { Menu, X, Car, Phone, Mail, Star, Shield , BookCheck } from "lucide-react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -16,6 +16,17 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const scrollToSearchForm = () => {
+    const searchForm = document.getElementById('search-form-section')
+    if (searchForm) {
+      searchForm.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      })
+    }
+    setIsOpen(false) // Close mobile menu after clicking
+  }
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -38,7 +49,7 @@ export default function Header() {
                 whileHover={{ scale: 1.05 }}
               >
                 <Phone size={14} />
-                <span>+94 123 456 789</span>
+                <span>+94 777 850 529</span>
               </motion.a>
               <motion.a
                 href="mailto:info@taxipickme.com"
@@ -137,8 +148,8 @@ export default function Header() {
 
             {/* CTA Button - Desktop */}
             <div className="hidden lg:flex items-center gap-4">
-              <motion.a
-                href="tel:+94123456789"
+              <motion.button
+                onClick={scrollToSearchForm}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`px-6 py-3 rounded-xl font-bold shadow-lg transition-all ${
@@ -147,9 +158,9 @@ export default function Header() {
                     : "bg-gray-900 text-white hover:bg-gray-800"
                 }`}
               >
-                <Phone className="inline mr-2" size={18} />
+                <BookCheck className="inline mr-2" size={18} />
                 Book Now
-              </motion.a>
+              </motion.button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -209,7 +220,7 @@ export default function Header() {
                       }`}
                     >
                       <Phone size={18} />
-                      <span className="font-medium">+94 123 456 789</span>
+                      <span className="font-medium">+94 777 850 529</span>
                     </a>
                     <a
                       href="mailto:info@taxipickme.com"
@@ -225,14 +236,14 @@ export default function Header() {
                   </div>
 
                   {/* Mobile CTA */}
-                  <motion.a
-                    href="tel:+94123456789"
+                  <motion.button
+                    onClick={scrollToSearchForm}
                     whileTap={{ scale: 0.95 }}
-                    className="block mx-4 mt-4 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-center rounded-xl shadow-lg"
+                    className="block w-full mx-4 mt-4 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-center rounded-xl shadow-lg"
                   >
-                    <Phone className="inline mr-2" size={18} />
+                    <BookCheck className="inline mr-2" size={18} />
                     Book Your Ride Now
-                  </motion.a>
+                  </motion.button>
 
                   {/* Mobile Trust Badges */}
                   <div className="flex items-center justify-center gap-4 pt-4 text-sm">

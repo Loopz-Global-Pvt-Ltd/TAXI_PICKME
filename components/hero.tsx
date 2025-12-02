@@ -199,7 +199,7 @@ export default function Hero() {
         </div>
 
         {/* Middle Section - Search Form */}
-        <div className="px-4 pb-8">
+        <div id="search-form-section" className="px-4 pb-8 scroll-mt-24">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -208,11 +208,8 @@ export default function Hero() {
           >
             <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl p-4 md:p-8 border-2 border-yellow-400">
               <div className="mb-4">
-                {/* <h2 className="text-2xl md:text-3xl font-bold text-gray-1000 mb-2">
+                <p className="text-gray-900 text-xl md:text-2xl font-bold">
                   Book Your Ride Now
-                </h2> */}
-                <p className="text-gray-900">
-                Book Your Ride Now
                 </p>
               </div>
               <SearchForm />
