@@ -188,34 +188,38 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="absolute top-6 left-6 bg-white rounded-2xl shadow-2xl overflow-hidden max-w-xs"
+          className="absolute top-3 left-3 bg-white/60 rounded-2xl shadow-2xl overflow-hidden max-w-xs"
         >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 p-4">
-            <div className="flex items-center gap-2 text-gray-900">
-              <Navigation className="animate-pulse" size={20} />
-              <h3 className="font-bold text-lg">Route Details</h3>
-            </div>
-          </div>
+   
 
           {/* Content */}
           <div className="p-4 space-y-4">
             {/* Pickup Point */}
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-bold">A</span>
                 </div>
-              </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Pickup Location</p>
-                <p className="text-sm font-semibold text-gray-900">Starting Point</p>
+                <p className="text-xs text-gray-500 font-medium">Pickup</p>
+                {/* <p className="text-sm font-semibold text-gray-900">Starting Point</p> */}
               </div>
             </div>
 
+
+            {/* Dropoff Point */}
+            <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">B</span>
+                </div>
+              <div>
+                <p className="text-xs text-gray-500 font-medium">Drop-off</p>
+                {/* <p className="text-sm font-semibold text-gray-900">Destination</p> */}
+              </div>
+            </div>
+
+            
             {/* Route Line */}
-            <div className="flex items-center gap-3 pl-5">
-              <div className="w-px h-8 bg-gradient-to-b from-green-500 via-yellow-400 to-red-500"></div>
+            <div className="flex items-center gap-2 pl-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 text-gray-700">
                   <TrendingUp className="text-yellow-500" size={16} />
@@ -228,37 +232,6 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
               </div>
             </div>
 
-            {/* Dropoff Point */}
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">B</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Drop-off Location</p>
-                <p className="text-sm font-semibold text-gray-900">Destination</p>
-              </div>
-            </div>
-
-            {/* Estimated Cost */}
-            {estimatedCost > 0 && (
-              <div className="pt-4 border-t-2 border-gray-100">
-                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-3">
-                  <p className="text-xs text-gray-600 mb-1">Estimated Fare</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-gray-900">
-                      Rs. {estimatedCost.toLocaleString()}
-                    </span>
-                    <span className="text-sm text-gray-600">onwards</span>
-                  </div>
-                  <div className="flex items-center gap-1 mt-2">
-                    <Star className="fill-yellow-400 text-yellow-400" size={14} />
-                    <span className="text-xs text-gray-600">Final price based on vehicle type</span>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </motion.div>
       )}

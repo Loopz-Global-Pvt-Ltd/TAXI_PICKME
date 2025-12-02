@@ -228,7 +228,7 @@ export default function SearchForm() {
             <span className="text-sm text-blue-900 font-medium">Calculating distance...</span>
           </div>
         )}
-
+{/* 
         {distanceInfo && !isCalculatingDistance && (
           <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
           <div className="flex items-start gap-3">
@@ -248,7 +248,7 @@ export default function SearchForm() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {distanceError && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
