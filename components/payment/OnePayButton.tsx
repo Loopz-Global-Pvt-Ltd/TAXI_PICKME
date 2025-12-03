@@ -33,8 +33,9 @@ export default function OnePayButton({
   const [isLoading, setIsLoading] = useState(true)
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentReference, setPaymentReference] = useState<string>('')
+  const [scriptLoaded, setScriptLoaded] = useState(false)
 
-  // Initialize payment data and load script
+  // Initialize payment data
   useEffect(() => {
     const initializePayment = async () => {
       try {
@@ -58,26 +59,11 @@ export default function OnePayButton({
         const reference = data.data.payment.reference_number
         setPaymentReference(reference)
 
-        // Log the request body that will be sent with window.onePayData
-        console.log('Payment Request Body:', {
-          appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
-          hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
-          amount: amount.toFixed(1),
-          orderReference: 'reference',
-          customerFirstName: customerData.firstName,
-          customerLastName: customerData.lastName,
-          customerPhoneNumber: customerData.phone,
-          customerEmail: customerData.email,
-          transactionRedirectUrl: `${window.location.origin}/booking/success?bookingId=${bookingId}&reference=${reference}`,
-          additionalData: bookingId.toString(),
-          apptoken: process.env.NEXT_PUBLIC_ONEPAY_APP_TOKEN,
-        })
-
-        // Set OnePay data - EXACTLY as in the sample (no currency field)
+        // Set OnePay data BEFORE loading the script
         window.onePayData = {
           appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
           hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
-          amount: amount.toFixed(1),
+          amount: amount.toFixed(1), // Must be decimal with .0
           orderReference: reference,
           customerFirstName: customerData.firstName,
           customerLastName: customerData.lastName,
@@ -100,7 +86,7 @@ export default function OnePayButton({
     initializePayment()
   }, [bookingId, amount, customerData])
 
-  // Setup event listeners
+  // Setup event listeners ONCE
   useEffect(() => {
     const handleOnePaySuccess = (e: CustomEvent) => {
       console.log('Payment SUCCESS:', e.detail)
@@ -140,6 +126,18 @@ export default function OnePayButton({
     }
   }, [bookingId, paymentReference, onSuccess, onFail])
 
+  // Trigger button creation after script loads
+  const handleScriptLoad = () => {
+    console.log('OnePay script loaded successfully')
+    console.log('window.onePayData:', window.onePayData)
+    setScriptLoaded(true)
+    
+    // Force button creation if not auto-created
+    if (typeof (window as any).createOnePayButton === 'function') {
+      (window as any).createOnePayButton()
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -151,25 +149,36 @@ export default function OnePayButton({
 
   return (
     <>
-      {/* Load OnePay Script AFTER data is set */}
-      <Script
-        src="https://storage.googleapis.com/onepayjs/onepayjs.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          console.log('OnePay script loaded successfully')
-        }}
-        onError={() => {
-          console.error('Failed to load OnePay script')
-          alert('Failed to load payment gateway. Please refresh the page.')
-        }}
-      />
+      {/* Load OnePay Script ONLY AFTER data is set */}
+      {!scriptLoaded && (
+        <Script
+          src="https://storage.googleapis.com/onepayjs/onepayjs.js"
+          strategy="afterInteractive"
+          onLoad={handleScriptLoad}
+          onError={() => {
+            console.error('Failed to load OnePay script')
+            alert('Failed to load payment gateway. Please refresh the page.')
+          }}
+        />
+      )}
 
       <div style={{ margin: '20px 0' }}>
         {/* OnePay will inject its button here */}
-        <div id="onepay-btn" />
+        <div id="onepay-btn"></div>
         
         {/* OnePay iframe container */}
-        <div id="iframe-container" />
+        <div id="iframe-container"></div>
+
+        {/* Debug info - Remove in production */}
+        {process.env.NODE_ENV === 'development' && (
+          <div style={{ marginTop: '20px', padding: '10px', background: '#f5f5f5', fontSize: '12px' }}>
+            <strong>Debug Info:</strong>
+            <div>Script Loaded: {scriptLoaded ? 'Yes' : 'No'}</div>
+            <div>Payment Reference: {paymentReference}</div>
+            <div>Amount: {amount.toFixed(1)} LKR</div>
+            <div>App ID: {process.env.NEXT_PUBLIC_ONEPAY_APP_ID}</div>
+          </div>
+        )}
       </div>
     </>
   )
