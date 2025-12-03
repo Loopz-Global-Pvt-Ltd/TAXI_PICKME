@@ -182,61 +182,48 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
     >
       <div ref={mapRef} className="w-full h-full min-h-[500px]" />
 
-      {/* Route Info Card - Enhanced */}
-      {distance && duration && (
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-          className="absolute top-3 left-3 bg-white/60 rounded-2xl shadow-2xl overflow-hidden max-w-xs"
-        >
-   
-
-          {/* Content */}
-          <div className="p-4 space-y-4">
-            {/* Pickup Point */}
-            <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">A</span>
-                </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Pickup</p>
-                {/* <p className="text-sm font-semibold text-gray-900">Starting Point</p> */}
-              </div>
+ 
+        {distance && duration && (
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden max-w-[200px] md:max-w-xs"
+          >
+            {/* Content */}
+            <div className="p-2 md:p-4 space-y-2 md:space-y-4">
+          {/* Pickup Point */}
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 md:w-6 md:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-[10px] md:text-xs font-bold">A</span>
             </div>
-
-
-            {/* Dropoff Point */}
-            <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">B</span>
-                </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Drop-off</p>
-                {/* <p className="text-sm font-semibold text-gray-900">Destination</p> */}
-              </div>
-            </div>
-
-            
-            {/* Route Line */}
-            <div className="flex items-center gap-2 pl-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 text-gray-700">
-                  <TrendingUp className="text-yellow-500" size={16} />
-                  <span className="text-xs font-medium">{distance}</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-700 mt-1">
-                  <Clock className="text-blue-500" size={16} />
-                  <span className="text-xs font-medium">{duration}</span>
-                </div>
-              </div>
-            </div>
-
+            <p className="text-[10px] md:text-xs text-gray-600 font-medium">Pickup</p>
           </div>
-        </motion.div>
-      )}
 
-      {/* Map Legend - Bottom Right */}
+          {/* Dropoff Point */}
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 md:w-6 md:h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-[10px] md:text-xs font-bold">B</span>
+            </div>
+            <p className="text-[10px] md:text-xs text-gray-600 font-medium">Drop-off</p>
+          </div>
+
+          {/* Route Info */}
+          <div className="pt-1 md:pt-2 border-t border-gray-200 space-y-1">
+            <div className="flex items-center gap-1.5 text-gray-700">
+              <TrendingUp className="text-yellow-500 flex-shrink-0" size={12} />
+              <span className="text-[10px] md:text-xs font-medium truncate">{distance}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-gray-700">
+              <Clock className="text-blue-500 flex-shrink-0" size={12} />
+              <span className="text-[10px] md:text-xs font-medium truncate">{duration}</span>
+            </div>
+          </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Map Legend - Bottom Right */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

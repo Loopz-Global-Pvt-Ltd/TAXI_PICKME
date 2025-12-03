@@ -153,12 +153,6 @@ export default function Testimonials() {
               </motion.div>
             ))}
           </div>
-          <p className="text-2xl font-bold text-gray-900">
-            4.9 out of 5
-            <span className="text-lg font-normal text-gray-600 ml-2">
-              based on 1000+ verified reviews
-            </span>
-          </p>
         </motion.div>
 
         {/* Stats Bar */}

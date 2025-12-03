@@ -167,11 +167,21 @@ export default function SearchForm() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-      {/* Left Side - Search Form */}
+      {/* Map Preview - Order 1 on mobile (top), Order 2 on desktop (right) */}
+      <div className="h-[300px] sm:h-[350px] lg:h-[400px] w-full rounded-lg overflow-hidden order-1 lg:order-2">
+        <MapPreview
+          pickupLat={pickupLocation.lat ?? undefined}
+          pickupLng={pickupLocation.lng ?? undefined}
+          dropoffLat={dropoffLocation.lat ?? undefined}
+          dropoffLng={dropoffLocation.lng ?? undefined}
+        />
+      </div>
+
+      {/* Search Form - Order 2 on mobile (bottom), Order 1 on desktop (left) */}
       <form
         ref={formRef}
         onSubmit={handleSearch}
-        className="space-y-3 sm:space-y-4"
+        className="space-y-3 sm:space-y-4 order-2 lg:order-1"
       >
         <div className="grid grid-cols-1 gap-1">
           {/* Pickup Location */}
@@ -228,27 +238,6 @@ export default function SearchForm() {
             <span className="text-sm text-blue-900 font-medium">Calculating distance...</span>
           </div>
         )}
-{/* 
-        {distanceInfo && !isCalculatingDistance && (
-          <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
-          <div className="flex items-start gap-3">
-            <Navigation className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-semibold text-green-900 mb-2">Route Information</h4>
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 text-sm">
-                <div>
-                  <p className="text-green-700 font-medium text-xs sm:text-sm">Distance</p>
-                  <p className="text-green-900 font-bold text-sm sm:text-base">{distanceInfo.distanceText}</p>
-                </div>
-                <div>
-                  <p className="text-green-700 font-medium text-xs sm:text-sm">Estimated Time</p>
-                  <p className="text-green-900 font-bold text-sm sm:text-base">{distanceInfo.durationText}</p>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */}
 
         {distanceError && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -256,7 +245,7 @@ export default function SearchForm() {
           </div>
         )}
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {/* Pickup Date */}
           <div>
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
@@ -322,17 +311,6 @@ export default function SearchForm() {
           </Button>
         </div>
       </form>
-
-      {/* Right Side - Map Preview (visible on all screen sizes) */}
-      <div className="h-[300px] sm:h-[350px] lg:h-[400px] w-full rounded-lg overflow-hidden">
-
-        <MapPreview
-          pickupLat={pickupLocation.lat ?? undefined}
-          pickupLng={pickupLocation.lng ?? undefined}
-          dropoffLat={dropoffLocation.lat ?? undefined}
-          dropoffLng={dropoffLocation.lng ?? undefined}
-        />
-      </div>
     </div>
   )
 }

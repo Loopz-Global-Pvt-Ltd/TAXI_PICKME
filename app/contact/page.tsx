@@ -50,7 +50,7 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-primary/10 to-transparent py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Get in Touch</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">Get in Touch</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Have a question or need assistance? Our team is here to help. Contact us anytime.
           </p>
@@ -58,7 +58,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16">
+      <section className="py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             {/* Contact Info Cards */}
@@ -76,7 +76,7 @@ export default function ContactPage() {
               <h3 className="text-lg font-semibold text-foreground mb-2">Email</h3>
               <p className="text-muted-foreground mb-3">Reach out to us via email</p>
               <a href="mailto:support@srilankataxi.com" className="text-primary font-semibold hover:underline">
-                support@srilankataxi.com
+                infor@taxisrilanka.com
               </a>
             </Card>
 

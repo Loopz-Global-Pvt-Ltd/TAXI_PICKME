@@ -89,43 +89,43 @@ const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
                   position === 'bottom-right' ? 'right-0' : 'left-0'
                 } w-72`}
               >
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4 relative">
+                <div className="hidden md:block bg-white rounded-xl shadow-xl border border-gray-200 p-4 relative">
                   {/* Tooltip Arrow */}
                   <div className={`absolute top-full ${
-                    position === 'bottom-right' ? 'right-6' : 'left-6'
+                  position === 'bottom-right' ? 'right-6' : 'left-6'
                   } w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white`} />
                   
                   {/* Close Button */}
                   <button
-                    onClick={handleTooltipClose}
-                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={handleTooltipClose}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    <X className="w-4 h-4" />
+                  <X className="w-4 h-4" />
                   </button>
                   
                   {/* Content */}
                   <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0">
-                      <WhatsAppIcon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-gray-900 text-sm font-inter mb-1">
-                        Need Help?
-                      </h4>
-                      <p className="text-gray-600 text-xs font-inter leading-relaxed">
-                        Chat with us on WhatsApp for instant support about our programs and admissions!
-                      </p>
-                    </div>
+                  <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0">
+                    <WhatsAppIcon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-900 text-sm font-inter mb-1">
+                    Need Help?
+                    </h4>
+                    <p className="text-gray-600 text-xs font-inter leading-relaxed">
+                    Chat with us on WhatsApp for instant support about our programs and admissions!
+                    </p>
+                  </div>
                   </div>
                   
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleWhatsAppClick}
-                    className="w-full mt-3 bg-[#25D366] hover:bg-[#128C7E] text-white py-2 px-4 rounded-lg text-sm font-medium font-inter transition-colors flex items-center justify-center"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleWhatsAppClick}
+                  className="w-full mt-3 bg-[#25D366] hover:bg-[#128C7E] text-white py-2 px-4 rounded-lg text-sm font-medium font-inter transition-colors flex items-center justify-center"
                   >
-                    <WhatsAppIcon className="w-4 h-4 mr-2 text-white" />
-                    Start Chat
+                  <WhatsAppIcon className="w-4 h-4 mr-2 text-white" />
+                  Start Chat
                   </motion.button>
                 </div>
               </motion.div>

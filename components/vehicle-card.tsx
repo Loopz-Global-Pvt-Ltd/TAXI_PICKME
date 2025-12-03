@@ -110,20 +110,22 @@ export default function VehicleCard({ vehicle, estimatedDistance = 0, searchPara
                 </span>
               ))}
             </div>
+            {/* Price per km */}
+            <div className="mb-2">
+              <p className="text-sm text-muted-foreground">
+                Price per km: <span className="font-semibold text-foreground">Rs. {vehicle.price_per_km}</span>
+              </p>
+            </div>
           </div>
 
-          {/* Pricing & CTA */}
           <div className="flex items-end justify-between pt-4 border-t border-border">
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Estimated Total</p>
+
+              <p className="text-xs text-muted-foreground mb-1">Estimated Total :</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-primary">
                   Rs. {Number(totalEstimate).toFixed(2)}
                 </span>
-              </div>
-              <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
-              
-                <p>Distance ({estimatedDistance.toFixed(1)}km): Rs. {distancePrice.toLocaleString()}</p>
               </div>
             </div>
             <Link href={bookingUrl} className="cursor-pointer">

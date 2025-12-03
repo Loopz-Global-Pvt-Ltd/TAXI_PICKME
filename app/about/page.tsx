@@ -108,9 +108,9 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             {[
-              { number: "200+", label: "Vehicles" },
-              { number: "500K+", label: "Happy Customers" },
-              { number: "1M+", label: "Trips Completed" },
+              { number: "100+", label: "Vehicles" },
+              { number: "1000+", label: "Happy Customers" },
+              { number: "100+", label: "Trips Completed" },
               { number: "24/7", label: "Support Available" },
             ].map((stat, index) => (
               <div key={index}>
