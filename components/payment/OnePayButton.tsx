@@ -62,7 +62,7 @@ export default function OnePayButton({
         console.log('Payment Request Body:', {
           appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
           hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
-          amount: parseFloat(amount.toFixed(2)),
+          amount: amount.toFixed(1),
           orderReference: reference,
           customerFirstName: customerData.firstName,
           customerLastName: customerData.lastName,
@@ -77,7 +77,7 @@ export default function OnePayButton({
         window.onePayData = {
           appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
           hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
-          amount: parseFloat(amount.toFixed(2)),
+          amount: amount.toFixed(1),
           orderReference: reference,
           customerFirstName: customerData.firstName,
           customerLastName: customerData.lastName,
