@@ -63,7 +63,7 @@ export default function OnePayButton({
           appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
           hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
           amount: amount.toFixed(1),
-          orderReference: reference,
+          orderReference: 'reference',
           customerFirstName: customerData.firstName,
           customerLastName: customerData.lastName,
           customerPhoneNumber: customerData.phone,
