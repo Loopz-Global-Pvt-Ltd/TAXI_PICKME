@@ -58,6 +58,21 @@ export default function OnePayButton({
         const reference = data.data.payment.reference_number
         setPaymentReference(reference)
 
+        // Log the request body that will be sent with window.onePayData
+        console.log('Payment Request Body:', {
+          appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
+          hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
+          amount: parseFloat(amount.toFixed(2)),
+          orderReference: reference,
+          customerFirstName: customerData.firstName,
+          customerLastName: customerData.lastName,
+          customerPhoneNumber: customerData.phone,
+          customerEmail: customerData.email,
+          transactionRedirectUrl: `${window.location.origin}/booking/success?bookingId=${bookingId}&reference=${reference}`,
+          additionalData: bookingId.toString(),
+          apptoken: process.env.NEXT_PUBLIC_ONEPAY_APP_TOKEN,
+        })
+
         // Set OnePay data - EXACTLY as in the sample (no currency field)
         window.onePayData = {
           appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
