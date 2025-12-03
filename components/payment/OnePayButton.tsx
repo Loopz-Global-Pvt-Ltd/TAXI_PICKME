@@ -52,7 +52,6 @@ export default function OnePayButton({
       // Set payment data for OnePay
       const onePayData = {
         appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
-        hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
         amount: amount,
         orderReference: data.data.payment.reference_number,
         customerFirstName: customerData.firstName,
