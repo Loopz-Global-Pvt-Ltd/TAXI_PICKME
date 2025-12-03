@@ -18,7 +18,6 @@ interface OnePayButtonProps {
   onFail?: (data: any) => void
 }
 
-// Extend Window interface to include onePayData
 declare global {
   interface Window {
     onePayData: any
@@ -34,13 +33,13 @@ export default function OnePayButton({
 }: OnePayButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [scriptLoaded, setScriptLoaded] = useState(false)
-  const [paymentReference, setPaymentReference] = useState<string>('')
+  const [paymentInitialized, setPaymentInitialized] = useState(false)
 
-  const handlePayment = async () => {
+  const initializePayment = async () => {
     setIsLoading(true)
 
     try {
-      // Create payment reference via API
+      // Create payment reference
       const response = await fetch('/api/payments/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -58,10 +57,9 @@ export default function OnePayButton({
       }
 
       const reference = data.data.payment.reference_number
-      setPaymentReference(reference)
 
-      // Prepare OnePay data
-      const onePayData = {
+      // Set OnePay data BEFORE triggering the button
+      window.onePayData = {
         appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
         hashToken: process.env.NEXT_PUBLIC_ONEPAY_HASH_TOKEN,
         amount: parseFloat(amount.toFixed(2)),
@@ -76,24 +74,24 @@ export default function OnePayButton({
         currency: process.env.NEXT_PUBLIC_ONEPAY_CURRENCY || 'LKR',
       }
 
-      console.log('OnePay Data:', onePayData)
+      console.log('OnePay Data Set:', window.onePayData)
 
-      // Expose data globally for OnePay script
-      window.onePayData = onePayData
+      setPaymentInitialized(true)
 
-      // Trigger OnePay button click after data is set
+      // Wait for DOM to update, then click the OnePay button
       setTimeout(() => {
-        const onePayBtn = document.querySelector('#onepay-btn button')
-        if (onePayBtn) {
-          console.log('Triggering OnePay button click')
-          ;(onePayBtn as HTMLButtonElement).click()
+        const onePayButton = document.querySelector('#onepay-btn button')
+        if (onePayButton) {
+          console.log('Clicking OnePay button')
+          ;(onePayButton as HTMLButtonElement).click()
         } else {
-          console.error('OnePay button not found')
-          throw new Error('Payment gateway not initialized properly')
+          console.error('OnePay button not found in DOM')
+          setIsLoading(false)
+          alert('Payment gateway not ready. Please try again.')
         }
-      }, 500)
+      }, 300)
     } catch (error: any) {
-      console.error('Payment error:', error)
+      console.error('Payment initialization error:', error)
       alert(error.message || 'Failed to initialize payment')
       setIsLoading(false)
     }
@@ -102,47 +100,52 @@ export default function OnePayButton({
   useEffect(() => {
     if (!scriptLoaded) return
 
-    // Setup OnePay event listeners
+    // Setup event listeners for OnePay callbacks
     const handleOnePaySuccess = (e: CustomEvent) => {
-      const successData = e.detail
-      console.log('Payment SUCCESS:', successData)
+      console.log('Payment SUCCESS:', e.detail)
       setIsLoading(false)
       
       if (onSuccess) {
-        onSuccess(successData)
+        onSuccess(e.detail)
       } else {
-        // Default success handler - redirect to success page
-        window.location.href = `/booking/success?bookingId=${bookingId}&reference=${paymentReference}&status=success`
+        window.location.href = `/booking/success?bookingId=${bookingId}&status=success`
       }
     }
 
     const handleOnePayFail = (e: CustomEvent) => {
-      const failData = e.detail
-      console.log('Payment FAIL:', failData)
+      console.log('Payment FAIL:', e.detail)
       setIsLoading(false)
       
       if (onFail) {
-        onFail(failData)
+        onFail(e.detail)
       } else {
-        // Default fail handler
         alert('Payment failed. Please try again.')
       }
     }
 
+    const handleOnePayClose = (e: CustomEvent) => {
+      console.log('Payment CLOSED:', e.detail)
+      setIsLoading(false)
+      alert('Payment window was closed. Transaction may not be complete.')
+    }
+
     window.addEventListener('onePaySuccess' as any, handleOnePaySuccess)
     window.addEventListener('onePayFail' as any, handleOnePayFail)
+    window.addEventListener('onePayClose' as any, handleOnePayClose)
 
     return () => {
       window.removeEventListener('onePaySuccess' as any, handleOnePaySuccess)
       window.removeEventListener('onePayFail' as any, handleOnePayFail)
+      window.removeEventListener('onePayClose' as any, handleOnePayClose)
     }
-  }, [scriptLoaded, bookingId, paymentReference, onSuccess, onFail])
+  }, [scriptLoaded, bookingId, onSuccess, onFail])
 
   return (
     <>
       {/* Load OnePay Script */}
       <Script
         src="https://storage.googleapis.com/onepayjs/onepayjs.js"
+        strategy="afterInteractive"
         onLoad={() => {
           console.log('OnePay script loaded successfully')
           setScriptLoaded(true)
@@ -154,9 +157,9 @@ export default function OnePayButton({
       />
 
       <div>
-        {/* Payment Button */}
+        {/* Custom Payment Button */}
         <Button
-          onClick={handlePayment}
+          onClick={initializePayment}
           disabled={isLoading || !scriptLoaded}
           className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-bold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -168,7 +171,7 @@ export default function OnePayButton({
           ) : isLoading ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Processing Payment...
+              Opening Payment Window...
             </>
           ) : (
             <>
