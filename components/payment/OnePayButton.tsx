@@ -71,7 +71,7 @@ export default function OnePayButton({
           transactionRedirectUrl: `${window.location.origin}/booking/success?bookingId=${bookingId}&reference=${reference}`,
           additionalData: bookingId.toString(),
           apptoken: process.env.NEXT_PUBLIC_ONEPAY_APP_TOKEN,
-          currency: process.env.NEXT_PUBLIC_ONEPAY_CURRENCY || 'LKR',
+          // currency: process.env.NEXT_PUBLIC_ONEPAY_CURRENCY || 'LKR',
         }
 
         console.log('OnePay Data Set:', window.onePayData)
