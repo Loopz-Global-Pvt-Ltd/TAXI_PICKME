@@ -1,11 +1,10 @@
 "use client"
 
-import { useEffect, useState } from 'react'
-import Script from 'next/script'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2, CreditCard } from 'lucide-react'
 
-interface OnePayButtonProps {
+interface OnePayButtonAltProps {
   bookingId: number
   amount: number
   customerData: {
@@ -18,27 +17,21 @@ interface OnePayButtonProps {
   onFail?: (data: any) => void
 }
 
-declare global {
-  interface Window {
-    OnePay: any
-  }
-}
-
-export default function OnePayButton({
+export default function OnePayButtonAlt({
   bookingId,
   amount,
   customerData,
   onSuccess,
   onFail,
-}: OnePayButtonProps) {
+}: OnePayButtonAltProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
 
-  const initializeOnePay = async () => {
+  const handlePayment = async () => {
     setIsLoading(true)
 
     try {
-      // Create payment reference via API
+      // Create payment via API
       const response = await fetch('/api/payments/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,9 +47,11 @@ export default function OnePayButton({
         throw new Error(data.error || 'Failed to create payment')
       }
 
-      // Initialize OnePay with payment data
-      if (window.OnePay) {
-        window.OnePay.initialize({
+      // Create and submit hidden form to OnePay
+      const form = formRef.current
+      if (form) {
+        // Set form values
+        const inputs = {
           appid: process.env.NEXT_PUBLIC_ONEPAY_APP_ID,
           amount: amount.toFixed(2),
           orderReference: data.data.payment.reference_number,
@@ -67,12 +62,23 @@ export default function OnePayButton({
           transactionRedirectUrl: `${window.location.origin}/booking/success?bookingId=${bookingId}`,
           additionalData: bookingId.toString(),
           currency: process.env.NEXT_PUBLIC_ONEPAY_CURRENCY || 'LKR',
+          hash: data.data.payment.hash, // Generated from backend
+        }
+
+        // Clear existing inputs
+        form.innerHTML = ''
+
+        // Add inputs to form
+        Object.entries(inputs).forEach(([key, value]) => {
+          const input = document.createElement('input')
+          input.type = 'hidden'
+          input.name = key
+          input.value = String(value || '')
+          form.appendChild(input)
         })
 
-        // Trigger payment modal
-        window.OnePay.startPayment()
-      } else {
-        throw new Error('OnePay SDK not loaded')
+        // Submit form
+        form.submit()
       }
     } catch (error: any) {
       console.error('Payment error:', error)
@@ -81,59 +87,17 @@ export default function OnePayButton({
     }
   }
 
-  useEffect(() => {
-    if (!scriptLoaded) return
-
-    // Setup OnePay event listeners
-    const handleSuccess = (event: CustomEvent) => {
-      console.log('Payment Success:', event.detail)
-      setIsLoading(false)
-      if (onSuccess) onSuccess(event.detail)
-    }
-
-    const handleFail = (event: CustomEvent) => {
-      console.log('Payment Failed:', event.detail)
-      setIsLoading(false)
-      if (onFail) onFail(event.detail)
-    }
-
-    window.addEventListener('onepay:success' as any, handleSuccess)
-    window.addEventListener('onepay:fail' as any, handleFail)
-
-    return () => {
-      window.removeEventListener('onepay:success' as any, handleSuccess)
-      window.removeEventListener('onepay:fail' as any, handleFail)
-    }
-  }, [scriptLoaded, onSuccess, onFail])
-
   return (
     <>
-      <Script
-        src="https://storage.googleapis.com/onepayjs/onepayjs.js"
-        onLoad={() => {
-          console.log('OnePay script loaded')
-          setScriptLoaded(true)
-        }}
-        onError={() => {
-          console.error('Failed to load OnePay script')
-          alert('Failed to load payment gateway')
-        }}
-      />
-
       <Button
-        onClick={initializeOnePay}
-        disabled={isLoading || !scriptLoaded}
+        onClick={handlePayment}
+        disabled={isLoading}
         className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-bold shadow-lg"
       >
-        {!scriptLoaded ? (
+        {isLoading ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Loading Payment Gateway...
-          </>
-        ) : isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Processing Payment...
+            Redirecting to Payment...
           </>
         ) : (
           <>
@@ -142,6 +106,14 @@ export default function OnePayButton({
           </>
         )}
       </Button>
+
+      {/* Hidden form for OnePay submission */}
+      <form
+        ref={formRef}
+        action="https://payment.onepay.lk/payment"
+        method="POST"
+        style={{ display: 'none' }}
+      />
     </>
   )
 }
