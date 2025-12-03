@@ -118,13 +118,13 @@ export default function SearchPage() {
     return result
   }, [vehicles, selectedCategory, priceRange, sortBy])
 
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </main>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <main className="min-h-screen bg-background flex items-center justify-center">
+  //       {/* <Loader2 className="h-8 w-8 animate-spin text-primary" /> */}
+  //     </main>
+  //   )
+  // }
 
   return (
     <main className="min-h-screen bg-background">

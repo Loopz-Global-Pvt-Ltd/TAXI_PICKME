@@ -126,9 +126,9 @@ export default function VehicleCard({ vehicle, estimatedDistance = 0, searchPara
                 <p>Distance ({estimatedDistance.toFixed(1)}km): Rs. {distancePrice.toLocaleString()}</p>
               </div>
             </div>
-            <Link href={bookingUrl}>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                Book Now
+            <Link href={bookingUrl} className="cursor-pointer">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer">
+              Book Now
               </Button>
             </Link>
           </div>

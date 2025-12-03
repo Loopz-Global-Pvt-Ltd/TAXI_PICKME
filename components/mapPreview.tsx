@@ -48,7 +48,7 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
         {
           featureType: "landscape",
           elementType: "geometry",
-          stylers: [{ color: "#f5f5f5" }],
+          stylers: [{ color: "#c3f7ba" }],
         },
         {
           featureType: "road",
@@ -62,7 +62,7 @@ export default function MapPreview({ pickupLat, pickupLng, dropoffLat, dropoffLn
       map: mapInstanceRef.current,
       suppressMarkers: true,
       polylineOptions: {
-        strokeColor: "#FCD34D",
+        strokeColor: "#0560f5",
         strokeWeight: 6,
         strokeOpacity: 0.9,
       },
