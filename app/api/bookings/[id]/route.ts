@@ -4,16 +4,17 @@ import { z } from 'zod'
 
 const updateBookingSchema = z.object({
   status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']).optional(),
-  payment_status: z.enum(['unpaid', 'paid', 'refunded', 'pending']).optional(),
+  payment_status: z.enum(['unpaid', 'paid', 'refunded']).optional(), // Removed 'pending'
   payment_method: z.string().optional(),
 })
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const bookingId = params.id
+    const { id } = await params
+    const bookingId = id
 
     // Support both numeric ID and booking reference
     const isNumeric = !isNaN(parseInt(bookingId))
@@ -27,7 +28,6 @@ export async function GET(
         v.seats as vehicle_seats,
         v.luggage as vehicle_luggage,
         v.features as vehicle_features,
-        v.base_price as vehicle_base_price,
         v.price_per_km as vehicle_price_per_km
       FROM bookings b
       LEFT JOIN vehicles v ON b.vehicle_id = v.id
@@ -78,6 +78,12 @@ export async function PATCH(
     }
 
     const body = await request.json()
+    
+    // Map 'pending' to 'unpaid' for payment_status
+    if (body.payment_status === 'pending') {
+      body.payment_status = 'unpaid'
+    }
+    
     const validatedData = updateBookingSchema.parse(body)
 
     const updates: string[] = []
@@ -141,13 +147,14 @@ export async function PATCH(
     )
   }
 }
-
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const bookingId = parseInt(params.id)
+    const { id } = await params
+    // const bookingId = parseInt(id)
+    const bookingId = parseInt(id)
     
     if (isNaN(bookingId)) {
       return NextResponse.json(

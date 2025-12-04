@@ -182,12 +182,12 @@ export default function BookingPage() {
 
   const handlePayLater = async () => {
     try {
-      // Update booking to pay later status
+      // Update booking to pay later status - use 'unpaid' instead of 'pending'
       const response = await fetch(`/api/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          payment_status: 'pending',
+          payment_status: 'unpaid', // Changed from 'pending'
           payment_method: 'cash',
         }),
       })

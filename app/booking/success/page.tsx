@@ -254,7 +254,7 @@ function BookingSuccessContent() {
 
               {/* Contact Information */}
               <Card className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-6">Your Information</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Your Information</h3>
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
