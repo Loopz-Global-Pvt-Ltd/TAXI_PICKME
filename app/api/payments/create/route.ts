@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         booking_id, 
         amount, 
         payment_method, 
-        payment_status, 
+        payment, 
         reference_number, 
         onepay_transaction_id,
         redirect_url,
