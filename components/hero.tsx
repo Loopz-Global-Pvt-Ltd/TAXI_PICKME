@@ -208,7 +208,7 @@ export default function Hero() {
           >
             <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-4 md:p-8 border-2 border-yellow-400">
               <div className="mb-4">
-                <p className="text-gray-900 text-xl md:text-2xl font-bold">
+                <p className="text-gray-1000 text-xl md:text-2xl font-bold">
                   Book Your Ride Now
                 </p>
               </div>

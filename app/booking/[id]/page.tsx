@@ -172,13 +172,37 @@ export default function BookingPage() {
 
   const handlePaymentSuccess = (paymentData: any) => {
     console.log('Payment successful:', paymentData)
-    // Redirect to success page
-    router.push(`/booking/success?ref=${paymentData.transaction_id || bookingId}`)
+    router.push(`/booking/success?ref=${paymentData.transaction_id || bookingId}&status=paid`)
   }
 
   const handlePaymentFail = (failData: any) => {
     console.log('Payment failed:', failData)
     setError('Payment failed. Please try again.')
+  }
+
+  const handlePayLater = async () => {
+    try {
+      // Update booking to pay later status
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          payment_status: 'pending',
+          payment_method: 'cash',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        router.push(`/booking/success?bookingId=${bookingId}&paymentMethod=later`)
+      } else {
+        throw new Error(data.error || 'Failed to update booking')
+      }
+    } catch (error: any) {
+      console.error('Pay later error:', error)
+      setError(error.message || 'Failed to process pay later option')
+    }
   }
 
   // Loading state
@@ -522,6 +546,7 @@ export default function BookingPage() {
                       }}
                       onSuccess={handlePaymentSuccess}
                       onFail={handlePaymentFail}
+                      onPayLater={handlePayLater}
                     />
                   ) : null}
                 </form>

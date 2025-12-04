@@ -31,18 +31,18 @@ export async function POST(request: NextRequest) {
 
     const booking = bookingResult.rows[0]
 
-    // // Check if payment already exists for this booking
-    // const existingPayment = await query(
-    //   'SELECT * FROM payments WHERE booking_id = $1 AND status IN ($2, $3)',
-    //   [bookingId, 'completed', 'processing']
-    // )
+    // Check if payment already exists for this booking
+    const existingPayment = await query(
+      'SELECT * FROM payments WHERE booking_id = $1 AND status IN ($2, $3)',
+      [bookingId, 'completed', 'processing']
+    )
 
-    // if (existingPayment.rows.length > 0) {
-    //   return NextResponse.json(
-    //     { success: false, error: 'Payment already exists for this booking' },
-    //     { status: 400 }
-    //   )
-    // }
+    if (existingPayment.rows.length > 0) {
+      return NextResponse.json(
+        { success: false, error: 'Payment already exists for this booking' },
+        { status: 400 }
+      )
+    }
 
     // Generate unique reference number
     const referenceNumber = `TPM-${Date.now()}-${bookingId}`
