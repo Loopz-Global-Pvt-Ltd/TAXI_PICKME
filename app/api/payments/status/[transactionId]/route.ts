@@ -1,76 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from '@/lib/db'
-import { checkOnePayStatus } from '@/lib/payment/onepay'
+import { Pool } from 'pg'
+import { getOnePayTransactionStatus } from '@/lib/utils/onepay'
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+})
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ transactionId: string }> }
+  { params }: { params: { transactionId: string } }
 ) {
+  const client = await pool.connect()
+  
   try {
-    const { transactionId } = await params
+    const { transactionId } = params
 
-    // Check local database first
-    const paymentResult = await query(
-      'SELECT * FROM payments WHERE onepay_transaction_id = $1 OR reference_number = $2',
-      [transactionId, transactionId]
+    // Get payment status from OnePay
+    const statusResponse = await getOnePayTransactionStatus(transactionId)
+
+    // Update payment in database
+    await client.query(
+      `UPDATE payments 
+       SET payment_status = $1, 
+           paid_at = $2,
+           updated_at = NOW()
+       WHERE onepay_transaction_id = $3`,
+      [
+        statusResponse.data.status ? 'completed' : 'pending',
+        statusResponse.data.paid_on,
+        transactionId
+      ]
     )
 
-    if (paymentResult.rows.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Payment not found' },
-        { status: 404 }
+    // If payment is completed, update booking status
+    if (statusResponse.data.status) {
+      const paymentResult = await client.query(
+        'SELECT booking_id FROM payments WHERE onepay_transaction_id = $1',
+        [transactionId]
       )
-    }
 
-    const localPayment = paymentResult.rows[0]
-
-    // Check status from OnePay API
-    try {
-      const onePayStatus = await checkOnePayStatus(localPayment.onepay_transaction_id)
-
-      // Update local record if status changed
-      if (onePayStatus.data.status && localPayment.status !== 'completed') {
-        await query(
-          `UPDATE payments 
-           SET status = 'completed', paid_at = $1, updated_at = CURRENT_TIMESTAMP
-           WHERE id = $2`,
-          [onePayStatus.data.paid_on, localPayment.id]
-        )
-
-        // Update booking
-        await query(
+      if (paymentResult.rows.length > 0) {
+        await client.query(
           `UPDATE bookings 
-           SET payment_status = 'paid', updated_at = CURRENT_TIMESTAMP
+           SET status = 'confirmed', 
+               payment_status = 'paid',
+               updated_at = NOW()
            WHERE id = $1`,
-          [localPayment.booking_id]
+          [paymentResult.rows[0].booking_id]
         )
       }
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          local: {
-            ...localPayment,
-            status: onePayStatus.data.status ? 'completed' : localPayment.status,
-          },
-          onepay: onePayStatus.data,
-        },
-      })
-    } catch (error) {
-      // If OnePay API fails, return local data
-      return NextResponse.json({
-        success: true,
-        data: {
-          local: localPayment,
-          onepay: null,
-        },
-      })
     }
-  } catch (error) {
-    console.error('Error checking payment status:', error)
+
+    return NextResponse.json({
+      success: true,
+      data: statusResponse.data
+    })
+  } catch (error: any) {
+    console.error('Status check error:', error)
     return NextResponse.json(
-      { success: false, error: 'Failed to check payment status' },
+      { success: false, error: error.message || 'Failed to check payment status' },
       { status: 500 }
     )
+  } finally {
+    client.release()
   }
 }
