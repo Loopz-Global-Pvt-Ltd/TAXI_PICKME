@@ -148,6 +148,7 @@ export default function Header() {
 
             {/* CTA Button - Desktop */}
             <div className="flex items-center gap-4 ">
+              {window.location.pathname === "/" && (
               <motion.button
               onClick={scrollToSearchForm}
               whileHover={{ scale: 1.05 }}
@@ -162,6 +163,7 @@ export default function Header() {
               <span className="hidden sm:inline ">Book Now</span>
               <span className="sm:hidden">Book Now</span>
               </motion.button>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
