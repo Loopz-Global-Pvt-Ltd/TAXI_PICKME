@@ -90,21 +90,17 @@ export default function OnePayButton({
                 initializeOnlinePayment()
               }}
               disabled={isLoading}
-              className="group relative p-6 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative p-4 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-500 transition-colors">
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-500 transition-colors">
                   <CreditCard className="text-green-600 group-hover:text-white" size={24} />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-gray-900 mb-1">Pay Now (Online)</h4>
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm text-gray-600 mb-1">
                     Secure online payment via OnePay
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Instant Confirmation</span>
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Secure Payment Gateway</span>
-                  </div>
                 </div>
               </div>
             </button>
@@ -116,21 +112,17 @@ export default function OnePayButton({
                 handlePayLater()
               }}
               disabled={isLoading}
-              className="group relative p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-500 transition-colors">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-500 transition-colors">
                   <Wallet className="text-blue-600 group-hover:text-white" size={24} />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-gray-900 mb-1">Pay at Trip</h4>
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm text-gray-600 mb-1">
                     Pay cash to the driver when you travel
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">No Upfront Payment</span>
-                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">Cash Only</span>
-                  </div>
                 </div>
               </div>
             </button>

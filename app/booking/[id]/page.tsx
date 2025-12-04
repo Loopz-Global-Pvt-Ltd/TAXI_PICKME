@@ -503,20 +503,20 @@ export default function BookingPage() {
                       value={formData.specialRequests}
                       onChange={handleChange}
                       placeholder="Any special requirements or requests? (e.g., baby seat, extra luggage, specific route)"
-                      rows={4}
+                      rows={2}
                       disabled={bookingCreated}
                       className="w-full mt-2 px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-background resize-none disabled:opacity-50"
                     />
                   </div>
 
                   {/* Terms Agreement */}
-                  <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg flex gap-3">
+                  {/* <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg flex gap-3">
                     <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-blue-900 dark:text-blue-100">
                       By proceeding, you agree to our terms and conditions, cancellation policy, and privacy policy.
                       You'll receive a confirmation via WhatsApp with booking details.
                     </p>
-                  </div>
+                  </div> */}
 
                   {/* Submit/Payment Buttons */}
                   {!bookingCreated ? (

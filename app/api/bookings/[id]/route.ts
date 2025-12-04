@@ -4,8 +4,8 @@ import { z } from 'zod'
 
 const updateBookingSchema = z.object({
   status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']).optional(),
-  payment_status: z.enum(['unpaid', 'paid', 'refunded']).optional(),
-  payment_method: z.string().max(50).optional(),
+  payment_status: z.enum(['unpaid', 'paid', 'refunded', 'pending']).optional(),
+  payment_method: z.string().optional(),
 })
 
 export async function GET(
@@ -64,10 +64,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const bookingId = parseInt(params.id)
+    const { id } = await params
+    const bookingId = parseInt(id)
     
     if (isNaN(bookingId)) {
       return NextResponse.json(
