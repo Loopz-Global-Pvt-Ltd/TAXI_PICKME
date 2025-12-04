@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Create OnePay checkout
     const onePayResponse = await createOnePayCheckout({
-      amount: parseFloat(amount.toFixed(2)),
+      amount: Number(amount.toFixed(2)),
       reference,
       customer_first_name: customerData?.firstName || booking.full_name.split(' ')[0] || 'Customer',
       customer_last_name: customerData?.lastName || booking.full_name.split(' ').slice(1).join(' ') || 'Name',
