@@ -378,10 +378,36 @@ function BookingSuccessContent() {
                 <Button 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => window.print()}
+                  onClick={async () => {
+                    try {
+                      const response = await fetch(`/api/bookings/${bookingId}/receipt`)
+                      
+                      if (!response.ok) {
+                        throw new Error('Failed to generate receipt')
+                      }
+                      
+                      const blob = await response.blob()
+                      
+                      if (blob.size === 0) {
+                        throw new Error('Empty PDF file received')
+                      }
+                      
+                      const url = window.URL.createObjectURL(blob)
+                      const a = document.createElement('a')
+                      a.href = url
+                      a.download = `receipt-${bookingData.booking_reference || bookingId}.pdf`
+                      document.body.appendChild(a)
+                      a.click()
+                      window.URL.revokeObjectURL(url)
+                      document.body.removeChild(a)
+                    } catch (error) {
+                      console.error('Error downloading receipt:', error)
+                      alert('Failed to download receipt. Please try again or contact support.')
+                    }
+                  }}
                 >
                   <Download className="mr-2" size={16} />
-                  Print Receipt
+                  Download Receipt
                 </Button>
               </div>
             </div>
