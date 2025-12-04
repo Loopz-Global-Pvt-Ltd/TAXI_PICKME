@@ -7,6 +7,7 @@ import Header from "@/components/Header"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { downloadReceipt } from "@/lib/utils/receipt-generator"
 import { 
   CheckCircle, 
   Loader2, 
@@ -291,7 +292,7 @@ function BookingSuccessContent() {
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-6">
+            <div className="lg:col-span-1 space-y-3">
               {/* Price Summary */}
               {bookingData.total_price && (
                 <Card className="p-6">
@@ -330,111 +331,24 @@ function BookingSuccessContent() {
                       {isPaid ? "Payment Completed" : "Pay on Trip"}
                     </p>
                   </div>
-                </Card>
-              )}
-
-              {/* Next Steps */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-foreground mb-4">What's Next?</h3>
-                <ol className="space-y-3 text-sm">
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      1
-                    </span>
-                    <span className="text-foreground pt-0.5">
-                      {isPaid 
-                        ? "Booking confirmed - check your contact details" 
-                        : "Wait for booking confirmation"}
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      2
-                    </span>
-                    <span className="text-foreground pt-0.5">
-                      Driver will contact you 30 mins before pickup
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      3
-                    </span>
-                    <span className="text-foreground pt-0.5">
-                      {isPayLater ? "Pay cash to driver on trip" : "Enjoy your ride!"}
-                    </span>
-                  </li>
-                </ol>
-              </Card>
-
-              {/* Actions */}
-              <div className="space-y-3">
-                <Link href="/" className="block">
-                  <Button className="w-full" variant="default">
-                    <Home className="mr-2" size={16} />
-                    Back to Home
-                  </Button>
-                </Link>
+                  
                 
                 <Button 
                   variant="outline" 
                   className="w-full"
-                  onClick={async () => {
-                    try {
-                      const response = await fetch(`/api/bookings/${bookingId}/receipt`)
-                      
-                      if (!response.ok) {
-                        throw new Error('Failed to generate receipt')
-                      }
-                      
-                      const blob = await response.blob()
-                      
-                      if (blob.size === 0) {
-                        throw new Error('Empty PDF file received')
-                      }
-                      
-                      const url = window.URL.createObjectURL(blob)
-                      const a = document.createElement('a')
-                      a.href = url
-                      a.download = `receipt-${bookingData.booking_reference || bookingId}.pdf`
-                      document.body.appendChild(a)
-                      a.click()
-                      window.URL.revokeObjectURL(url)
-                      document.body.removeChild(a)
-                    } catch (error) {
-                      console.error('Error downloading receipt:', error)
-                      alert('Failed to download receipt. Please try again or contact support.')
-                    }
-                  }}
+                  onClick={() => downloadReceipt(bookingData, paymentData)}
                 >
                   <Download className="mr-2" size={16} />
                   Download Receipt
                 </Button>
-              </div>
+                </Card>
+                
+              )}
+
+
             </div>
           </div>
 
-          {/* Help Section */}
-          <Card className="p-6 bg-blue-50 dark:bg-blue-950/20 border-blue-200">
-            <div className="flex items-start gap-4">
-              <AlertCircle size={24} className="text-blue-600 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Need Help?</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  If you have any questions or need to make changes to your booking, please contact us:
-                </p>
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <a href="tel:+94777850529" className="flex items-center gap-2 text-primary hover:underline">
-                    <Phone size={16} />
-                    +94 777 850 529
-                  </a>
-                  <a href="mailto:info@taxipickme.com" className="flex items-center gap-2 text-primary hover:underline">
-                    <Mail size={16} />
-                    info@taxipickme.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </Card>
         </div>
       </section>
 

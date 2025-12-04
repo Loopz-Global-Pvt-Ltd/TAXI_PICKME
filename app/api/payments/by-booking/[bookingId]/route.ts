@@ -6,13 +6,13 @@ const pool = new Pool({
 })
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { bookingId: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ bookingId: string }> }
 ) {
   const client = await pool.connect()
   
   try {
-    const { bookingId } = params
+    const { bookingId } = await params
 
     const result = await client.query(
       'SELECT * FROM payments WHERE booking_id = $1 ORDER BY created_at DESC LIMIT 1',

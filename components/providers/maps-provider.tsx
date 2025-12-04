@@ -36,20 +36,23 @@ export function MapsProvider({ children }: { children: ReactNode }) {
 
   if (!isLoaded) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
-        <div className="text-center space-y-6 p-8">
-          <div className="relative">
-            <Loader2 className="h-16 w-16 animate-spin text-yellow-500 mx-auto" />
-            <div className="absolute inset-0 h-16 w-16 animate-pulse bg-yellow-400/20 rounded-full blur-xl mx-auto" />
-          </div>
+      <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#FCFCFF' }}>
+        <div className="text-center space-y-5 p-5 rounded-lg">
+        <div className="relative">
+        <img 
+          src="/gif/taxi-car-animation.gif" 
+          alt="Loading..." 
+          className="h-20 w-26 mx-auto"
+        />
+        </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-gray-800">Loading Your Rides...</h2>
-            <p className="text-sm text-gray-600">Preparing the best taxi experience for you</p>
+        <h2 className="text-2xl font-bold text-gray-800">Loading Your Rides...</h2>
+        <p className="text-sm text-gray-600">Preparing the best taxi experience for you</p>
           </div>
           <div className="flex items-center justify-center gap-2 pt-4">
-            <div className="h-2 w-2 rounded-full bg-yellow-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="h-2 w-2 rounded-full bg-yellow-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="h-2 w-2 rounded-full bg-yellow-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+        <div className="h-2 w-2 rounded-full bg-yellow-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+        <div className="h-2 w-2 rounded-full bg-yellow-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <div className="h-2 w-2 rounded-full bg-yellow-500 animate-bounce" style={{ animationDelay: '300ms' }} />
           </div>
         </div>
       </div>
