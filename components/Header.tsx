@@ -88,33 +88,33 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
               <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
-                  isScrolled
-                    ? "bg-gradient-to-br from-yellow-400 to-yellow-500"
-                    : "bg-gray-900"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6 }}
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg ${
+                isScrolled
+                ? "bg-gradient-to-br from-yellow-400 to-yellow-500"
+                : "bg-gray-900"
+              }`}
+              >
+              <Car className="text-white" size={20} />
+              </motion.div>
+              <div>
+              <h1
+                className={`font-bold text-lg sm:text-2xl transition-colors ${
+                isScrolled ? "text-gray-900" : "text-gray-900"
                 }`}
               >
-                <Car className="text-white" size={24} />
-              </motion.div>
-              <div className="hidden sm:block">
-                <h1
-                  className={`font-bold text-2xl transition-colors ${
-                    isScrolled ? "text-gray-900" : "text-gray-900"
-                  }`}
-                >
-                  TaxiPickMe
-                </h1>
-                <p
-                  className={`text-xs font-medium ${
-                    isScrolled ? "text-gray-600" : "text-gray-800"
-                  }`}
-                >
-                  Your Premium Ride Partner
-                </p>
+                TaxiPickMe
+              </h1>
+              <p
+                className={`text-[10px] sm:text-xs font-medium ${
+                isScrolled ? "text-gray-600" : "text-gray-800"
+                }`}
+              >
+                Your Premium Ride Partner
+              </p>
               </div>
             </Link>
 
@@ -147,19 +147,20 @@ export default function Header() {
             </nav>
 
             {/* CTA Button - Desktop */}
-            <div className="hidden lg:flex items-center gap-4">
+            <div className="flex items-center gap-4 ">
               <motion.button
-                onClick={scrollToSearchForm}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-6 py-3 rounded-xl font-bold shadow-lg transition-all ${
-                  isScrolled
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-xl"
-                    : "bg-gray-900 text-white hover:bg-gray-800"
-                }`}
+              onClick={scrollToSearchForm}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-bold shadow-lg transition-all text-sm sm:text-base ${
+                isScrolled
+                ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-xl"
+                : "bg-gray-900 text-white hover:bg-gray-800"
+              }`}
               >
-                <BookCheck className="inline mr-2" size={18} />
-                Book Now
+              <BookCheck className="inline mr-2 sm:mr-2" size={16} />
+              <span className="hidden sm:inline ">Book Now</span>
+              <span className="sm:hidden">Book Now</span>
               </motion.button>
             </div>
 

@@ -140,7 +140,7 @@ export default function SearchPage() {
                 <p>
                   <span className="font-semibold">{pickup}</span> → <span className="font-semibold">{dropoff}</span>
                 </p>
-                <p className="text-sm">
+                <p className="text-sm hidden md:block">
                   Distance: <span className="font-semibold">{distance.toFixed(1)} km</span> • 
                   Duration: <span className="font-semibold">{Math.round(duration)} mins</span> • 
                   Date: <span className="font-semibold">{date}</span> • 
@@ -148,15 +148,15 @@ export default function SearchPage() {
                 </p>
               </div>
             </div>
-            <Link href="/">
+            {/* <Link href="/">
               <Button variant="outline">Modify Search</Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>
 
       {/* Results Grid */}
-      <section className="py-12">
+      <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar Filters */}

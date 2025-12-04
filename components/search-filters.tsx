@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Card } from "@/components/ui/card"
+import { ChevronDown } from "lucide-react"
+import { useState } from "react"
 
 const CATEGORIES = ["Economy", "Sedan", "SUV", "Van", "Luxury"]
 
@@ -19,15 +21,45 @@ export default function SearchFilters({
   priceRange,
   setPriceRange,
 }: SearchFiltersProps) {
+  const [expandedSections, setExpandedSections] = useState({
+    vehicleType: false,
+    features: false,
+  })
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }))
+  }
+
   const handlePriceChange = (value: number[]) => {
     setPriceRange([value[0], value[1]])
   }
 
+  const handleApplyFilters = () => {
+    // Close all sections on mobile
+    setExpandedSections({
+      vehicleType: false,
+      features: false,
+    })
+  }
+
   return (
-    <div className="space-y-6">
-      <Card className="p-4">
-        <h3 className="font-semibold text-foreground mb-4">Vehicle Type</h3>
-        <div className="space-y-3">
+    <div className="space-y-4">
+      <Card className="p-3">
+        <button
+          onClick={() => toggleSection("vehicleType")}
+          className="w-full flex items-center justify-between mb-1 md:cursor-default"
+        >
+          <h3 className="font-semibold text-foreground">Vehicle Type</h3>
+          <ChevronDown
+            className={`w-5 h-5 transition-transform md:hidden ${
+              expandedSections.vehicleType ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        <div className={`space-y-3 ${expandedSections.vehicleType ? "block" : "hidden"} md:block`}>
           <div className="flex items-center gap-2">
             <Checkbox
               id="all-categories"
@@ -53,27 +85,19 @@ export default function SearchFilters({
         </div>
       </Card>
 
-      {/* <Card className="p-4">
-        <h3 className="font-semibold text-foreground mb-4">Price Range</h3>
-        <div className="space-y-4">
-          <Slider
-            value={priceRange}
-            onValueChange={handlePriceChange}
-            min={3500}
-            max={12500}
-            step={500}
-            className="w-full"
+      <Card className="p-3">
+        <button
+          onClick={() => toggleSection("features")}
+          className="w-full flex items-center justify-between mb-1 md:cursor-default"
+        >
+          <h3 className="font-semibold text-foreground">Features</h3>
+          <ChevronDown
+            className={`w-5 h-5 transition-transform md:hidden ${
+              expandedSections.features ? "rotate-180" : ""
+            }`}
           />
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Rs. {priceRange[0].toLocaleString()}</span>
-            <span>Rs. {priceRange[1].toLocaleString()}</span>
-          </div>
-        </div>
-      </Card> */}
-
-      <Card className="p-4">
-        <h3 className="font-semibold text-foreground mb-4">Features</h3>
-        <div className="space-y-3">
+        </button>
+        <div className={`space-y-3 ${expandedSections.features ? "block" : "hidden"} md:block`}>
           {["WiFi", "AC", "Phone Charger", "Leather Seats"].map((feature) => (
             <div key={feature} className="flex items-center gap-2">
               <Checkbox id={feature} />
@@ -85,7 +109,12 @@ export default function SearchFilters({
         </div>
       </Card>
 
-      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">Apply Filters</Button>
+      <Button 
+        onClick={handleApplyFilters}
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+      >
+        Apply Filters
+      </Button>
     </div>
   )
 }
