@@ -53,9 +53,18 @@ function BookingSuccessContent() {
 
         setBookingData(bookingResult.data)
 
-        // Fetch payment details if reference exists
+        // Try to fetch payment details for this booking
+        // First try by reference if provided
         if (reference) {
           const paymentResponse = await fetch(`/api/payments/by-reference/${reference}`)
+          const paymentResult = await paymentResponse.json()
+
+          if (paymentResult.success) {
+            setPaymentData(paymentResult.data)
+          }
+        } else {
+          // If no reference, fetch by booking ID
+          const paymentResponse = await fetch(`/api/payments/by-booking/${bookingId}`)
           const paymentResult = await paymentResponse.json()
 
           if (paymentResult.success) {
@@ -115,8 +124,17 @@ function BookingSuccessContent() {
     )
   }
 
-  const isPaid = paymentMethod === 'online' || status === 'paid' || paymentData?.status === 'completed'
-  const isPayLater = paymentMethod === 'later'
+  // Determine payment status
+  const isPaid = 
+    paymentMethod === 'online' || 
+    status === 'paid' || 
+    paymentData?.status === 'completed' ||
+    paymentData?.status === 'paid' ||
+    bookingData.payment_status === 'paid'
+
+  const isPayLater = 
+    paymentMethod === 'later' || 
+    bookingData.payment_status === 'pending'
 
   return (
     <main className="min-h-screen bg-background">
@@ -143,6 +161,11 @@ function BookingSuccessContent() {
                 {bookingData.booking_reference || `#${bookingId}`}
               </span>
             </p>
+            {paymentData?.reference_number && (
+              <p className="text-xs text-muted-foreground mt-2">
+                Payment Reference: {paymentData.reference_number}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
@@ -160,13 +183,19 @@ function BookingSuccessContent() {
                   } flex-shrink-0 mt-1`} />
                   <div className="flex-1">
                     <h2 className="text-lg font-semibold text-foreground mb-2">
-                      {isPaid ? "Payment Confirmed" : "Pending Driver Confirmation"}
+                      {isPaid ? "Payment Confirmed" : "Pending Payment"}
                     </h2>
                     <p className="text-sm text-muted-foreground">
                       {isPaid 
-                        ? "Your payment has been processed successfully. A confirmation email has been sent."
+                        ? "Your payment has been processed successfully. A confirmation has been sent to your contact details."
                         : "Please pay cash to the driver when you travel. Our team will confirm your booking shortly."}
                     </p>
+                    {paymentData && (
+                      <div className="mt-3 text-xs text-muted-foreground">
+                        <p>Transaction ID: {paymentData.onepay_transaction_id || 'N/A'}</p>
+                        <p>Payment Date: {paymentData.created_at ? new Date(paymentData.created_at).toLocaleString() : 'N/A'}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -275,7 +304,11 @@ function BookingSuccessContent() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Rate per km</span>
-                      <span className="text-foreground">Rs. {(bookingData.total_price / bookingData.estimated_distance_km).toFixed(2)}</span>
+                      <span className="text-foreground">
+                        Rs. {bookingData.estimated_distance_km > 0 
+                          ? (bookingData.total_price / bookingData.estimated_distance_km).toFixed(2)
+                          : '0.00'}
+                      </span>
                     </div>
                   </div>
 
@@ -310,7 +343,7 @@ function BookingSuccessContent() {
                     </span>
                     <span className="text-foreground pt-0.5">
                       {isPaid 
-                        ? "Booking confirmed - check your email" 
+                        ? "Booking confirmed - check your contact details" 
                         : "Wait for booking confirmation"}
                     </span>
                   </li>
@@ -319,7 +352,7 @@ function BookingSuccessContent() {
                       2
                     </span>
                     <span className="text-foreground pt-0.5">
-                      Driver will contact you 30 mins before
+                      Driver will contact you 30 mins before pickup
                     </span>
                   </li>
                   <li className="flex gap-3">
