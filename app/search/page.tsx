@@ -231,7 +231,7 @@ export default function SearchPage() {
                   ))
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 bg-muted rounded-lg">
-                    <p className="text-foreground font-semibold mb-2">No vehicles found</p>
+                    <p className="text-foreground font-semibold mb-2">Searching...</p>
                     <p className="text-sm text-muted-foreground mb-4">Try adjusting your filters or search criteria</p>
                     <Link href="/">
                       <Button>New Search</Button>

@@ -208,13 +208,19 @@ export default function BookingPage() {
   // Loading state
   if (isLoadingVehicle) {
     return (
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen" style={{ backgroundColor: '#FCFCFF' }}>
         <Header />
         <section className="py-12">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center py-12">
-              <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-              <p className="text-muted-foreground">Loading vehicle details...</p>
+              <div className="relative">
+              <img 
+                src="/gif/taxi-car-animation.gif" 
+                alt="Loading..." 
+                className="h-20 w-26 mx-auto"
+              />
+              </div>
+              <p className="text-muted-foreground mt-4">Loading vehicle details...</p>
             </div>
           </div>
         </section>
