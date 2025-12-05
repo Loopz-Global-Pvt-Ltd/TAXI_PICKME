@@ -30,9 +30,9 @@ export default function Header() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/destinations", label: "Destinations" },
+    // { href: "/destinations", label: "Destinations" },
     { href: "/about", label: "About Us" },
-    { href: "/faq", label: "FAQ" },
+    // { href: "/faq", label: "FAQ" },
     { href: "/contact", label: "Contact" },
   ]
 
@@ -119,7 +119,7 @@ export default function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-5">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
@@ -129,7 +129,7 @@ export default function Header() {
                 >
                   <Link
                     href={link.href}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all relative group ${
+                    className={`px-4 py-2 rounded-lg font-bold transition-all relative group ${
                       isScrolled
                         ? "text-gray-700 hover:text-gray-900 hover:bg-yellow-50"
                         : "text-gray-900 hover:text-white hover:bg-gray-900/10"
@@ -148,22 +148,28 @@ export default function Header() {
 
             {/* CTA Button - Desktop */}
             <div className="flex items-center gap-4 ">
-              {window.location.pathname === "/" && (
-              <motion.button
-              onClick={scrollToSearchForm}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-bold shadow-lg transition-all text-sm sm:text-base ${
-                isScrolled
-                ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-xl"
-                : "bg-gray-900 text-white hover:bg-gray-800"
-              }`}
-              >
-              <BookCheck className="inline mr-2 sm:mr-2" size={16} />
-              <span className="hidden sm:inline ">Book Now</span>
-              <span className="sm:hidden">Book Now</span>
-              </motion.button>
-              )}
+                {(window.location.pathname === "/" || window.location.pathname === "/about" || window.location.pathname === "/contact") && (
+                  <motion.button
+                    onClick={() => {
+                      if (window.location.pathname !== "/") {
+                        window.location.href = "/#search-form-section";
+                      } else {
+                        scrollToSearchForm();
+                      }
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-bold shadow-lg transition-all text-sm sm:text-base ${
+                      isScrolled
+                        ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-xl"
+                        : "bg-gray-900 text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    <BookCheck className="inline mr-2 sm:mr-2" size={16} />
+                    <span className="hidden sm:inline ">Book Now</span>
+                    <span className="sm:hidden">Book Now</span>
+                  </motion.button>
+                )}
             </div>
 
             {/* Mobile Menu Button */}
