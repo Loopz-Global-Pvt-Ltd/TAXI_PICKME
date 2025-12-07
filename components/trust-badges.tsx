@@ -92,7 +92,7 @@ export default function TrustBadges() {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-gray-900">
-            Why Choose <span className="text-white">TaxiPickMe</span>
+            Why Choose <span className="text-white">taxisrilanka</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-800 max-w-3xl mx-auto">
             Your safety, comfort, and satisfaction are our top priorities

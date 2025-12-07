@@ -1,20 +1,20 @@
 version: '3.8'
 
 services:
-  taxipickme:
+  taxisrilanka:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: taxipickme-app
+    container_name: taxisrilanka-app
     restart: unless-stopped
     ports:
       - "80:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_SITE_URL=http://taxipickme.com
+      - NEXT_PUBLIC_SITE_URL=http://taxisrilanka.com
     networks:
-      - taxipickme-network
+      - taxisrilanka-network
 
 networks:
-  taxipickme-network:
+  taxisrilanka-network:
     driver: bridge

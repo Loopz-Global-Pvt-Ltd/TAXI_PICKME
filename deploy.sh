@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Deploying TaxiPickMe..."
+echo "🚀 Deploying taxisrilanka..."
 
 # Stop existing containers
 docker-compose down

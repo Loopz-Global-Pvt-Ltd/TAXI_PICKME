@@ -16,7 +16,7 @@ export default function AboutPage() {
       <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-5 md:py-15 overflow-hidden">
         <div className="absolute inset-0 opacity-5"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">About TaxiPickMe</h1>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">About taxisrilanka</h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
             Your trusted partner for reliable, affordable, and professional taxi services across Sri Lanka since 2015
           </p>
@@ -45,7 +45,7 @@ export default function AboutPage() {
               </div>
               <h2 className="text-4xl font-bold text-foreground mb-6">Driving Excellence Since 2015</h2>
               <p className="text-muted-foreground mb-4 text-lg">
-                Founded in 2015, <strong>TaxiPickMe</strong> was born from a simple vision: to provide travelers with reliable,
+                Founded in 2015, <strong>taxisrilanka</strong> was born from a simple vision: to provide travelers with reliable,
                 transparent, and professional taxi services across Sri Lanka's most popular destinations.
               </p>
               <p className="text-muted-foreground mb-4">
@@ -168,7 +168,7 @@ export default function AboutPage() {
       <section className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose TaxiPickMe?</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose taxisrilanka?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Experience the difference with our premium taxi service
             </p>

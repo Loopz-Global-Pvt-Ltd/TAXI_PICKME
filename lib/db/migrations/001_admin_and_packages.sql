@@ -45,7 +45,7 @@ INSERT INTO admin_users (username, password_hash, email, full_name)
 VALUES (
   'admin',
   '$2b$10$rGxVXxP5KzO4K4mVYxJF5.7N6vK7N9z5zQxJKq5kYxY7F5z7N9z5z',
-  'admin@taxipickme.com',
+  'admin@taxisrilanka.com',
   'System Administrator'
 ) ON CONFLICT (username) DO NOTHING;
 

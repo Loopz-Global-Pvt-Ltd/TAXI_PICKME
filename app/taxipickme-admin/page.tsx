@@ -16,7 +16,7 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.push('/taxipickme-admin/dashboard')
+      router.push('/taxisrilanka-admin/dashboard')
     }
   }, [isAuthenticated, isLoading, router])
 
@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
 
     try {
       await login(username, password)
-      router.push('/taxipickme-admin/dashboard')
+      router.push('/taxisrilanka-admin/dashboard')
     } catch (err: any) {
       setError(err.message || 'Invalid credentials')
     } finally {
@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
               <Lock className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
-            <p className="text-gray-600">TaxiPickMe Administration Panel</p>
+            <p className="text-gray-600">taxisrilanka Administration Panel</p>
           </div>
 
           {/* Error Message */}

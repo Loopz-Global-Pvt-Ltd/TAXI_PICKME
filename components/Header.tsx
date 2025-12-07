@@ -52,12 +52,12 @@ export default function Header() {
                 <span>+94 777 850 529</span>
               </motion.a>
               <motion.a
-                href="mailto:info@taxipickme.com"
+                href="mailto:info@taxisrilanka.com"
                 className="flex items-center gap-2 hover:text-yellow-400 transition-colors"
                 whileHover={{ scale: 1.05 }}
               >
                 <Mail size={14} />
-                <span>info@taxipickme.com</span>
+                <span>info@taxisrilanka.com</span>
               </motion.a>
             </div>
             <div className="flex items-center gap-4">
@@ -88,17 +88,17 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
+            <Link href="/" className="flex  items-center gap-2 sm:gap-3 group ">
               <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg ${
-                isScrolled
-                ? "bg-gradient-to-br from-yellow-400 to-yellow-500"
-                : "bg-gray-900"
-              }`}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-50 h-50 sm:w-12 sm:h-12 "
               >
-              <Car className="text-white" size={20} />
+              <img 
+                src="/images/taxi-srilanak-logo.svg" 
+                alt="taxisrilanka Logo" 
+                className="w-full h-full object-contain rounded-lg shadow-md group-hover:shadow-xl transition-shadow"
+              />
               </motion.div>
               <div>
               <h1
@@ -106,7 +106,7 @@ export default function Header() {
                 isScrolled ? "text-gray-900" : "text-gray-900"
                 }`}
               >
-                TaxiPickme
+                taxisrilanka
               </h1>
               <p
                 className={`text-[10px] sm:text-xs font-medium ${
@@ -232,7 +232,7 @@ export default function Header() {
                       <span className="font-medium">+94 777 850 529</span>
                     </a>
                     <a
-                      href="mailto:info@taxipickme.com"
+                      href="mailto:info@taxisrilanka.com"
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                         isScrolled
                           ? "text-gray-700 hover:bg-gray-100"
@@ -240,7 +240,7 @@ export default function Header() {
                       }`}
                     >
                       <Mail size={18} />
-                      <span className="font-medium">info@taxipickme.com</span>
+                      <span className="font-medium">info@taxisrilanka.com</span>
                     </a>
                   </div>
 

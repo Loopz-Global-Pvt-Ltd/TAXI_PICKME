@@ -11,13 +11,13 @@ export default function Hero() {
 
   const slides = [
     {
-      image: "/images/TaxiPickme-Slider-1.jpg",
+      image: "/images/taxisrilanka-Slider-1.jpg",
       title: "Sri Lanka's Premier Taxi Service",
       subtitle: "Professional Drivers • Luxury Comfort • Unbeatable Rates",
       highlight: "Book Now & Save 15%",
     },
     {
-      image: "/images/TaxiPickme-Slider-4.webp",
+      image: "/images/taxisrilanka-Slider-4.webp",
       title: "Explore Sri Lanka In Style",
       subtitle: "Island-Wide Coverage • 24/7 Availability • Licensed & Insured",
       highlight: "Trusted by 1000+ Travelers",

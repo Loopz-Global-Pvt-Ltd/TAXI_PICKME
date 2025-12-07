@@ -21,13 +21,13 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/taxipickme-admin')
+      router.push('/taxisrilanka-admin')
     }
   }, [isAuthenticated, isLoading, router])
 
   const handleLogout = async () => {
     await logout()
-    router.push('/taxipickme-admin')
+    router.push('/taxisrilanka-admin')
   }
 
   if (isLoading) {
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
               </div>
             </Link>
 
-            <Link href="/taxipickme-admin/vehicles">
+            <Link href="/taxisrilanka-admin/vehicles">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
                 <Car className="h-8 w-8 text-yellow-500 mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-1">Manage Vehicles</h3>
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
               </div>
             </Link>
 
-            <Link href="/taxipickme-admin/bookings">
+            <Link href="/taxisrilanka-admin/bookings">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
                 <Calendar className="h-8 w-8 text-yellow-500 mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-1">View Bookings</h3>

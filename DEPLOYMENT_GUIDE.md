@@ -1,9 +1,9 @@
-# TaxiPickMe Deployment Guide
+# taxisrilanka Deployment Guide
 
 ## Prerequisites
 
 1. DigitalOcean Droplet (Ubuntu 22.04 LTS recommended)
-2. Domain name: taxipickme.com
+2. Domain name: taxisrilanka.com
 3. SSH access to the server
 
 ## Phase 1: HTTP Deployment (No SSL)
@@ -17,8 +17,8 @@
    - Add SSH keys for authentication
 
 2. Point your domain to the droplet:
-   - Add an A record: `taxipickme.com` → Your Droplet IP
-   - Add an A record: `www.taxipickme.com` → Your Droplet IP
+   - Add an A record: `taxisrilanka.com` → Your Droplet IP
+   - Add an A record: `www.taxisrilanka.com` → Your Droplet IP
 
 ### Step 2: Connect to Your Droplet
 
@@ -54,8 +54,8 @@ apt install git -y
 
 ```bash
 cd /var/www
-git clone https://github.com/yourusername/taxipickme.git
-cd taxipickme
+git clone https://github.com/yourusername/taxisrilanka.git
+cd taxisrilanka
 ```
 
 ### Step 6: Deploy the Application
@@ -75,10 +75,10 @@ chmod +x deploy.sh
 docker ps
 
 # Check logs
-docker-compose logs -f taxipickme
+docker-compose logs -f taxisrilanka
 ```
 
-Visit `http://taxipickme.com` in your browser.
+Visit `http://taxisrilanka.com` in your browser.
 
 ## Phase 2: HTTPS Deployment (With SSL)
 
@@ -118,7 +118,7 @@ docker-compose -f docker-compose.ssl.yml up -d
 
 ### Step 6: Verify HTTPS
 
-Visit `https://taxipickme.com` in your browser. The site should load with a valid SSL certificate.
+Visit `https://taxisrilanka.com` in your browser. The site should load with a valid SSL certificate.
 
 ### Step 7: Set Up Auto-Renewal
 
@@ -137,7 +137,7 @@ docker ps | grep certbot
 docker-compose -f docker-compose.ssl.yml logs -f
 
 # Specific service
-docker-compose -f docker-compose.ssl.yml logs -f taxipickme
+docker-compose -f docker-compose.ssl.yml logs -f taxisrilanka
 docker-compose -f docker-compose.ssl.yml logs -f nginx
 ```
 
@@ -214,7 +214,7 @@ docker-compose -f docker-compose.ssl.yml run --rm certbot certificates
 
 ```bash
 # Check logs
-docker-compose -f docker-compose.ssl.yml logs taxipickme
+docker-compose -f docker-compose.ssl.yml logs taxisrilanka
 
 # Rebuild
 docker-compose -f docker-compose.ssl.yml up -d --build --force-recreate
@@ -254,7 +254,7 @@ tar -czf certbot-backup-$(date +%Y%m%d).tar.gz ./certbot
 ### Backup Application Data
 
 ```bash
-tar -czf app-backup-$(date +%Y%m%d).tar.gz /var/www/taxipickme
+tar -czf app-backup-$(date +%Y%m%d).tar.gz /var/www/taxisrilanka
 ```
 
 ## Security Recommendations

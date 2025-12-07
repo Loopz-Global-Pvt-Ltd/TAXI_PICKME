@@ -90,7 +90,7 @@ export default function WhyChooseUs() {
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed opacity-30"
-        style={{ backgroundImage: "url('/images/TaxiPickme-Why-choose-us.webp')" }}
+        style={{ backgroundImage: "url('/images/taxisrilanka-Why-choose-us.webp')" }}
       />
       
       {/* Gradient Overlays */}
@@ -119,7 +119,7 @@ export default function WhyChooseUs() {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-            Why Choose <span className="text-yellow-400">TaxiPickMe</span>?
+            Why Choose <span className="text-yellow-400">taxisrilanka</span>?
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
             We're committed to making your journey comfortable, safe, and unforgettable with premium service every mile

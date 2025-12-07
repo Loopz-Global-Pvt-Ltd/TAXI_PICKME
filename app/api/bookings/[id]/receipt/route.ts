@@ -315,7 +315,7 @@ function generateReceiptHTML(booking: any): string {
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <div class="logo">TaxiPickMe</div>
+      <div class="logo">taxisrilanka</div>
       <div class="logo-subtitle">Sri Lanka's Premier Taxi Service</div>
       <div class="receipt-badge">
         ${isPaid ? '✓ PAID' : '⏳ PENDING PAYMENT'}
@@ -472,11 +472,11 @@ function generateReceiptHTML(booking: any): string {
         </div>
         <div class="contact-item">
           <span>✉️</span>
-          <span>info@taxipickme.com</span>
+          <span>info@taxisrilanka.com</span>
         </div>
         <div class="contact-item">
           <span>🌐</span>
-          <span>www.taxipickme.com</span>
+          <span>www.taxisrilanka.com</span>
         </div>
       </div>
       <button class="print-button" onclick="window.print()">
