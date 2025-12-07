@@ -92,10 +92,10 @@ export default function Header() {
               <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
-              className="relative w-50 h-50 sm:w-12 sm:h-12 "
+              className="relative w-60 h-60 sm:w-15 sm:h-15 "
               >
               <img 
-                src="/images/taxi-srilanak-logo.svg" 
+                src="/images/taxi-srilanak.png" 
                 alt="taxisrilanka Logo" 
                 className="w-full h-full object-contain rounded-lg shadow-md group-hover:shadow-xl transition-shadow"
               />
