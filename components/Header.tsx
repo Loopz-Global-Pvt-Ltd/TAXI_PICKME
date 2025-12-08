@@ -88,16 +88,16 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href="/" className="flex  items-center gap-2 sm:gap-3 group ">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
               <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
-              className="relative w-70 h-70 sm:w-15 sm:h-15 "
+              className="relative w-10 h-10 sm:w-12 sm:h-12"
               >
               <img 
-                src="/images/taxi-srilanaka.png" 
+                src="/favicon/favicon-96x96.png" 
                 alt="taxisrilanka Logo" 
-                className="w-full h-full object-contain "
+                className="w-full h-full object-contain"
               />
               </motion.div>
               <div>
@@ -106,7 +106,7 @@ export default function Header() {
                 isScrolled ? "text-gray-900" : "text-gray-900"
                 }`}
               >
-                Taxi Sri Lanka Tours
+                Taxi Sri Lanka
               </h1>
               <p
                 className={`text-[10px] sm:text-xs font-medium ${
