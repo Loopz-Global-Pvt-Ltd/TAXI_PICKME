@@ -363,12 +363,6 @@ function generateReceiptHTML(booking: any): string {
             <div class="info-label">Phone Number</div>
             <div class="info-value">${booking.phone}</div>
           </div>
-          ${booking.email ? `
-          <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">${booking.email}</div>
-          </div>
-          ` : ''}
         </div>
       </div>
 

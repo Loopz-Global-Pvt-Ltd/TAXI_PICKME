@@ -1,6 +1,6 @@
 
 -- ============================================
--- COMPLETE DATABASE SCHEMA FOR TAXI PICKME
+-- COMPLETE DATABASE SCHEMA FOR Taxi Sri Lanka
 -- ============================================
 
 -- 1. Vehicles Table
