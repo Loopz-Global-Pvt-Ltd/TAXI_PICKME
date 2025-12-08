@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 const updateVehicleSchema = z.object({
   name: z.string().min(2).max(255).optional(),
-  category: z.enum(['economy', 'standard', 'luxury', 'van']).optional(),
+  category: z.enum(['Economy', 'Standard', 'Luxury', 'Van' , 'SUV', 'Sedan']).optional(),
   pricePerKm: z.number().positive().optional(),
   seats: z.number().int().positive().optional(),
   luggage: z.number().int().min(0).optional(),
@@ -15,8 +15,8 @@ const updateVehicleSchema = z.object({
   rating: z.number().min(0).max(5).optional(),
   reviews: z.number().int().min(0).optional(),
   isAvailable: z.boolean().optional(),
-  fuelType: z.enum(['petrol', 'diesel', 'hybrid', 'electric']).optional(),
-  transmission: z.enum(['manual', 'automatic']).optional(),
+  fuelType: z.enum(['Petrol', 'Diesel', 'Hybrid', 'Electric']).optional(),
+  transmission: z.enum(['Manual', 'Automatic']).optional(),
 })
 
 function verifyAdmin(request: NextRequest) {
