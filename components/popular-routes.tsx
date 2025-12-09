@@ -104,7 +104,7 @@ export default function PopularRoutes() {
                 <div className="relative bg-card border border-border rounded-xl overflow-hidden hover:shadow-2xl transition-shadow cursor-pointer h-full flex flex-col group prefers-reduced-motion:hover:y-0">
                   <motion.div style={{ y: imageY }} className="relative h-40 bg-cover bg-center overflow-hidden">
                     <img
-                      src={route.image || "/placeholder.svg"}
+                      src={route.image}
                       alt={`${route.from} to ${route.to}`}
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
