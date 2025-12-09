@@ -12,6 +12,30 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_SITE_URL=https://taxisrilanka.com
+      # Add your database connection environment variables
+      - DATABASE_URL=postgresql://taxisrilanka_user:root@82.25.180.10:5432/taxisrilanka_prod_db
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - taxisrilanka-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: taxisrilanka-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=taxisrilanka
+      - POSTGRES_USER=taxiuser
+      - POSTGRES_PASSWORD=taxipassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxiuser -d taxisrilanka"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - taxisrilanka-network
 
@@ -31,3 +55,6 @@ services:
 networks:
   taxisrilanka-network:
     driver: bridge
+
+volumes:
+  postgres_data:
