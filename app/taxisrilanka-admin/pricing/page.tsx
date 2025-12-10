@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useRouter } from 'next/navigation'
+import { useAdmin } from '@/contexts/AdminContext'
 import { 
   AlertCircle,
   CheckCircle,
@@ -46,10 +48,23 @@ export default function AdminPricingPage() {
   const [saving, setSaving] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const { isAuthenticated, isLoading } = useAdmin()
+  const router = useRouter();
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/taxisrilanka-admin')
+    }
+  }, [isAuthenticated, isLoading, router])
 
   useEffect(() => {
+    if (isAuthenticated) {
     fetchConfigs()
-  }, [])
+  }
+}, [isAuthenticated])
+
+
+ 
+
 
   const fetchConfigs = async () => {
     try {
