@@ -103,6 +103,7 @@ export async function getPricingConfig(vehicleType: VehicleType): Promise<Vehicl
   cacheTimestamp = now
 
   const config = pricingConfigCache[vehicleType]
+  console.log('Fetched pricing config for', vehicleType, config)
   if (!config) {
     throw new Error(`Pricing configuration not found for ${vehicleType}`)
   }

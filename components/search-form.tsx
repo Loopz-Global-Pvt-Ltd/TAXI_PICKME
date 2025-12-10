@@ -1,17 +1,17 @@
-// components/search-form.tsx
 "use client"
 
 import type React from "react"
 import { useState, useCallback, useEffect, useRef } from "react"
 import { Autocomplete } from "@react-google-maps/api"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Users, Loader2, Navigation } from "lucide-react"
+import { Calendar, MapPin, Users, Loader2 } from "lucide-react"
 import MapPreview from "./mapPreview"
 import { useMaps } from "@/components/providers/maps-provider"
 import { calculateDistance, type DistanceResult } from "@/lib/utils/distance"
 
 interface LocationData {
-  address: string
+  displayName: string      // User-friendly name like "Sigiriya Lion Rock"
+  address: string          // Full formatted address
   lat: number | null
   lng: number | null
 }
@@ -19,13 +19,15 @@ interface LocationData {
 export default function SearchForm() {
   const { isLoaded } = useMaps()
   const formRef = useRef<HTMLFormElement>(null)
-  const [formHeight, setFormHeight] = useState<number>(0)
+  
   const [pickupLocation, setPickupLocation] = useState<LocationData>({
+    displayName: "",
     address: "",
     lat: null,
     lng: null,
   })
   const [dropoffLocation, setDropoffLocation] = useState<LocationData>({
+    displayName: "",
     address: "",
     lat: null,
     lng: null,
@@ -88,7 +90,11 @@ export default function SearchForm() {
     if (pickupAutocomplete) {
       const place = pickupAutocomplete.getPlace()
       if (place.geometry?.location) {
+        // Use place.name (main text) as display name, fallback to formatted_address
+        const displayName = place.name || place.formatted_address || ""
+        
         setPickupLocation({
+          displayName: displayName,
           address: place.formatted_address || "",
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -101,7 +107,11 @@ export default function SearchForm() {
     if (dropoffAutocomplete) {
       const place = dropoffAutocomplete.getPlace()
       if (place.geometry?.location) {
+        // Use place.name (main text) as display name, fallback to formatted_address
+        const displayName = place.name || place.formatted_address || ""
+        
         setDropoffLocation({
+          displayName: displayName,
           address: place.formatted_address || "",
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -123,11 +133,12 @@ export default function SearchForm() {
       return
     }
 
+    // Use displayName in URL params (user-friendly names)
     const queryParams = new URLSearchParams({
-      pickup: pickupLocation.address,
+      pickup: pickupLocation.displayName,
       pickupLat: pickupLocation.lat.toString(),
       pickupLng: pickupLocation.lng.toString(),
-      dropoff: dropoffLocation.address,
+      dropoff: dropoffLocation.displayName,
       dropoffLat: dropoffLocation.lat.toString(),
       dropoffLng: dropoffLocation.lng.toString(),
       distance: distanceInfo.distanceKm.toFixed(2),
@@ -148,22 +159,6 @@ export default function SearchForm() {
       </div>
     )
   }
-
-  useEffect(() => {
-    if (formRef.current) {
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          setFormHeight(entry.contentRect.height)
-        }
-      })
-      
-      resizeObserver.observe(formRef.current)
-      
-      return () => {
-        resizeObserver.disconnect()
-      }
-    }
-  }, [])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
@@ -195,13 +190,13 @@ export default function SearchForm() {
               onPlaceChanged={onPickupPlaceChanged}
               options={{
                 componentRestrictions: { country: "lk" },
-                fields: ["formatted_address", "geometry", "name"],
+                fields: ["formatted_address", "geometry", "name"], // Include 'name' field
               }}
             >
               <input
                 type="text"
                 placeholder="Where are you?"
-                defaultValue={pickupLocation.address}
+                defaultValue={pickupLocation.displayName}
                 className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold text-sm sm:text-base"
               />
             </Autocomplete>
@@ -209,7 +204,7 @@ export default function SearchForm() {
 
           {/* Dropoff Location */}
           <div className="relative">
-          <label className="block text-sm font-medium text-black mb-2 font-semibold">
+            <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={20} />
               Dropoff Location
             </label>
@@ -218,13 +213,13 @@ export default function SearchForm() {
               onPlaceChanged={onDropoffPlaceChanged}
               options={{
                 componentRestrictions: { country: "lk" },
-                fields: ["formatted_address", "geometry", "name"],
+                fields: ["formatted_address", "geometry", "name"], // Include 'name' field
               }}
             >
               <input
                 type="text"
                 placeholder="Where to?"
-                defaultValue={dropoffLocation.address}
+                defaultValue={dropoffLocation.displayName}
                 className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold placeholder:font-normal text-sm sm:text-base"
               />
             </Autocomplete>
