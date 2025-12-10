@@ -11,7 +11,8 @@ import {
   Users, 
   LogOut, 
   Loader2,
-  LayoutDashboard
+  LayoutDashboard,
+  DollarSign
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -107,7 +108,7 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+          {/* <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Packages</p>
@@ -119,7 +120,7 @@ export default function AdminDashboard() {
               </div>
               <Package className="h-10 w-10 text-blue-500" />
             </div>
-          </div>
+          </div> */}
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
@@ -149,7 +150,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          {/* <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Active Users</p>
@@ -161,20 +162,20 @@ export default function AdminDashboard() {
               </div>
               <Users className="h-10 w-10 text-orange-500" />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Link href="/taxisrilanka-admin/packages">
+            {/* <Link href="/taxisrilanka-admin/packages">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
                 <Package className="h-8 w-8 text-yellow-500 mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-1">Manage Packages</h3>
                 <p className="text-sm text-gray-600">Create and manage taxi packages</p>
               </div>
-            </Link>
+            </Link> */}
 
             <Link href="/taxisrilanka-admin/vehicles">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
@@ -191,6 +192,14 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-600">Manage all customer bookings</p>
               </div>
             </Link>
+            <Link href="/taxisrilanka-admin/pricing">
+              <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
+                <DollarSign className="h-8 w-8 text-yellow-500 mb-3" />
+                <h3 className="font-semibold text-gray-900 mb-1">Pricing Configuration</h3>
+                <p className="text-sm text-gray-600">Configure pricing and rates</p>
+              </div>
+            </Link>
+
           </div>
         </div>
       </main>

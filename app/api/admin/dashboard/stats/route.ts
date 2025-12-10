@@ -20,13 +20,12 @@ export async function GET(request: NextRequest) {
 
     // Execute all queries in parallel
     const [
-      packagesResult,
+      // packagesResult,
       vehiclesResult,
       bookingsTodayResult,
-      activeUsersResult
     ] = await Promise.all([
-      // Total Packages
-      query('SELECT COUNT(*) as count FROM packages'),
+      // // Total Packages
+      // query('SELECT COUNT(*) as count FROM packages'),
 
       // Total Vehicles
       query('SELECT COUNT(*) as count FROM vehicles'),
@@ -37,26 +36,22 @@ export async function GET(request: NextRequest) {
         [todayStr, tomorrowStr]
       ),
 
-      // Active Users (unique emails who made bookings in last 30 days)
-      query(
-        'SELECT COUNT(DISTINCT customer_email) as count FROM bookings WHERE created_at >= $1',
-        [thirtyDaysAgoStr]
-      )
+
     ])
 
     // Extract counts from results
-    const totalPackages = parseInt(packagesResult.rows[0]?.count || '0')
+    // const totalPackages = parseInt(packagesResult.rows[0]?.count || '0')
     const totalVehicles = parseInt(vehiclesResult.rows[0]?.count || '0')
     const bookingsToday = parseInt(bookingsTodayResult.rows[0]?.count || '0')
-    const activeUsers = parseInt(activeUsersResult.rows[0]?.count || '0')
+    // const activeUsers = parseInt(activeUsersResult.rows[0]?.count || '0')
 
     return NextResponse.json({
       success: true,
       data: {
-        totalPackages,
+        // totalPackages,
         totalVehicles,
         bookingsToday,
-        activeUsers
+        // activeUsers
       }
     })
 
