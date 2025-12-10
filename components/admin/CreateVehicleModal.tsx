@@ -32,7 +32,7 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
   const [error, setError] = useState('')
   const [formData, setFormData] = useState<Vehicle>({
     name: '',
-    category: 'mini',
+    category: 'Mini',
     price_per_km: 0,
     seats: 4,
     luggage: 2,

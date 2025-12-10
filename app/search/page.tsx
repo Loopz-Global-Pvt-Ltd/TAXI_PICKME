@@ -1,4 +1,4 @@
-// app/search/page.tsx 
+// app/search/page.tsx  
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import SearchFilters from "@/components/search-filters"
 import VehicleCard from "@/components/vehicle-card"
 import { ChevronDown, Loader2 } from "lucide-react"
+import { calculateFare, type VehicleType } from "@/lib/pricing"
 
 type SortOption = "price-low" | "price-high" | "rating" | "popularity"
 
@@ -31,6 +32,12 @@ interface Vehicle {
 
 interface VehicleWithPrice extends Vehicle {
   estimatedTotalPrice: number
+  pricingBreakdown: {
+    distanceFare: number
+    totalFare: number
+    effectiveRatePerKm: number
+    savings: number
+  }
 }
 
 export default function SearchPage() {
@@ -41,7 +48,6 @@ export default function SearchPage() {
   const [priceRange, setPriceRange] = useState<[number, number]>([3500, 12500])
   const [sortBy, setSortBy] = useState<SortOption>("price-low")
 
-  // Get search parameters
   const pickup = searchParams.get("pickup") || ""
   const dropoff = searchParams.get("dropoff") || ""
   const distance = parseFloat(searchParams.get("distance") || "0")
@@ -50,7 +56,6 @@ export default function SearchPage() {
   const time = searchParams.get("time") || ""
   const passengers = searchParams.get("passengers") || "1"
 
-  // Fetch vehicles and calculate prices
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
@@ -62,14 +67,41 @@ export default function SearchPage() {
         const data = await response.json()
 
         if (data.success) {
-          // Calculate estimated price for each vehicle
           const vehiclesWithPrices = data.data.map((vehicle: Vehicle) => {
-            const distancePrice = distance * vehicle.price_per_km
-            const estimatedTotalPrice =  distancePrice
+            try {
+              const vehicleType = vehicle.category as VehicleType
 
-            return {
-              ...vehicle,
-              estimatedTotalPrice,
+              const fareResult = calculateFare({
+                vehicleType,
+                distanceKm: distance
+              })
+
+              const flatRateFare = distance * vehicle.price_per_km
+              const savings = flatRateFare - fareResult.fareBreakdown.totalFare
+
+              return {
+                ...vehicle,
+                estimatedTotalPrice: fareResult.fareBreakdown.totalFare,
+                pricingBreakdown: {
+                  distanceFare: fareResult.fareBreakdown.distanceFare,
+                  totalFare: fareResult.fareBreakdown.totalFare,
+                  effectiveRatePerKm: fareResult.fareBreakdown.effectiveRatePerKm,
+                  savings: Math.round(savings)
+                }
+              }
+            } catch (error) {
+              console.error(`Error calculating price for ${vehicle.name}:`, error)
+              const simplePrice = distance * vehicle.price_per_km
+              return {
+                ...vehicle,
+                estimatedTotalPrice: Math.round(simplePrice),
+                pricingBreakdown: {
+                  distanceFare: Math.round(simplePrice),
+                  totalFare: Math.round(simplePrice),
+                  effectiveRatePerKm: vehicle.price_per_km,
+                  savings: 0
+                }
+              }
             }
           })
 
@@ -87,19 +119,11 @@ export default function SearchPage() {
 
   const filteredVehicles = useMemo(() => {
     let result = vehicles
-    console.log("All vehicles:", result)
 
-    // Filter by category
     if (selectedCategory) {
       result = result.filter((v) => v.category === selectedCategory)
     }
 
-    // Filter by price range (using estimated total price)
-    // result = result.filter(
-    //   (v) => v.estimatedTotalPrice >= priceRange[0] && v.estimatedTotalPrice <= priceRange[1]
-    // )
-
-    // Sort
     switch (sortBy) {
       case "price-high":
         result.sort((a, b) => b.estimatedTotalPrice - a.estimatedTotalPrice)
@@ -116,15 +140,7 @@ export default function SearchPage() {
     }
 
     return result
-  }, [vehicles, selectedCategory, priceRange, sortBy])
-
-  // if (loading) {
-  //   return (
-  //     <main className="min-h-screen bg-background flex items-center justify-center">
-  //       {/* <Loader2 className="h-8 w-8 animate-spin text-primary" /> */}
-  //     </main>
-  //   )
-  // }
+  }, [vehicles, selectedCategory, sortBy])
 
   return (
     <main className="min-h-screen bg-background">
@@ -140,17 +156,13 @@ export default function SearchPage() {
                 <p>
                   <span className="font-semibold">{pickup}</span> → <span className="font-semibold">{dropoff}</span>
                 </p>
-                <p className="text-sm hidden md:block">
+                <p className="text-sm">
                   Distance: <span className="font-semibold">{distance.toFixed(1)} km</span> • 
-                  Duration: <span className="font-semibold">{Math.round(duration)} mins</span> • 
                   Date: <span className="font-semibold">{date}</span> • 
                   {passengers} Passenger{passengers !== "1" ? "s" : ""}
                 </p>
               </div>
             </div>
-            {/* <Link href="/">
-              <Button variant="outline">Modify Search</Button>
-            </Link> */}
           </div>
         </div>
       </section>
@@ -159,7 +171,6 @@ export default function SearchPage() {
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar Filters */}
             <aside className="lg:col-span-1">
               <div className="sticky top-4">
                 <SearchFilters
@@ -171,9 +182,7 @@ export default function SearchPage() {
               </div>
             </aside>
 
-            {/* Vehicle Listings */}
             <div className="lg:col-span-3">
-              {/* Sort Options */}
               <div className="mb-6 flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
                   Showing <span className="font-semibold text-foreground">{filteredVehicles.length}</span> result
@@ -212,33 +221,40 @@ export default function SearchPage() {
                 </div>
               </div>
 
-              {/* Vehicle List */}
-              <div className="space-y-4">
-                {filteredVehicles.length > 0 ? (
-                  filteredVehicles.map((vehicle) => (
-                    <VehicleCard 
-                      key={vehicle.id} 
-                      vehicle={vehicle}
-                      estimatedDistance={distance}
-                      searchParams={{
-                        pickup,
-                        dropoff,
-                        date,
-                        time,
-                        distance: distance.toString(),
-                      }}
-                    />
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12 bg-muted rounded-lg">
-                    <p className="text-foreground font-semibold mb-2">Searching...</p>
-                    <p className="text-sm text-muted-foreground mb-4">Try adjusting your filters or search criteria</p>
-                    <Link href="/">
-                      <Button>New Search</Button>
-                    </Link>
-                  </div>
-                )}
-              </div>
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+                  <p className="text-muted-foreground">Calculating best prices...</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredVehicles.length > 0 ? (
+                    filteredVehicles.map((vehicle) => (
+                      <VehicleCard 
+                        key={vehicle.id} 
+                        vehicle={vehicle}
+                        estimatedDistance={distance}
+                        pricingBreakdown={vehicle.pricingBreakdown}
+                        searchParams={{
+                          pickup,
+                          dropoff,
+                          date,
+                          time,
+                          distance: distance.toString(),
+                        }}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-12 bg-muted rounded-lg">
+                      <p className="text-foreground font-semibold mb-2">No vehicles found</p>
+                      <p className="text-sm text-muted-foreground mb-4">Try adjusting your filters or search criteria</p>
+                      <Link href="/">
+                        <Button>New Search</Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

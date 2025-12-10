@@ -109,7 +109,9 @@ export async function POST(request: NextRequest) {
 
     const createdVehicle = {
       ...result.rows[0],
-      features: JSON.parse(result.rows[0].features || '[]'),
+      features: Array.isArray(result.rows[0].features) 
+        ? result.rows[0].features 
+        : JSON.parse(result.rows[0].features || '[]'),
     }
 
     return NextResponse.json({
