@@ -15,8 +15,8 @@ const createVehicleSchema = z.object({
   rating: z.number().min(0).max(5).default(0),
   reviews: z.number().int().min(0).default(0),
   isAvailable: z.boolean().default(true),
-  fuelType: z.enum(['petrol', 'diesel', 'hybrid', 'electric']).optional(),
-  transmission: z.enum(['manual', 'automatic']).optional(),
+  fuelType: z.enum(['Petrol', 'Diesel', 'Hybrid', 'Electric']).optional(),
+  transmission: z.enum(['Manual', 'Automatic']).optional(),
 })
 
 function verifyAdmin(request: NextRequest) {

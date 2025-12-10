@@ -42,8 +42,8 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
     rating: 0,
     reviews: 0,
     is_available: true,
-    fuel_type: 'petrol',
-    transmission: 'manual',
+    fuel_type: 'Petrol',
+    transmission: 'Manual',
   })
   const [newFeature, setNewFeature] = useState('')
 
@@ -243,10 +243,10 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
                 onChange={(e) => setFormData({ ...formData, fuel_type: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               >
-                <option value="petrol">Petrol</option>
-                <option value="diesel">Diesel</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="electric">Electric</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Electric">Electric</option>
               </select>
             </div>
 
@@ -259,8 +259,8 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
                 onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               >
-                <option value="manual">Manual</option>
-                <option value="automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+                <option value="Automatic">Automatic</option>
               </select>
             </div>
           </div>

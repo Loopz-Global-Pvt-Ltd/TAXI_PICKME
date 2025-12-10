@@ -67,19 +67,36 @@ export default function SearchPage() {
         const data = await response.json()
 
         if (data.success) {
-          const vehiclesWithPrices = data.data.map((vehicle: Vehicle) => {
+          const vehiclesWithPrices: VehicleWithPrice[] = []
+
+          for (const vehicle of data.data) {
             try {
               const vehicleType = vehicle.category as VehicleType
 
-              const fareResult = calculateFare({
+              const fareResult = await calculateFare({
                 vehicleType,
                 distanceKm: distance
               })
 
+              if (!fareResult || !fareResult.fareBreakdown) {
+                throw new Error('Invalid fare calculation result')
+              }
+
               const flatRateFare = distance * vehicle.price_per_km
               const savings = flatRateFare - fareResult.fareBreakdown.totalFare
 
-              return {
+              console.log(`[${vehicle.name}] Price Calculation:`, {
+                vehicleType,
+                distance: `${distance} km`,
+                baseRatePerKm: vehicle.price_per_km,
+                flatRateFare: flatRateFare.toFixed(2),
+                distanceFare: fareResult.fareBreakdown.distanceFare.toFixed(2),
+                totalFare: fareResult.fareBreakdown.totalFare.toFixed(2),
+                effectiveRatePerKm: fareResult.fareBreakdown.effectiveRatePerKm.toFixed(2),
+                savings: savings.toFixed(2)
+              })
+
+              vehiclesWithPrices.push({
                 ...vehicle,
                 estimatedTotalPrice: fareResult.fareBreakdown.totalFare,
                 pricingBreakdown: {
@@ -88,11 +105,18 @@ export default function SearchPage() {
                   effectiveRatePerKm: fareResult.fareBreakdown.effectiveRatePerKm,
                   savings: Math.round(savings)
                 }
-              }
+              })
             } catch (error) {
               console.error(`Error calculating price for ${vehicle.name}:`, error)
               const simplePrice = distance * vehicle.price_per_km
-              return {
+              
+              console.log(`[${vehicle.name}] Fallback Price Calculation:`, {
+                distance: `${distance} km`,
+                baseRatePerKm: vehicle.price_per_km,
+                simplePrice: simplePrice.toFixed(2)
+              })
+
+              vehiclesWithPrices.push({
                 ...vehicle,
                 estimatedTotalPrice: Math.round(simplePrice),
                 pricingBreakdown: {
@@ -101,9 +125,9 @@ export default function SearchPage() {
                   effectiveRatePerKm: vehicle.price_per_km,
                   savings: 0
                 }
-              }
+              })
             }
-          })
+          }
 
           setVehicles(vehiclesWithPrices)
         }
