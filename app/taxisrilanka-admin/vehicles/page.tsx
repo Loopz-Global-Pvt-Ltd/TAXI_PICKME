@@ -167,7 +167,7 @@ export default function VehiclesPage() {
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex gap-2">
-          {['all', 'economy', 'standard', 'luxury', 'van'].map((category) => (
+          {['all', 'mini', 'standard', 'luxury', 'van'].map((category) => (
             <Button
               key={category}
               onClick={() => setFilterCategory(category)}

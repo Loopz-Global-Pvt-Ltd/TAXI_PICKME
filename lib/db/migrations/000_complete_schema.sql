@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS vehicles (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  category VARCHAR(50) NOT NULL CHECK (category IN ('economy', 'standard', 'luxury', 'van')),
+  category VARCHAR(50) NOT NULL CHECK (category IN ('mini', 'standard', 'luxury', 'van')),
   price_per_km DECIMAL(10, 2) NOT NULL,
   image VARCHAR(500),
   seats INTEGER NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS taxi_packages (
   package_name VARCHAR(255) NOT NULL,
   package_code VARCHAR(50) UNIQUE NOT NULL,
   description TEXT,
-  category VARCHAR(50) NOT NULL CHECK (category IN ('economy', 'standard', 'luxury', 'van')),
+  category VARCHAR(50) NOT NULL CHECK (category IN ('mini', 'standard', 'luxury', 'van')),
   price_per_km DECIMAL(10, 2) NOT NULL,
   max_passengers INTEGER NOT NULL,
   features JSONB DEFAULT '[]',
@@ -132,7 +132,7 @@ VALUES (
 -- Sample Vehicles
 INSERT INTO vehicles (name, category, price_per_km, seats, luggage, rating, reviews, features, description, fuel_type, transmission, image) 
 VALUES 
-  ('Toyota Prius', 'economy', 50.00, 4, 2, 4.5, 120, '["Air Conditioning", "GPS Navigation", "Bluetooth"]', 'Comfortable and fuel-efficient hybrid sedan', 'hybrid', 'automatic', '/images/vehicles/toyota-prius.jpg'),
+  ('Toyota Prius', 'mini', 50.00, 4, 2, 4.5, 120, '["Air Conditioning", "GPS Navigation", "Bluetooth"]', 'Comfortable and fuel-efficient hybrid sedan', 'hybrid', 'automatic', '/images/vehicles/toyota-prius.jpg'),
   ('Honda Civic', 'standard', 60.00, 4, 3, 4.7, 95, '["Air Conditioning", "GPS Navigation", "USB Charging", "Premium Sound"]', 'Reliable and comfortable standard sedan', 'petrol', 'automatic', '/images/vehicles/honda-civic.jpg'),
   ('Mercedes E-Class', 'luxury', 120.00, 4, 3, 4.9, 78, '["Leather Seats", "Climate Control", "Premium Sound", "WiFi", "Bottled Water"]', 'Luxury executive sedan with premium amenities', 'diesel', 'automatic', '/images/vehicles/mercedes-eclass.jpg'),
   ('Toyota Hiace', 'van', 80.00, 10, 8, 4.6, 65, '["Air Conditioning", "Spacious Interior", "Luggage Rack", "GPS Navigation"]', 'Spacious van perfect for group travel', 'diesel', 'manual', '/images/vehicles/toyota-hiace.jpg')
@@ -141,7 +141,7 @@ ON CONFLICT DO NOTHING;
 -- Sample Packages
 INSERT INTO taxi_packages (package_name, package_code, description, category, price_per_km, max_passengers, features, popular, image) 
 VALUES 
-  ('City Tour Package', 'PKG-CITY-001', 'Perfect for exploring the city at your own pace', 'economy', 45.00, 4, '["Air Conditioning", "Professional Driver", "Fuel Included", "City Guide"]', true, '/images/packages/city-tour.jpg'),
+  ('City Tour Package', 'PKG-CITY-001', 'Perfect for exploring the city at your own pace', 'mini', 45.00, 4, '["Air Conditioning", "Professional Driver", "Fuel Included", "City Guide"]', true, '/images/packages/city-tour.jpg'),
   ('Airport Transfer', 'PKG-AIRPORT-001', 'Reliable airport pickup and drop service', 'standard', 55.00, 4, '["Meet & Greet", "Luggage Assistance", "Flight Tracking", "Water Bottles"]', true, '/images/packages/airport.jpg'),
   ('Executive Package', 'PKG-EXEC-001', 'Premium service for business travelers', 'luxury', 110.00, 4, '["Luxury Vehicle", "Professional Chauffeur", "WiFi", "Newspapers", "Refreshments"]', false, '/images/packages/executive.jpg'),
   ('Group Travel', 'PKG-GROUP-001', 'Comfortable transportation for larger groups', 'van', 75.00, 10, '["Spacious Van", "Professional Driver", "Luggage Space", "Air Conditioning"]', true, '/images/packages/group.jpg')

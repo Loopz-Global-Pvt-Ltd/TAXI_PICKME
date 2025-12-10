@@ -7,7 +7,7 @@ const createPackageSchema = z.object({
   packageName: z.string().min(3).max(255),
   packageCode: z.string().min(3).max(50),
   description: z.string().optional(),
-  category: z.enum(['economy', 'standard', 'luxury', 'van']),
+  category: z.enum(['mini', 'standard', 'luxury', 'van']),
   pricePerKm: z.number().positive(),
   maxPassengers: z.number().int().positive(),
   features: z.array(z.string()).default([]),

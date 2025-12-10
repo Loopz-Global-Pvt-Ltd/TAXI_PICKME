@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
 
-const CATEGORIES = ["Economy", "Sedan", "SUV", "Van", "Luxury"]
+const CATEGORIES = ["Mini", "Sedan", "SUV", "Van", "Luxury"]
 
 interface SearchFiltersProps {
   selectedCategory: string

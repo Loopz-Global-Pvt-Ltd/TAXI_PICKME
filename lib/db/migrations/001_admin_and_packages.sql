@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS taxi_packages (
   package_name VARCHAR(255) NOT NULL,
   package_code VARCHAR(50) UNIQUE NOT NULL,
   description TEXT,
-  category VARCHAR(50) NOT NULL, -- 'economy', 'standard', 'luxury', 'van'
+  category VARCHAR(50) NOT NULL, -- 'mini', 'standard', 'luxury', 'van'
   base_price DECIMAL(10, 2) NOT NULL,
   price_per_km DECIMAL(10, 2) NOT NULL,
   included_km INTEGER DEFAULT 0,
@@ -59,7 +59,7 @@ INSERT INTO taxi_packages (
   'City Tour - Half Day',
   'PKG-CITY-HALF',
   'Perfect for exploring the city within 4 hours',
-  'economy',
+  'mini',
   3500.00,
   50.00,
   50,

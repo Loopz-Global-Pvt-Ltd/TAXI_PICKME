@@ -32,7 +32,7 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
     package_name: '',
     package_code: '',
     description: '',
-    category: 'economy',
+    category: 'mini',
     price_per_km: 0,
     max_passengers: 4,
     features: [],
@@ -188,7 +188,7 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               >
-                <option value="economy">Economy</option>
+                <option value="mini">Mini</option>
                 <option value="standard">Standard</option>
                 <option value="luxury">Luxury</option>
                 <option value="van">Van</option>
