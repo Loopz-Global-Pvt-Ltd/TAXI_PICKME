@@ -14,14 +14,14 @@ services:
       - NEXT_PUBLIC_SITE_URL=https://taxisrilanka.com
       - NODE_ENV=production
       - NEXT_PUBLIC_SITE_URL=https://taxisrilanka.com
-      - DATABASE_URL=postgresql://taxisrilanka_user:YourStrongPassword@172.17.0.1:5432/taxisrilanka_prod_db
+      - DATABASE_URL=${DATABASE_URL}
       - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
       - ONEPAY_APP_ID=${ONEPAY_APP_ID}
       - ONEPAY_APP_TOKEN=${ONEPAY_APP_TOKEN}
       - ONEPAY_HASH_SALT=${ONEPAY_HASH_SALT}
-      - ONEPAY_CURRENCY=LKR
-      - ONEPAY_API_URL=https://api.onepay.lk/v3
-      - ONEPAY_CALLBACK_URL=https://www.taxisrilanka.com/api/payments/callback
+      - ONEPAY_CURRENCY=${ONEPAY_CURRENCY}
+      - ONEPAY_API_URL=${ONEPAY_API_URL}
+      - ONEPAY_CALLBACK_URL=${ONEPAY_CALLBACK_URL}
     networks:
       - taxisrilanka-network
     healthcheck:
