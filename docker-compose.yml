@@ -12,10 +12,24 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_SITE_URL=https://taxisrilanka.com
-      # Add your database connection environment variables
-      # - DATABASE_URL=postgresql://taxisrilanka_user:root@82.25.180.10:5432/taxisrilanka_prod_db
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SITE_URL=https://taxisrilanka.com
+      - DATABASE_URL=postgresql://taxisrilanka_user:YourStrongPassword@172.17.0.1:5432/taxisrilanka_prod_db
+      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      - ONEPAY_APP_ID=${ONEPAY_APP_ID}
+      - ONEPAY_APP_TOKEN=${ONEPAY_APP_TOKEN}
+      - ONEPAY_HASH_SALT=${ONEPAY_HASH_SALT}
+      - ONEPAY_CURRENCY=LKR
+      - ONEPAY_API_URL=https://api.onepay.lk/v3
+      - ONEPAY_CALLBACK_URL=https://www.taxisrilanka.com/api/payments/callback
     networks:
       - taxisrilanka-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 
 
