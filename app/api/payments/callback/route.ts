@@ -70,17 +70,49 @@ export async function POST(request: NextRequest) {
       ]
     )
 
-    return NextResponse.json({
-      success: true,
-      message: 'Callback processed successfully'
-    })
+    return new NextResponse(
+      JSON.stringify({
+        success: true,
+        message: 'Callback processed successfully'
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    )
   } catch (error: any) {
     console.error('Callback processing error:', error)
-    return NextResponse.json(
-      { success: false, error: error.message || 'Failed to process callback' },
-      { status: 500 }
+    return new NextResponse(
+      JSON.stringify({
+        success: false,
+        error: error.message || 'Failed to process callback'
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
     )
   } finally {
     client.release()
   }
+}
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+    },
+  })
 }

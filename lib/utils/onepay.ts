@@ -87,7 +87,6 @@ export async function createOnePayCheckout(
   const appToken = process.env.ONEPAY_APP_TOKEN!
   const currency = process.env.ONEPAY_CURRENCY || 'LKR'
   
-  // Generate hash
   const hash = generateOnePayHash(appId, currency, request.amount, hashSalt)
   
   const payload: OnePayCheckoutRequest = {

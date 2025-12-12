@@ -67,7 +67,7 @@ export default function Footer() {
 
         <div className="border-t border-background/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <p>&copy; 2025 Taxi Sri Lanka. All rights reserved.</p>
+            <p>&copy; 2025 Taxi Sri Lanka Tours. All rights reserved.</p>
             <div className="flex gap-4 justify-center">
               <Link href="/terms" className="hover:opacity-80 transition">
                 Terms & Conditions
