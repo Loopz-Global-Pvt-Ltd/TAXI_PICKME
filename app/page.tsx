@@ -11,7 +11,7 @@ import SafetyCommitment from "@/components/safety-commitment"
 import Footer from "@/components/footer"
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { Metadata } from 'next'
-
+import {ReviewSchema} from '@/components/seo/ReviewSchema'
 
 export const metadata: Metadata = {
   title: {
@@ -104,6 +104,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
+      <ReviewSchema />
       <Header />
       <Hero />
       <TrustBadges />
