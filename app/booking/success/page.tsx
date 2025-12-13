@@ -32,7 +32,7 @@ function BookingSuccessContent() {
 
   const bookingId = searchParams.get('bookingId')
   const paymentMethod = searchParams.get('paymentMethod')
-  const reference = searchParams.get('reference')
+  const reference = searchParams.get('ref') || searchParams.get('reference')
   const status = searchParams.get('status')
 
   useEffect(() => {
@@ -44,9 +44,12 @@ function BookingSuccessContent() {
       }
 
       try {
-        // Fetch booking details
+        console.log('🔍 Fetching booking details for ID:', bookingId)
+        
         const bookingResponse = await fetch(`/api/bookings/${bookingId}`)
         const bookingResult = await bookingResponse.json()
+
+        console.log('📦 Booking data received:', bookingResult)
 
         if (!bookingResult.success) {
           throw new Error(bookingResult.error || 'Failed to fetch booking')
@@ -54,8 +57,6 @@ function BookingSuccessContent() {
 
         setBookingData(bookingResult.data)
 
-        // Try to fetch payment details for this booking
-        // First try by reference if provided
         if (reference) {
           const paymentResponse = await fetch(`/api/payments/by-reference/${reference}`)
           const paymentResult = await paymentResponse.json()
@@ -64,7 +65,6 @@ function BookingSuccessContent() {
             setPaymentData(paymentResult.data)
           }
         } else {
-          // If no reference, fetch by booking ID
           const paymentResponse = await fetch(`/api/payments/by-booking/${bookingId}`)
           const paymentResult = await paymentResponse.json()
 
@@ -75,7 +75,7 @@ function BookingSuccessContent() {
 
         setIsLoading(false)
       } catch (err: any) {
-        console.error('Error fetching booking:', err)
+        console.error('❌ Error fetching booking:', err)
         setError(err.message || 'Failed to load booking details')
         setIsLoading(false)
       }
@@ -125,7 +125,6 @@ function BookingSuccessContent() {
     )
   }
 
-  // Determine payment status
   const isPaid = 
     paymentMethod === 'online' || 
     status === 'paid' || 
@@ -135,7 +134,20 @@ function BookingSuccessContent() {
 
   const isPayLater = 
     paymentMethod === 'later' || 
-    bookingData.payment_status === 'pending'
+    bookingData.payment_status === 'pending' ||
+    bookingData.payment_status === 'unpaid'
+
+  // Get the total price directly from booking data (this is the tier-calculated price)
+  const totalPrice = parseFloat(bookingData.total_price) || 0
+  const distance = parseFloat(bookingData.estimated_distance_km) || 0
+  const effectiveRate = distance > 0 ? (totalPrice / distance) : 0
+
+  console.log('💰 Price calculation:', {
+    totalPrice,
+    distance,
+    effectiveRate,
+    rawTotalPrice: bookingData.total_price
+  })
 
   return (
     <main className="min-h-screen bg-background">
@@ -206,7 +218,6 @@ function BookingSuccessContent() {
                 <h3 className="text-lg font-semibold text-foreground mb-6">Trip Details</h3>
 
                 <div className="space-y-6">
-                  {/* Pickup */}
                   <div className="flex gap-4">
                     <MapPin size={20} className="text-green-500 flex-shrink-0 mt-1" />
                     <div className="flex-1">
@@ -225,15 +236,13 @@ function BookingSuccessContent() {
                     </div>
                   </div>
 
-                  {/* Divider */}
                   <div className="h-8 flex items-center">
                     <div className="w-1 h-full bg-border mx-2"></div>
                     <div className="flex-1 text-sm text-muted-foreground">
-                      {bookingData.estimated_distance_km} km
+                      {distance.toFixed(1)} km • Tier-based pricing
                     </div>
                   </div>
 
-                  {/* Dropoff */}
                   <div className="flex gap-4">
                     <MapPin size={20} className="text-red-500 flex-shrink-0 mt-1" />
                     <div className="flex-1">
@@ -278,7 +287,7 @@ function BookingSuccessContent() {
                     </div>
                   </div>
 
-                  {bookingData.email && (
+                  {bookingData.email && bookingData.email !== 'customer@email.com' && (
                     <div className="flex items-center gap-4">
                       <Mail size={20} className="text-primary flex-shrink-0" />
                       <div>
@@ -294,61 +303,100 @@ function BookingSuccessContent() {
             {/* Sidebar */}
             <div className="lg:col-span-1 space-y-3">
               {/* Price Summary */}
-              {bookingData.total_price && (
-                <Card className="p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Price Summary</h3>
+              <Card className="p-6">
+                <h3 className="font-semibold text-foreground mb-4">Price Summary</h3>
 
-                  <div className="space-y-3 mb-4 pb-4 border-b border-border">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Distance</span>
-                      <span className="text-foreground">{bookingData.estimated_distance_km} km</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Rate per km</span>
-                      <span className="text-foreground">
-                        Rs. {bookingData.estimated_distance_km > 0 
-                          ? (bookingData.total_price / bookingData.estimated_distance_km).toFixed(2)
-                          : '0.00'}
-                      </span>
-                    </div>
+                <div className="space-y-3 mb-4 pb-4 border-b border-border">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Journey Distance</span>
+                    <span className="text-foreground font-medium">{distance.toFixed(1)} km</span>
                   </div>
-
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-semibold text-foreground">Total</span>
-                    <span className="text-2xl font-bold text-primary">
-                      Rs. {Number(bookingData.total_price).toLocaleString()}
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Average Rate</span>
+                    <span className="text-foreground font-medium">
+                      Rs. {effectiveRate.toFixed(2)}/km
                     </span>
                   </div>
-
-                  <div className={`p-3 rounded text-center ${
-                    isPaid 
-                      ? "bg-green-50 border border-green-200" 
-                      : "bg-orange-50 border border-orange-200"
-                  }`}>
-                    <p className={`text-xs font-semibold ${
-                      isPaid ? "text-green-900" : "text-orange-900"
-                    }`}>
-                      {isPaid ? "Payment Completed" : "Pay on Trip"}
-                    </p>
+                  <div className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 p-2 rounded">
+                    💡 Tier-based pricing applied - you saved money on longer distances!
                   </div>
-                  
+                </div>
+
+                <div className="flex justify-between items-center mb-4">
+                  <span className="font-semibold text-foreground">Total Fare</span>
+                  <span className="text-2xl font-bold text-primary">
+                    Rs. {Math.round(totalPrice).toLocaleString()}
+                  </span>
+                </div>
+
+                <div className={`p-3 rounded text-center ${
+                  isPaid 
+                    ? "bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-900" 
+                    : "bg-orange-50 border border-orange-200 dark:bg-orange-950/20 dark:border-orange-900"
+                }`}>
+                  <p className={`text-xs font-semibold ${
+                    isPaid ? "text-green-900 dark:text-green-100" : "text-orange-900 dark:text-orange-100"
+                  }`}>
+                    {isPaid ? "✓ Payment Completed" : "⏱ Pay on Trip"}
+                  </p>
+                </div>
                 
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full mt-4"
                   onClick={() => downloadReceipt(bookingData, paymentData)}
                 >
                   <Download className="mr-2" size={16} />
                   Download Receipt
                 </Button>
-                </Card>
-                
-              )}
+              </Card>
 
+              {/* Next Steps */}
+              <Card className="p-6 bg-blue-50 dark:bg-blue-950/20 border-blue-200">
+                <h3 className="font-semibold text-foreground mb-3">Next Steps</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 font-bold">1.</span>
+                    <span>Check your phone/email for booking confirmation</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 font-bold">2.</span>
+                    <span>Our driver will contact you before pickup</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 font-bold">3.</span>
+                    <span>{isPaid ? "Enjoy your journey!" : "Have cash ready for the driver"}</span>
+                  </li>
+                </ul>
+              </Card>
 
+              {/* Support */}
+              <Card className="p-6">
+                <h3 className="font-semibold text-foreground mb-3">Need Help?</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Contact our 24/7 support team
+                </p>
+                <div className="space-y-2">
+                  <a href="tel:+94777850529" className="flex items-center gap-2 text-sm text-primary hover:underline">
+                    <Phone size={16} />
+                    +94 77 785 0529
+                  </a>
+                  <a href="mailto:info@taxisrilanka.com" className="flex items-center gap-2 text-sm text-primary hover:underline">
+                    <Mail size={16} />
+                    info@taxisrilanka.com
+                  </a>
+                </div>
+              </Card>
+
+              {/* Back Home Button */}
+              <Link href="/">
+                <Button className="w-full" variant="default">
+                  <Home className="mr-2" size={16} />
+                  Back to Home
+                </Button>
+              </Link>
             </div>
           </div>
-
         </div>
       </section>
 

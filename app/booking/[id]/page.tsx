@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import OnePayButton from "@/components/payment/OnePayButton"
-import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User, Loader2, CheckCircle, Navigation} from "lucide-react"
+import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User, Loader2, CheckCircle, Navigation, Car} from "lucide-react"
 
 interface Vehicle {
   id: number
@@ -46,7 +46,9 @@ export default function BookingPage() {
     pickupDate: "",
     pickupTime: "",
     estimatedDistanceKm: "",
-    numberOfDays: "1"
+    numberOfDays: "1",
+    totalPrice: "",
+    effectiveRate: ""
   })
 
   const [formData, setFormData] = useState({
@@ -99,6 +101,8 @@ export default function BookingPage() {
     const urlDate = searchParams.get('date')
     const urlTime = searchParams.get('time')
     const urlDays = searchParams.get('days')
+    const urlTotalPrice = searchParams.get('totalPrice')
+    const urlEffectiveRate = searchParams.get('effectiveRate')
   
     setTripData({
       estimatedDistanceKm: urlDistance || "",
@@ -106,7 +110,9 @@ export default function BookingPage() {
       dropoffLocation: urlDropoff || "",
       pickupDate: urlDate || "",
       pickupTime: urlTime || "",
-      numberOfDays: urlDays || "1"
+      numberOfDays: urlDays || "1",
+      totalPrice: urlTotalPrice || "",
+      effectiveRate: urlEffectiveRate || ""
     })
   }, [])
 
@@ -128,9 +134,9 @@ export default function BookingPage() {
         throw new Error("Vehicle not found")
       }
 
-      // Calculate total price based on distance
+      // Use the calculated price from search page
+      const totalPrice = parseFloat(tripData.totalPrice) || 0
       const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
-      const totalPrice = vehicle.price_per_km * distanceKm
 
       // Create booking via API
       const response = await fetch('/api/bookings', {
@@ -146,8 +152,8 @@ export default function BookingPage() {
           pickupDate: tripData.pickupDate,
           pickupTime: tripData.pickupTime,
           estimatedDistanceKm: distanceKm,
+          totalPrice: totalPrice,
           specialRequests: formData.specialRequests,
-
         }),
       })
 
@@ -157,7 +163,6 @@ export default function BookingPage() {
         throw new Error(data.error || 'Failed to create booking')
       }
 
-      // Set booking ID and show payment button
       setBookingId(data.data.id)
       setBookingCreated(true)
 
@@ -182,12 +187,11 @@ export default function BookingPage() {
 
   const handlePayLater = async () => {
     try {
-      // Update booking to pay later status - use 'unpaid' instead of 'pending'
       const response = await fetch(`/api/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          payment_status: 'unpaid', // Changed from 'pending'
+          payment_status: 'unpaid',
           payment_method: 'cash',
         }),
       })
@@ -204,6 +208,11 @@ export default function BookingPage() {
       setError(error.message || 'Failed to process pay later option')
     }
   }
+
+  // Calculate prices properly
+  const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
+  const totalPrice = parseFloat(tripData.totalPrice) || (vehicle ? vehicle.price_per_km * distanceKm : 0)
+  const effectiveRate = parseFloat(tripData.effectiveRate) || (vehicle ? vehicle.price_per_km : 0)
 
   // Loading state
   if (isLoadingVehicle) {
@@ -271,9 +280,6 @@ export default function BookingPage() {
     )
   }
 
-  const distanceKm = parseFloat(tripData.estimatedDistanceKm) || 0
-  const totalPrice = vehicle.price_per_km * distanceKm
-
   return (
     <main className="min-h-screen bg-background">
       <Header />
@@ -297,7 +303,7 @@ export default function BookingPage() {
                       <Image src={vehicle.image} alt={vehicle.name} fill className="object-cover" />
                     ) : (
                       <div className="flex items-center justify-center h-full">
-                        <Card className="h-16 w-16 text-gray-400" />
+                        <Car className="h-16 w-16 text-gray-400" />
                       </div>
                     )}
                   </div>
@@ -327,6 +333,26 @@ export default function BookingPage() {
                       <p className="text-xs text-green-700 dark:text-green-300 mt-1">
                         Proceed with payment to confirm your booking.
                       </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Price Display in Sidebar */}
+                {totalPrice > 0 && (
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-muted-foreground">Distance</span>
+                      <span className="text-sm font-medium text-foreground">{distanceKm.toFixed(1)} km</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-sm text-muted-foreground">Avg Rate</span>
+                      <span className="text-sm font-medium text-foreground">Rs. {effectiveRate.toFixed(2)}/km</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-4 border-t border-border">
+                      <span className="font-semibold text-foreground">Total Fare</span>
+                      <span className="text-2xl font-bold text-primary">
+                        Rs. {Math.round(totalPrice).toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -367,44 +393,44 @@ export default function BookingPage() {
                     <Navigation className="h-5 w-5 text-gray-400" />
                     <div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Estimated Distance</p>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{distanceKm} km</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{distanceKm.toFixed(1)} km</p>
                     </div>
                   </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  {/*  Rate */}
+                  {/* Pricing Details with Tier-based calculation */}
                   <div className="flex justify-between items-center pb-4 border-b border-border">
                     <div>
-                      <p className="text-sm font-medium text-foreground">Rate per KM</p>
-                      <p className="text-xs text-muted-foreground capitalize">{vehicle.category} Vehicle</p>
-                    </div>
-                    <p className="text-lg font-semibold text-foreground">Rs. {Number(vehicle.price_per_km).toFixed(2)}</p>
-                  </div>
-
-                  {/* Distance */}
-                  <div className="flex justify-between items-center pb-4 border-b border-border">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Estimated Distance</p>
+                      <p className="text-sm font-medium text-foreground">Journey Distance</p>
                       <p className="text-xs text-muted-foreground">
                         {tripData.pickupLocation && tripData.dropoffLocation 
                           ? `${tripData.pickupLocation} → ${tripData.dropoffLocation}`
                           : "Route distance"}
                       </p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">{distanceKm} km</p>
+                    <p className="text-lg font-semibold text-foreground">{distanceKm.toFixed(1)} km</p>
                   </div>
 
-                  {/* Calculation */}
+                  {/* Effective Rate */}
+                  {/* <div className="flex justify-between items-center pb-4 border-b border-border">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Average Rate</p>
+                      <p className="text-xs text-muted-foreground">Tier-based pricing applied</p>
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">Rs. {effectiveRate.toFixed(2)}/km</p>
+                  </div> */}
+
+                  {/* Subtotal */}
                   <div className="flex justify-between items-center pb-4 border-b border-border">
                     <div>
                       <p className="text-sm font-medium text-foreground">Subtotal</p>
                       <p className="text-xs text-muted-foreground">
-                        Rs. {vehicle.price_per_km.toLocaleString()} × {distanceKm} km
+                        Calculated with tiered rates
                       </p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">Rs. {Number(totalPrice).toFixed(2)}</p>
+                    <p className="text-lg font-semibold text-foreground">Rs. {Math.round(totalPrice).toLocaleString()}</p>
                   </div>
 
                   {/* Total */}
@@ -413,7 +439,7 @@ export default function BookingPage() {
                       <p className="text-lg font-bold text-foreground">Total Amount</p>
                       <p className="text-xs text-muted-foreground">All inclusive</p>
                     </div>
-                    <p className="text-2xl font-bold text-primary">Rs. {Number(totalPrice).toFixed(2)}</p>
+                    <p className="text-2xl font-bold text-primary">Rs. {Math.round(totalPrice).toLocaleString()}</p>
                   </div>
                 </div>
               </Card>
@@ -432,7 +458,6 @@ export default function BookingPage() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Passenger Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <User size={20} className="text-primary" />
@@ -498,7 +523,6 @@ export default function BookingPage() {
                     </div>
                   </div>
 
-                  {/* Special Requests */}
                   <div>
                     <Label htmlFor="specialRequests" className="text-sm font-medium text-foreground">
                       Special Requests (Optional)
@@ -515,16 +539,6 @@ export default function BookingPage() {
                     />
                   </div>
 
-                  {/* Terms Agreement */}
-                  {/* <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg flex gap-3">
-                    <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-blue-900 dark:text-blue-100">
-                      By proceeding, you agree to our terms and conditions, cancellation policy, and privacy policy.
-                      You'll receive a confirmation via WhatsApp with booking details.
-                    </p>
-                  </div> */}
-
-                  {/* Submit/Payment Buttons */}
                   {!bookingCreated ? (
                     <Button
                       type="submit"
