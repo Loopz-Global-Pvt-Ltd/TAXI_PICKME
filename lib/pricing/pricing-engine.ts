@@ -75,7 +75,15 @@ export async function fetchVehiclePricing(vehicleId: number): Promise<VehiclePri
         { upToKm: config.tier_1_upto_km, rateMultiplier: parseFloat(config.tier_1_multiplier) },
         { upToKm: config.tier_2_upto_km, rateMultiplier: parseFloat(config.tier_2_multiplier) },
         { upToKm: config.tier_3_upto_km, rateMultiplier: parseFloat(config.tier_3_multiplier) },
-        { aboveKm: config.tier_3_upto_km, rateMultiplier: parseFloat(config.tier_4_multiplier) }
+        { upToKm: config.tier_4_upto_km, rateMultiplier: parseFloat(config.tier_4_multiplier) },
+        { upToKm: config.tier_5_upto_km, rateMultiplier: parseFloat(config.tier_5_multiplier) },
+        { upToKm: config.tier_6_upto_km, rateMultiplier: parseFloat(config.tier_6_multiplier) },
+        { upToKm: config.tier_7_upto_km, rateMultiplier: parseFloat(config.tier_7_multiplier) },
+        { upToKm: config.tier_8_upto_km, rateMultiplier: parseFloat(config.tier_8_multiplier) },
+        { upToKm: config.tier_9_upto_km, rateMultiplier: parseFloat(config.tier_9_multiplier) },
+        { upToKm: config.tier_10_upto_km, rateMultiplier: parseFloat(config.tier_10_multiplier) },
+        { upToKm: config.tier_11_upto_km, rateMultiplier: parseFloat(config.tier_11_multiplier) },
+        { aboveKm: config.tier_11_upto_km, rateMultiplier: parseFloat(config.tier_12_multiplier) }
       ]
     }
   } catch (error) {

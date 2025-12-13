@@ -193,13 +193,13 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-600">Manage all customer bookings</p>
               </div>
             </Link>
-            <Link href="/taxisrilanka-admin/pricing">
+            {/* <Link href="/taxisrilanka-admin/pricing">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
                 <DollarSign className="h-8 w-8 text-yellow-500 mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-1">Pricing Configuration</h3>
                 <p className="text-sm text-gray-600">Configure pricing and rates</p>
               </div>
-            </Link>
+            </Link> */}
             <Link href="/taxisrilanka-admin/vehicles/pricing">
               <div className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all cursor-pointer">
                 <DollarSign className="h-8 w-8 text-yellow-500 mb-3" />

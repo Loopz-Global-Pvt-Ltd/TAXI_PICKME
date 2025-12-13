@@ -19,7 +19,9 @@ import {
   TrendingDown,
   Search,
   Edit,
-  X
+  X,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react"
 import Link from 'next/link'
 
@@ -35,30 +37,47 @@ interface Vehicle {
   tier_2_multiplier: string
   tier_3_upto_km: number
   tier_3_multiplier: string
+  tier_4_upto_km: number
   tier_4_multiplier: string
-  use_category_pricing: boolean
+  tier_5_upto_km: number
+  tier_5_multiplier: string
+  tier_6_upto_km: number
+  tier_6_multiplier: string
+  tier_7_upto_km: number
+  tier_7_multiplier: string
+  tier_8_upto_km: number
+  tier_8_multiplier: string
+  tier_9_upto_km: number
+  tier_9_multiplier: string
+  tier_10_upto_km: number
+  tier_10_multiplier: string
+  tier_11_upto_km: number
+  tier_11_multiplier: string
+  tier_12_multiplier: string
   price_per_km: string
 }
 
-interface CategoryPricing {
-  vehicle_category: string
-  base_rate: string
-  minimum_fare: string
-  tier_1_upto_km: number
-  tier_1_multiplier: string
-  tier_2_upto_km: number
-  tier_2_multiplier: string
-  tier_3_upto_km: number
-  tier_3_multiplier: string
-  tier_4_multiplier: string
-}
+const TIER_CONFIGS = [
+  { number: 1, color: 'green', from: 0, label: 'First Tier' },
+  { number: 2, color: 'yellow', label: 'Short Distance' },
+  { number: 3, color: 'orange', label: 'Medium Distance' },
+  { number: 4, color: 'red', label: 'Long Distance' },
+  { number: 5, color: 'purple', label: 'Extended Distance' },
+  { number: 6, color: 'blue', label: 'Regional Travel' },
+  { number: 7, color: 'indigo', label: 'Inter-City' },
+  { number: 8, color: 'pink', label: 'Long Journey' },
+  { number: 9, color: 'cyan', label: 'Cross-Country' },
+  { number: 10, color: 'teal', label: 'Extended Journey' },
+  { number: 11, color: 'amber', label: 'Ultra Distance' },
+  { number: 12, color: 'rose', label: 'Maximum Distance', isLast: true },
+]
 
 export default function VehiclePricingManagementPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
-  const [categoryPricing, setCategoryPricing] = useState<Record<string, CategoryPricing>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState<number | null>(null)
   const [editingVehicle, setEditingVehicle] = useState<number | null>(null)
+  const [expandedVehicles, setExpandedVehicles] = useState<Set<number>>(new Set())
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
@@ -84,19 +103,36 @@ export default function VehiclePricingManagementPage() {
       const vehiclesResponse = await fetch('/api/admin/vehicles')
       const vehiclesData = await vehiclesResponse.json()
       
-      const pricingResponse = await fetch('/api/admin/pricing')
-      const pricingData = await pricingResponse.json()
-      
       if (vehiclesData.success) {
-        setVehicles(vehiclesData.data)
-      }
-      
-      if (pricingData.success) {
-        const pricingMap: Record<string, CategoryPricing> = {}
-        pricingData.data.forEach((config: any) => {
-          pricingMap[config.vehicle_category] = config
-        })
-        setCategoryPricing(pricingMap)
+        const normalizedVehicles = vehiclesData.data.map((v: any) => ({
+          ...v,
+          base_rate: v.base_rate || '0',
+          minimum_fare: v.minimum_fare || '0',
+          tier_1_upto_km: v.tier_1_upto_km || 10,
+          tier_1_multiplier: v.tier_1_multiplier || '1.0',
+          tier_2_upto_km: v.tier_2_upto_km || 25,
+          tier_2_multiplier: v.tier_2_multiplier || '0.9',
+          tier_3_upto_km: v.tier_3_upto_km || 60,
+          tier_3_multiplier: v.tier_3_multiplier || '0.8',
+          tier_4_upto_km: v.tier_4_upto_km || 100,
+          tier_4_multiplier: v.tier_4_multiplier || '0.75',
+          tier_5_upto_km: v.tier_5_upto_km || 150,
+          tier_5_multiplier: v.tier_5_multiplier || '0.7',
+          tier_6_upto_km: v.tier_6_upto_km || 200,
+          tier_6_multiplier: v.tier_6_multiplier || '0.65',
+          tier_7_upto_km: v.tier_7_upto_km || 250,
+          tier_7_multiplier: v.tier_7_multiplier || '0.6',
+          tier_8_upto_km: v.tier_8_upto_km || 300,
+          tier_8_multiplier: v.tier_8_multiplier || '0.55',
+          tier_9_upto_km: v.tier_9_upto_km || 350,
+          tier_9_multiplier: v.tier_9_multiplier || '0.5',
+          tier_10_upto_km: v.tier_10_upto_km || 400,
+          tier_10_multiplier: v.tier_10_multiplier || '0.48',
+          tier_11_upto_km: v.tier_11_upto_km || 450,
+          tier_11_multiplier: v.tier_11_multiplier || '0.45',
+          tier_12_multiplier: v.tier_12_multiplier || '0.42',
+        }))
+        setVehicles(normalizedVehicles)
       }
     } catch (err: any) {
       setError(err.message)
@@ -123,8 +159,23 @@ export default function VehiclePricingManagementPage() {
           tier2Multiplier: updatedVehicle.tier_2_multiplier,
           tier3UptoKm: updatedVehicle.tier_3_upto_km,
           tier3Multiplier: updatedVehicle.tier_3_multiplier,
+          tier4UptoKm: updatedVehicle.tier_4_upto_km,
           tier4Multiplier: updatedVehicle.tier_4_multiplier,
-          useCategoryPricing: updatedVehicle.use_category_pricing
+          tier5UptoKm: updatedVehicle.tier_5_upto_km,
+          tier5Multiplier: updatedVehicle.tier_5_multiplier,
+          tier6UptoKm: updatedVehicle.tier_6_upto_km,
+          tier6Multiplier: updatedVehicle.tier_6_multiplier,
+          tier7UptoKm: updatedVehicle.tier_7_upto_km,
+          tier7Multiplier: updatedVehicle.tier_7_multiplier,
+          tier8UptoKm: updatedVehicle.tier_8_upto_km,
+          tier8Multiplier: updatedVehicle.tier_8_multiplier,
+          tier9UptoKm: updatedVehicle.tier_9_upto_km,
+          tier9Multiplier: updatedVehicle.tier_9_multiplier,
+          tier10UptoKm: updatedVehicle.tier_10_upto_km,
+          tier10Multiplier: updatedVehicle.tier_10_multiplier,
+          tier11UptoKm: updatedVehicle.tier_11_upto_km,
+          tier11Multiplier: updatedVehicle.tier_11_multiplier,
+          tier12Multiplier: updatedVehicle.tier_12_multiplier,
         })
       })
 
@@ -157,13 +208,26 @@ export default function VehiclePricingManagementPage() {
 
   const handleEdit = (vehicleId: number) => {
     setEditingVehicle(vehicleId)
+    setExpandedVehicles(new Set([vehicleId]))
     setError(null)
     setSuccess(null)
   }
 
   const handleCancelEdit = (vehicleId: number) => {
     setEditingVehicle(null)
-    fetchData() // Reset to original values
+    fetchData()
+  }
+
+  const toggleExpand = (vehicleId: number) => {
+    setExpandedVehicles(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(vehicleId)) {
+        newSet.delete(vehicleId)
+      } else {
+        newSet.add(vehicleId)
+      }
+      return newSet
+    })
   }
 
   const filteredVehicles = vehicles.filter(vehicle => {
@@ -173,6 +237,93 @@ export default function VehiclePricingManagementPage() {
   })
 
   const categories = Array.from(new Set(vehicles.map(v => v.category)))
+
+  const renderTierInput = (vehicle: Vehicle, tierConfig: typeof TIER_CONFIGS[0], isDisabled: boolean) => {
+    const tierNum = tierConfig.number
+    const prevTier = tierNum > 1 ? (vehicle as any)[`tier_${tierNum - 1}_upto_km`] : 0
+    const currentLimit = tierConfig.isLast ? '' : String((vehicle as any)[`tier_${tierNum}_upto_km`] || '')
+    const multiplier = String((vehicle as any)[`tier_${tierNum}_multiplier`] || '0')
+    
+    const bgColor = {
+      green: 'bg-green-50 dark:bg-green-950/20 border-green-200',
+      yellow: 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200',
+      orange: 'bg-orange-50 dark:bg-orange-950/20 border-orange-200',
+      red: 'bg-red-50 dark:bg-red-950/20 border-red-200',
+      purple: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200',
+      blue: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200',
+      indigo: 'bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200',
+      pink: 'bg-pink-50 dark:bg-pink-950/20 border-pink-200',
+      cyan: 'bg-cyan-50 dark:bg-cyan-950/20 border-cyan-200',
+      teal: 'bg-teal-50 dark:bg-teal-950/20 border-teal-200',
+      amber: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200',
+      rose: 'bg-rose-50 dark:bg-rose-950/20 border-rose-200',
+    }[tierConfig.color]
+
+    const textColor = {
+      green: 'text-green-900 dark:text-green-100',
+      yellow: 'text-yellow-900 dark:text-yellow-100',
+      orange: 'text-orange-900 dark:text-orange-100',
+      red: 'text-red-900 dark:text-red-100',
+      purple: 'text-purple-900 dark:text-purple-100',
+      blue: 'text-blue-900 dark:text-blue-100',
+      indigo: 'text-indigo-900 dark:text-indigo-100',
+      pink: 'text-pink-900 dark:text-pink-100',
+      cyan: 'text-cyan-900 dark:text-cyan-100',
+      teal: 'text-teal-900 dark:text-teal-100',
+      amber: 'text-amber-900 dark:text-amber-100',
+      rose: 'text-rose-900 dark:text-rose-100',
+    }[tierConfig.color]
+
+    const iconColor = {
+      green: 'text-green-600',
+      yellow: 'text-yellow-600',
+      orange: 'text-orange-600',
+      red: 'text-red-600',
+      purple: 'text-purple-600',
+      blue: 'text-blue-600',
+      indigo: 'text-indigo-600',
+      pink: 'text-pink-600',
+      cyan: 'text-cyan-600',
+      teal: 'text-teal-600',
+      amber: 'text-amber-600',
+      rose: 'text-rose-600',
+    }[tierConfig.color]
+
+    const effectiveRate = parseFloat(vehicle.base_rate || '0') * parseFloat(multiplier || '0')
+
+    return (
+      <div key={tierNum} className={`p-3 ${bgColor} border rounded-lg`}>
+        <div className="flex items-center gap-2 mb-2">
+          <TrendingDown className={`h-4 w-4 ${iconColor}`} />
+          <Label className={`text-xs font-bold ${textColor}`}>
+            Tier {tierNum} ({prevTier}-{currentLimit || '∞'} km) - {tierConfig.label}
+          </Label>
+        </div>
+        <div className={`grid ${tierConfig.isLast ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
+          {!tierConfig.isLast && (
+            <Input
+              type="number"
+              placeholder="Up to KM"
+              value={currentLimit}
+              onChange={(e) => handleChange(vehicle.id, `tier_${tierNum}_upto_km`, parseInt(e.target.value) || 0)}
+              disabled={isDisabled}
+            />
+          )}
+          <Input
+            type="number"
+            step="0.01"
+            placeholder="Multiplier"
+            value={multiplier}
+            onChange={(e) => handleChange(vehicle.id, `tier_${tierNum}_multiplier`, e.target.value || '0')}
+            disabled={isDisabled}
+          />
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Rate: Rs. {effectiveRate.toFixed(2)}/km
+        </p>
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -201,7 +352,7 @@ export default function VehiclePricingManagementPage() {
                     Vehicle Pricing Configuration
                   </h1>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {filteredVehicles.length} vehicles
+                    {filteredVehicles.length} vehicles • 12-Tier System • Vehicle-Specific Pricing
                   </p>
                 </div>
               </div>
@@ -217,7 +368,6 @@ export default function VehiclePricingManagementPage() {
       <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
           
-          {/* Filters */}
           <Card className="p-6 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
@@ -263,26 +413,37 @@ export default function VehiclePricingManagementPage() {
             </div>
           )}
 
-          {/* Vehicle Pricing Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
             {filteredVehicles.map((vehicle) => {
               const isEditing = editingVehicle === vehicle.id
               const isDisabled = !isEditing
+              const isExpanded = expandedVehicles.has(vehicle.id)
 
               return (
                 <Card key={vehicle.id} className="p-6">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex items-start gap-3">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-start gap-3 flex-1">
                       <Car className="h-8 w-8 text-primary mt-1" />
-                      <div>
-                        <h2 className="text-xl font-bold text-foreground">{vehicle.name}</h2>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3">
+                          <h2 className="text-xl font-bold text-foreground">{vehicle.name}</h2>
+                          <button
+                            onClick={() => toggleExpand(vehicle.id)}
+                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp size={20} className="text-gray-500" />
+                            ) : (
+                              <ChevronDown size={20} className="text-gray-500" />
+                            )}
+                          </button>
+                        </div>
                         <p className="text-sm text-muted-foreground capitalize">
                           {vehicle.category} • ID: {vehicle.id}
                         </p>
                       </div>
                     </div>
                     
-                    {/* Edit/Cancel Button */}
                     {!isEditing ? (
                       <Button
                         onClick={() => handleEdit(vehicle.id)}
@@ -306,190 +467,64 @@ export default function VehiclePricingManagementPage() {
                     )}
                   </div>
 
-                  <div className="space-y-4">
-                    {/* Use Category Pricing Toggle - Only editable when editing */}
-                    {/* <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <input
-                        type="checkbox"
-                        id={`category-${vehicle.id}`}
-                        checked={vehicle.use_category_pricing}
-                        onChange={(e) => handleChange(vehicle.id, 'use_category_pricing', e.target.checked)}
-                        className="w-4 h-4"
-                        disabled={isDisabled}
-                      />
-                      <Label 
-                        htmlFor={`category-${vehicle.id}`} 
-                        className={`text-sm ${isDisabled ? 'cursor-default text-muted-foreground' : 'cursor-pointer'}`}
-                      >
-                        Use category default pricing
-                      </Label>
-                    </div> */}
+                  {isExpanded && (
+                    <div className="space-y-4 mt-4">
+                      <div className="grid grid-cols-2 gap-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200">
+                        <div>
+                          <Label className="text-xs font-semibold text-blue-900 dark:text-blue-100">
+                            Base Rate (Rs/km)
+                          </Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={vehicle.base_rate || '0'}
+                            onChange={(e) => handleChange(vehicle.id, 'base_rate', e.target.value || '0')}
+                            className="mt-2"
+                            disabled={isDisabled}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs font-semibold text-blue-900 dark:text-blue-100">
+                            Minimum Fare (Rs)
+                          </Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={vehicle.minimum_fare || '0'}
+                            onChange={(e) => handleChange(vehicle.id, 'minimum_fare', e.target.value || '0')}
+                            className="mt-2"
+                            disabled={isDisabled}
+                          />
+                        </div>
+                      </div>
 
-                    {/* Base Settings */}
-                    <div className="grid grid-cols-2 gap-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                      <div>
-                        <Label className="text-xs font-semibold text-blue-900 dark:text-blue-100">
-                          Base Rate (Rs/km)
-                        </Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={vehicle.base_rate}
-                          onChange={(e) => handleChange(vehicle.id, 'base_rate', e.target.value)}
-                          className="mt-2"
-                          disabled={isDisabled}
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs font-semibold text-blue-900 dark:text-blue-100">
-                          Minimum Fare (Rs)
-                        </Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={vehicle.minimum_fare}
-                          onChange={(e) => handleChange(vehicle.id, 'minimum_fare', e.target.value)}
-                          className="mt-2"
-                          disabled={isDisabled}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Tier 1 */}
-                    <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingDown className="h-4 w-4 text-green-600" />
-                        <Label className="text-xs font-bold text-green-900 dark:text-green-100">
-                          Tier 1 (0-{vehicle.tier_1_upto_km} km)
-                        </Label>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Input
-                          type="number"
-                          placeholder="Up to KM"
-                          value={vehicle.tier_1_upto_km}
-                          onChange={(e) => handleChange(vehicle.id, 'tier_1_upto_km', parseInt(e.target.value))}
-                          disabled={isDisabled}
-                        />
-                        <Input
-                          type="number"
-                          step="0.01"
-                          placeholder="Multiplier"
-                          value={vehicle.tier_1_multiplier}
-                          onChange={(e) => handleChange(vehicle.id, 'tier_1_multiplier', e.target.value)}
-                          disabled={isDisabled}
-                        />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Rate: Rs. {(parseFloat(vehicle.base_rate) * parseFloat(vehicle.tier_1_multiplier)).toFixed(2)}/km
-                      </p>
-                    </div>
-
-                    {/* Tier 2 */}
-                    <div className="p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingDown className="h-4 w-4 text-yellow-600" />
-                        <Label className="text-xs font-bold text-yellow-900 dark:text-yellow-100">
-                          Tier 2 ({vehicle.tier_1_upto_km}-{vehicle.tier_2_upto_km} km)
-                        </Label>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Input
-                          type="number"
-                          placeholder="Up to KM"
-                          value={vehicle.tier_2_upto_km}
-                          onChange={(e) => handleChange(vehicle.id, 'tier_2_upto_km', parseInt(e.target.value))}
-                          disabled={isDisabled}
-                        />
-                        <Input
-                          type="number"
-                          step="0.01"
-                          placeholder="Multiplier"
-                          value={vehicle.tier_2_multiplier}
-                          onChange={(e) => handleChange(vehicle.id, 'tier_2_multiplier', e.target.value)}
-                          disabled={isDisabled}
-                        />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Rate: Rs. {(parseFloat(vehicle.base_rate) * parseFloat(vehicle.tier_2_multiplier)).toFixed(2)}/km
-                        {' '}({((1 - parseFloat(vehicle.tier_2_multiplier)) * 100).toFixed(0)}% discount)
-                      </p>
-                    </div>
-
-                    {/* Tier 3 */}
-                    <div className="p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingDown className="h-4 w-4 text-orange-600" />
-                        <Label className="text-xs font-bold text-orange-900 dark:text-orange-100">
-                          Tier 3 ({vehicle.tier_2_upto_km}-{vehicle.tier_3_upto_km} km)
-                        </Label>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Input
-                          type="number"
-                          placeholder="Up to KM"
-                          value={vehicle.tier_3_upto_km}
-                          onChange={(e) => handleChange(vehicle.id, 'tier_3_upto_km', parseInt(e.target.value))}
-                          disabled={isDisabled}
-                        />
-                        <Input
-                          type="number"
-                          step="0.01"
-                          placeholder="Multiplier"
-                          value={vehicle.tier_3_multiplier}
-                          onChange={(e) => handleChange(vehicle.id, 'tier_3_multiplier', e.target.value)}
-                          disabled={isDisabled}
-                        />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Rate: Rs. {(parseFloat(vehicle.base_rate) * parseFloat(vehicle.tier_3_multiplier)).toFixed(2)}/km
-                        {' '}({((1 - parseFloat(vehicle.tier_3_multiplier)) * 100).toFixed(0)}% discount)
-                      </p>
-                    </div>
-
-                    {/* Tier 4 */}
-                    <div className="p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingDown className="h-4 w-4 text-red-600" />
-                        <Label className="text-xs font-bold text-red-900 dark:text-red-100">
-                          Tier 4 ({vehicle.tier_3_upto_km}+ km)
-                        </Label>
-                      </div>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Multiplier"
-                        value={vehicle.tier_4_multiplier}
-                        onChange={(e) => handleChange(vehicle.id, 'tier_4_multiplier', e.target.value)}
-                        disabled={isDisabled}
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Rate: Rs. {(parseFloat(vehicle.base_rate) * parseFloat(vehicle.tier_4_multiplier)).toFixed(2)}/km
-                        {' '}({((1 - parseFloat(vehicle.tier_4_multiplier)) * 100).toFixed(0)}% discount)
-                      </p>
-                    </div>
-
-                    {/* Save Button - Only show when editing */}
-                    {isEditing && (
-                      <Button
-                        onClick={() => handleUpdate(vehicle.id, vehicle)}
-                        disabled={saving === vehicle.id}
-                        className="w-full mt-4"
-                      >
-                        {saving === vehicle.id ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving...
-                          </>
-                        ) : (
-                          <>
-                            <Save className="mr-2 h-4 w-4" />
-                            Save Changes
-                          </>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {TIER_CONFIGS.map(tierConfig => 
+                          renderTierInput(vehicle, tierConfig, isDisabled)
                         )}
-                      </Button>
-                    )}
-                  </div>
+                      </div>
+
+                      {isEditing && (
+                        <Button
+                          onClick={() => handleUpdate(vehicle.id, vehicle)}
+                          disabled={saving === vehicle.id}
+                          className="w-full mt-4"
+                        >
+                          {saving === vehicle.id ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Changes
+                            </>
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </Card>
               )
             })}

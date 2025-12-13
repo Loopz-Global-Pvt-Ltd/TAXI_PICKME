@@ -244,8 +244,14 @@ export default function SearchPage() {
 
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                  <p className="text-muted-foreground">Calculating best prices...</p>
+                  <div className="relative">
+                  <img 
+                    src="/gif/taxi-car-animation.gif" 
+                    alt="Loading..." 
+                    className="h-20 w-26 mx-auto"
+                  />
+                  </div>
+                  <p className="text-muted-foreground mt-4">Calculating best prices...</p>
                 </div>
               ) : (
                 <div className="space-y-4">

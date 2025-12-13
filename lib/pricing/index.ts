@@ -1,8 +1,6 @@
 
 export {
   calculateFare,
-  getBaseRate,
-  PRICING_CONFIG
 } from './pricing-engine'
 
 export type {
