@@ -86,16 +86,16 @@ export default function SearchPage() {
               const flatRateFare = distance * vehicle.price_per_km
               const savings = flatRateFare - fareResult.fareBreakdown.totalFare
 
-              console.log(`[${vehicle.name}] Price Calculation:`, {
-                vehicleId: vehicle.id,
-                distance: `${distance} km`,
-                baseRatePerKm: vehicle.price_per_km,
-                flatRateFare: flatRateFare.toFixed(2),
-                distanceFare: fareResult.fareBreakdown.distanceFare.toFixed(2),
-                totalFare: fareResult.fareBreakdown.totalFare.toFixed(2),
-                effectiveRatePerKm: fareResult.fareBreakdown.effectiveRatePerKm.toFixed(2),
-                savings: savings.toFixed(2)
-              })
+              // console.log(`[${vehicle.name}] Price Calculation:`, {
+              //   vehicleId: vehicle.id,
+              //   distance: `${distance} km`,
+              //   baseRatePerKm: vehicle.price_per_km,
+              //   flatRateFare: flatRateFare.toFixed(2),
+              //   distanceFare: fareResult.fareBreakdown.distanceFare.toFixed(2),
+              //   totalFare: fareResult.fareBreakdown.totalFare.toFixed(2),
+              //   effectiveRatePerKm: fareResult.fareBreakdown.effectiveRatePerKm.toFixed(2),
+              //   savings: savings.toFixed(2)
+              // })
 
               vehiclesWithPrices.push({
                 ...vehicle,

@@ -100,13 +100,13 @@ function calculateTieredDistanceFare(
   config: VehiclePricingConfig,
   vehicleName?: string
 ): { fare: number; tierBreakdowns: TierBreakdown[] } {
-  console.log('\n' + '='.repeat(80))
-  console.log(`🚖 CALCULATING FARE FOR: ${vehicleName || 'Unknown Vehicle'}`)
-  console.log('='.repeat(80))
-  console.log(`📍 Total Distance: ${distanceKm.toFixed(2)} km`)
-  console.log(`💰 Base Rate: Rs. ${config.baseRate.toFixed(2)}/km`)
-  console.log(`🎯 Minimum Fare: Rs. ${config.minimumFare?.toFixed(2) || 0}`)
-  console.log('─'.repeat(80))
+  // console.log('\n' + '='.repeat(80))
+  // console.log(`🚖 CALCULATING FARE FOR: ${vehicleName || 'Unknown Vehicle'}`)
+  // console.log('='.repeat(80))
+  // console.log(`📍 Total Distance: ${distanceKm.toFixed(2)} km`)
+  // console.log(`💰 Base Rate: Rs. ${config.baseRate.toFixed(2)}/km`)
+  // console.log(`🎯 Minimum Fare: Rs. ${config.minimumFare?.toFixed(2) || 0}`)
+  // console.log('─'.repeat(80))
 
   let totalFare = 0
   let remainingKm = distanceKm
@@ -136,14 +136,14 @@ function calculateTieredDistanceFare(
         : `${previousLimit}-${currentLimit} km`
 
       // Detailed console output
-      console.log(`\n🔷 ${tierName}`)
-      console.log(`   ├─ Distance Range: ${kmRange}`)
-      console.log(`   ├─ KM in this tier: ${kmInThisTier.toFixed(2)} km`)
-      console.log(`   ├─ Base Rate: Rs. ${config.baseRate.toFixed(2)}/km`)
-      console.log(`   ├─ Multiplier: ${tier.rateMultiplier} (${((1 - tier.rateMultiplier) * 100).toFixed(0)}% discount)`)
-      console.log(`   ├─ Effective Rate: Rs. ${effectiveRate.toFixed(2)}/km`)
-      console.log(`   ├─ Calculation: ${kmInThisTier.toFixed(2)} km × Rs. ${effectiveRate.toFixed(2)}/km`)
-      console.log(`   └─ Tier Amount: Rs. ${tierAmount.toFixed(2)}`)
+      // console.log(`\n🔷 ${tierName}`)
+      // console.log(`   ├─ Distance Range: ${kmRange}`)
+      // console.log(`   ├─ KM in this tier: ${kmInThisTier.toFixed(2)} km`)
+      // console.log(`   ├─ Base Rate: Rs. ${config.baseRate.toFixed(2)}/km`)
+      // console.log(`   ├─ Multiplier: ${tier.rateMultiplier} (${((1 - tier.rateMultiplier) * 100).toFixed(0)}% discount)`)
+      // console.log(`   ├─ Effective Rate: Rs. ${effectiveRate.toFixed(2)}/km`)
+      // console.log(`   ├─ Calculation: ${kmInThisTier.toFixed(2)} km × Rs. ${effectiveRate.toFixed(2)}/km`)
+      // console.log(`   └─ Tier Amount: Rs. ${tierAmount.toFixed(2)}`)
 
       tierBreakdowns.push({
         tierNumber,
@@ -164,9 +164,9 @@ function calculateTieredDistanceFare(
     previousLimit = currentLimit
   }
 
-  console.log('\n' + '─'.repeat(80))
-  console.log(`💵 SUBTOTAL (Distance-based): Rs. ${totalFare.toFixed(2)}`)
-  console.log('=' .repeat(80) + '\n')
+  // console.log('\n' + '─'.repeat(80))
+  // console.log(`💵 SUBTOTAL (Distance-based): Rs. ${totalFare.toFixed(2)}`)
+  // console.log('=' .repeat(80) + '\n')
 
   return { fare: totalFare, tierBreakdowns }
 }
@@ -177,10 +177,10 @@ function calculateTieredDistanceFare(
 export async function calculateFare(input: FareCalculationInput): Promise<FareCalculationResult> {
   const { vehicleId, vehicleType, distanceKm } = input
 
-  console.log('\n🚀 STARTING FARE CALCULATION')
-  console.log(`   Vehicle ID: ${vehicleId || 'N/A'}`)
-  console.log(`   Vehicle Type: ${vehicleType || 'N/A'}`)
-  console.log(`   Distance: ${distanceKm} km`)
+  // console.log('\n🚀 STARTING FARE CALCULATION')
+  // console.log(`   Vehicle ID: ${vehicleId || 'N/A'}`)
+  // console.log(`   Vehicle Type: ${vehicleType || 'N/A'}`)
+  // console.log(`   Distance: ${distanceKm} km`)
 
   if (distanceKm <= 0) {
     throw new Error('Distance must be greater than 0')
@@ -208,21 +208,21 @@ export async function calculateFare(input: FareCalculationInput): Promise<FareCa
 
   // Apply minimum fare
   if (config.minimumFare && totalFare < config.minimumFare) {
-    console.log(`⚠️  Applying Minimum Fare: Rs. ${config.minimumFare.toFixed(2)}`)
-    console.log(`   (Calculated fare Rs. ${totalFare.toFixed(2)} < Minimum Rs. ${config.minimumFare.toFixed(2)})`)
+    // console.log(`⚠️  Applying Minimum Fare: Rs. ${config.minimumFare.toFixed(2)}`)
+    // console.log(`   (Calculated fare Rs. ${totalFare.toFixed(2)} < Minimum Rs. ${config.minimumFare.toFixed(2)})`)
     totalFare = config.minimumFare
   }
 
   const effectiveRatePerKm = distanceFare / distanceKm
 
-  console.log('\n' + '='.repeat(80))
-  console.log('✅ FINAL CALCULATION')
-  console.log('='.repeat(80))
-  console.log(`💰 Total Fare: Rs. ${totalFare.toFixed(2)}`)
-  console.log(`📊 Effective Rate: Rs. ${effectiveRatePerKm.toFixed(2)}/km`)
-  console.log(`🎯 Savings vs Flat Rate: Rs. ${((config.baseRate * distanceKm) - totalFare).toFixed(2)}`)
-  console.log(`📈 Discount: ${(((config.baseRate * distanceKm - totalFare) / (config.baseRate * distanceKm)) * 100).toFixed(1)}%`)
-  console.log('='.repeat(80) + '\n')
+  // console.log('\n' + '='.repeat(80))
+  // console.log('✅ FINAL CALCULATION')
+  // console.log('='.repeat(80))
+  // console.log(`💰 Total Fare: Rs. ${totalFare.toFixed(2)}`)
+  // console.log(`📊 Effective Rate: Rs. ${effectiveRatePerKm.toFixed(2)}/km`)
+  // console.log(`🎯 Savings vs Flat Rate: Rs. ${((config.baseRate * distanceKm) - totalFare).toFixed(2)}`)
+  // console.log(`📈 Discount: ${(((config.baseRate * distanceKm - totalFare) / (config.baseRate * distanceKm)) * 100).toFixed(1)}%`)
+  // console.log('='.repeat(80) + '\n')
 
   return {
     vehicleId,
