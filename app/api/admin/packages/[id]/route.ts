@@ -6,7 +6,7 @@ import { z } from 'zod'
 const updatePackageSchema = z.object({
   packageName: z.string().min(3).max(255).optional(),
   description: z.string().optional(),
-  category: z.enum(['mini', 'standard', 'luxury', 'van']).optional(),
+  category: z.enum(['mini', 'standard', 'luxury', 'van' , 'tuk tuk']).optional(),
   pricePerKm: z.number().positive().optional(),
   maxPassengers: z.number().int().positive().optional(),
   features: z.array(z.string()).optional(),

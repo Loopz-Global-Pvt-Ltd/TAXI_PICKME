@@ -165,10 +165,11 @@ export default function CreateVehicleModal({ vehicle: editVehicle, onClose, onSu
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               >
-                <option value="mini">Mini</option>
-                <option value="standard">Standard</option>
-                <option value="luxury">Luxury</option>
-                <option value="van">Van</option>
+                <option value="Mini">Mini</option>
+                <option value="Standard">Standard</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Van">Van</option>
+                <option value="Tuk Tuk">Tuk Tuk</option>
               </select>
             </div>
           </div>

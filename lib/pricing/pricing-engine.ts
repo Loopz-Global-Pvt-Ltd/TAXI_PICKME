@@ -2,7 +2,7 @@
  * Enhanced Pricing Engine - Vehicle-specific tiered pricing with detailed logging
  */
 
-export type VehicleType = 'Mini' | 'Sedan' | 'Van' | 'SUV' | 'Luxury'
+export type VehicleType = 'Mini' | 'Sedan' | 'Van' | 'SUV' | 'Luxury' |'Tuk Tuk'
 
 export interface PricingTier {
   upToKm?: number

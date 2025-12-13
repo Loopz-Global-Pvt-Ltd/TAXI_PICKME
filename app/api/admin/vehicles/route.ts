@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 const createVehicleSchema = z.object({
   name: z.string().min(2).max(255),
-  category: z.enum(['Mini', 'Standard', 'Luxury', 'Van', 'SUV', 'Sedan']),
+  category: z.enum(['Mini', 'Standard', 'Luxury', 'Van', 'SUV', 'Sedan','Tuk Tuk']),
   pricePerKm: z.number().positive(),
   seats: z.number().int().positive(),
   luggage: z.number().int().min(0),

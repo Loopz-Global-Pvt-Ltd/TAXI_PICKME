@@ -192,6 +192,7 @@ export default function CreatePackageModal({ package: editPackage, onClose, onSu
                 <option value="standard">Standard</option>
                 <option value="luxury">Luxury</option>
                 <option value="van">Van</option>
+                <option value="tuk tuk">Tuk Tuk</option>
               </select>
             </div>
 
