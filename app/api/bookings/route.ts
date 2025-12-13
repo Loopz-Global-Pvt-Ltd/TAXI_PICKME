@@ -20,6 +20,7 @@ const createBookingSchema = z.object({
   pickupTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
   estimatedDistanceKm: z.number().min(1).max(10000),
   specialRequests: z.string().max(1000).optional(),
+  totalPrice: z.number().min(0),
 })
 
 const bookingSearchSchema = z.object({
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
           validatedData.pickupDate,
           validatedData.pickupTime,
           validatedData.estimatedDistanceKm,
-          pricing.totalPrice,
+          validatedData.totalPrice,
           validatedData.specialRequests || null,
           'pending',
           'unpaid',
