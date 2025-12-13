@@ -125,20 +125,20 @@ export default function VehicleCard({ vehicle, estimatedDistance, pricingBreakdo
                 <p className="text-2xl font-bold text-primary">
                   Rs. {totalPrice.toLocaleString()}
                 </p>
-                {savings > 0 && (
+                {/* {savings > 0 && (
                   <span className="text-sm text-green-600 font-medium">
                     Save Rs. {savings.toLocaleString()}
                   </span>
-                )}
+                )} */}
               </div>
               <p className="text-sm text-muted-foreground">
                 For {distance.toFixed(1)} km journey
               </p>
-              {pricingBreakdown && (
+              {/* {pricingBreakdown && (
                 <p className="text-xs text-muted-foreground">
                   Avg: Rs. {effectiveRate.toFixed(2)}/km • Tier-based pricing
                 </p>
-              )}
+              )} */}
             </div>
             <Link href={`/booking/${vehicle.id}?${bookingParams.toString()}`}>
               <Button size="lg" className="bg-primary hover:bg-primary/90">
