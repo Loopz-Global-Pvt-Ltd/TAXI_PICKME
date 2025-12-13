@@ -142,6 +142,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+      <meta name="google-site-verification" content="VUv4RmrTeTNue1hfJyek3oq_0DQiVZiK3_pv8czY79g" />  
       <HomeStructuredData />
         <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon/favicon-16x16.png" type="image/png" sizes="16x16" />
