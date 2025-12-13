@@ -11,7 +11,6 @@ import SearchFilters from "@/components/search-filters"
 import VehicleCard from "@/components/vehicle-card"
 import { ChevronDown, Loader2 } from "lucide-react"
 import { calculateFare, type VehicleType } from "@/lib/pricing"
-import { se } from "date-fns/locale"
 
 type SortOption = "price-low" | "price-high" | "rating" | "popularity"
 
@@ -43,7 +42,6 @@ interface VehicleWithPrice extends Vehicle {
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
-  // Log search parameters received from homepage
   const [vehicles, setVehicles] = useState<VehicleWithPrice[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("")
@@ -60,6 +58,10 @@ export default function SearchPage() {
 
   useEffect(() => {
     const fetchVehicles = async () => {
+      console.log('\n🔍 FETCHING VEHICLES FOR SEARCH')
+      console.log(`📍 Route: ${pickup} → ${dropoff}`)
+      console.log(`📏 Distance: ${distance.toFixed(2)} km`)
+      
       try {
         const params = new URLSearchParams({
           passengers: passengers,
@@ -71,12 +73,16 @@ export default function SearchPage() {
         if (data.success) {
           const vehiclesWithPrices: VehicleWithPrice[] = []
 
+          console.log(`\n🚗 Processing ${data.data.length} vehicles...`)
+          console.log('='.repeat(100))
+
           for (const vehicle of data.data) {
             try {
-              const vehicleType = vehicle.category as VehicleType
+              console.log(`\n🔄 Processing: ${vehicle.name} (ID: ${vehicle.id})`)
 
               const fareResult = await calculateFare({
-                vehicleType,
+                vehicleId: vehicle.id,
+                vehicleType: vehicle.category as VehicleType,
                 distanceKm: distance
               })
 
@@ -86,17 +92,6 @@ export default function SearchPage() {
 
               const flatRateFare = distance * vehicle.price_per_km
               const savings = flatRateFare - fareResult.fareBreakdown.totalFare
-
-              console.log(`[${vehicle.name}] Price Calculation:`, {
-                vehicleType,
-                distance: `${distance} km`,
-                baseRatePerKm: vehicle.price_per_km,
-                flatRateFare: flatRateFare.toFixed(2),
-                distanceFare: fareResult.fareBreakdown.distanceFare.toFixed(2),
-                totalFare: fareResult.fareBreakdown.totalFare.toFixed(2),
-                effectiveRatePerKm: fareResult.fareBreakdown.effectiveRatePerKm.toFixed(2),
-                savings: savings.toFixed(2)
-              })
 
               vehiclesWithPrices.push({
                 ...vehicle,
@@ -108,16 +103,13 @@ export default function SearchPage() {
                   savings: Math.round(savings)
                 }
               })
+
+              console.log(`✅ ${vehicle.name}: Rs. ${fareResult.fareBreakdown.totalFare.toLocaleString()}`)
             } catch (error) {
-              console.error(`Error calculating price for ${vehicle.name}:`, error)
+              console.error(`❌ Error calculating price for ${vehicle.name}:`, error)
+              
               const simplePrice = distance * vehicle.price_per_km
               
-              console.log(`[${vehicle.name}] Fallback Price Calculation:`, {
-                distance: `${distance} km`,
-                baseRatePerKm: vehicle.price_per_km,
-                simplePrice: simplePrice.toFixed(2)
-              })
-
               vehiclesWithPrices.push({
                 ...vehicle,
                 estimatedTotalPrice: Math.round(simplePrice),
@@ -131,17 +123,21 @@ export default function SearchPage() {
             }
           }
 
+          console.log('\n' + '='.repeat(100))
+          console.log(`✅ Successfully processed ${vehiclesWithPrices.length} vehicles`)
+          console.log('='.repeat(100) + '\n')
+
           setVehicles(vehiclesWithPrices)
         }
       } catch (error) {
-        console.error('Error fetching vehicles:', error)
+        console.error('❌ Error fetching vehicles:', error)
       } finally {
         setLoading(false)
       }
     }
 
     fetchVehicles()
-  }, [distance, passengers])
+  }, [distance, passengers, pickup, dropoff])
 
   const filteredVehicles = useMemo(() => {
     let result = vehicles
@@ -172,77 +168,37 @@ export default function SearchPage() {
     <main className="min-h-screen bg-background">
       <Header />
 
-      {/* Search Summary */}
-      {/* <section className="bg-primary/10 py-6 border-b border-border">
+      <section className="bg-primary/10 py-6 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Available Taxis</h1>
+              <div className="text-muted-foreground space-y-1">
+                <p>
+                  <span className="font-semibold">{pickup}</span> → <span className="font-semibold">{dropoff}</span>
+                </p>
+                <p className="text-sm">
+                  Distance: <span className="font-semibold">{distance.toFixed(1)} km</span> • 
+                  Date: <span className="font-semibold">{date}</span> • 
+                  {passengers} Passenger{passengers !== "1" ? "s" : ""}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </section> */}
+      </section>
 
-      {/* Results Grid */}
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <aside className="lg:col-span-1">
-              {/* <div className="sticky top-4">
+              <div className="sticky top-4">
                 <SearchFilters
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
                   priceRange={priceRange}
                   setPriceRange={setPriceRange}
                 />
-              </div> */}
-
-              <div className="sticky top-4 bg-card border border-border rounded-lg p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">Trip Details</h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-semibold text-muted-foreground mb-2">Route</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-start gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary mt-1.5"></div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-foreground">{pickup}</p>
-                          <p className="text-xs text-muted-foreground">Pickup Location</p>
-                        </div>
-                      </div>
-                      <div className="ml-1 border-l-2 border-dashed border-border h-8"></div>
-                      <div className="flex items-start gap-2">
-                        <div className="w-2 h-2 rounded-full bg-destructive mt-1.5"></div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-foreground">{dropoff}</p>
-                          <p className="text-xs text-muted-foreground">Drop-off Location</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="border-t border-border pt-4">
-                    <h3 className="text-sm font-semibold text-muted-foreground mb-3">Journey Information</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Distance</span>
-                        <span className="text-sm font-semibold text-foreground">{distance.toFixed(1)} km</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Date</span>
-                        <span className="text-sm font-semibold text-foreground">{date}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Time</span>
-                        <span className="text-sm font-semibold text-foreground">{time || "Not specified"}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Passengers</span>
-                        <span className="text-sm font-semibold text-foreground">{passengers}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </aside>
 

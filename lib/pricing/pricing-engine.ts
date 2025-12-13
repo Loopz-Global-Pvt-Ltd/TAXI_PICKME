@@ -1,5 +1,5 @@
 /**
- * Pricing Engine for Taxi Sri Lanka - Database-driven tiered pricing system
+ * Enhanced Pricing Engine - Vehicle-specific tiered pricing with detailed logging
  */
 
 export type VehicleType = 'Mini' | 'Sedan' | 'Van' | 'SUV' | 'Luxury'
@@ -17,169 +17,97 @@ export interface VehiclePricingConfig {
 }
 
 export interface FareCalculationInput {
-  vehicleType: VehicleType
+  vehicleId?: number
+  vehicleType?: VehicleType
   distanceKm: number
+}
+
+export interface TierBreakdown {
+  tierNumber: number
+  tierName: string
+  kmRange: string
+  kmInTier: number
+  baseRate: number
+  multiplier: number
+  effectiveRate: number
+  tierAmount: number
 }
 
 export interface FareBreakdown {
   distanceFare: number
   totalFare: number
   effectiveRatePerKm: number
-  tiersApplied: {
-    kmRange: string
-    km: number
-    rate: number
-    amount: number
-  }[]
+  tierBreakdowns: TierBreakdown[]
 }
 
 export interface FareCalculationResult {
-  vehicleType: VehicleType
+  vehicleId?: number
+  vehicleType?: string
   distanceKm: number
   fareBreakdown: FareBreakdown
 }
 
-// Cache for pricing configs
-let pricingConfigCache: Record<string, VehiclePricingConfig> | null = null
-let cacheTimestamp: number = 0
-const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
-
 /**
- * Fetch pricing configurations from database
+ * Fetch vehicle-specific pricing from database
  */
-export async function fetchPricingConfigs(): Promise<Record<string, VehiclePricingConfig>> {
+export async function fetchVehiclePricing(vehicleId: number): Promise<VehiclePricingConfig | null> {
   try {
-    const response = await fetch('/api/admin/pricing', {
+    const response = await fetch(`/api/vehicles/${vehicleId}/pricing`, {
       cache: 'no-store'
     })
     
     if (!response.ok) {
-      throw new Error('Failed to fetch pricing configurations')
+      throw new Error('Failed to fetch vehicle pricing')
     }
 
     const data = await response.json()
     
     if (!data.success) {
-      throw new Error(data.error || 'Failed to fetch pricing configurations')
+      throw new Error(data.error || 'Failed to fetch vehicle pricing')
     }
 
-    const configs: Record<string, VehiclePricingConfig> = {}
-
-    data.data.forEach((config: any) => {
-      configs[config.vehicle_category] = {
-        baseRate: parseFloat(config.base_rate),
-        minimumFare: parseFloat(config.minimum_fare),
-        tiers: [
-          { upToKm: config.tier_1_upto_km, rateMultiplier: parseFloat(config.tier_1_multiplier) },
-          { upToKm: config.tier_2_upto_km, rateMultiplier: parseFloat(config.tier_2_multiplier) },
-          { upToKm: config.tier_3_upto_km, rateMultiplier: parseFloat(config.tier_3_multiplier) },
-          { aboveKm: config.tier_3_upto_km, rateMultiplier: parseFloat(config.tier_4_multiplier) }
-        ]
-      }
-    })
-
-    return configs
+    const config = data.data
+    
+    return {
+      baseRate: parseFloat(config.base_rate),
+      minimumFare: parseFloat(config.minimum_fare),
+      tiers: [
+        { upToKm: config.tier_1_upto_km, rateMultiplier: parseFloat(config.tier_1_multiplier) },
+        { upToKm: config.tier_2_upto_km, rateMultiplier: parseFloat(config.tier_2_multiplier) },
+        { upToKm: config.tier_3_upto_km, rateMultiplier: parseFloat(config.tier_3_multiplier) },
+        { aboveKm: config.tier_3_upto_km, rateMultiplier: parseFloat(config.tier_4_multiplier) }
+      ]
+    }
   } catch (error) {
-    console.error('Error fetching pricing configs:', error)
-    // Return default fallback configs
-    return getDefaultPricingConfigs()
+    console.error('❌ Error fetching vehicle pricing:', error)
+    return null
   }
 }
 
 /**
- * Get pricing configuration with caching
- */
-export async function getPricingConfig(vehicleType: VehicleType): Promise<VehiclePricingConfig> {
-  const now = Date.now()
-  
-  // Check if cache is valid
-  if (pricingConfigCache && (now - cacheTimestamp) < CACHE_DURATION) {
-    const config = pricingConfigCache[vehicleType]
-    if (config) return config
-  }
-
-  // Fetch fresh configs
-  pricingConfigCache = await fetchPricingConfigs()
-  cacheTimestamp = now
-
-  const config = pricingConfigCache[vehicleType]
-  console.log('Fetched pricing config for', vehicleType, config)
-  if (!config) {
-    throw new Error(`Pricing configuration not found for ${vehicleType}`)
-  }
-
-  return config
-}
-
-/**
- * Default pricing configurations (fallback)
- */
-function getDefaultPricingConfigs(): Record<string, VehiclePricingConfig> {
-  return {
-    Mini: {
-      baseRate: 95,
-      minimumFare: 500,
-      tiers: [
-        { upToKm: 10, rateMultiplier: 1.0 },
-        { upToKm: 25, rateMultiplier: 0.9 },
-        { upToKm: 60, rateMultiplier: 0.8 },
-        { aboveKm: 60, rateMultiplier: 0.75 }
-      ]
-    },
-    Sedan: {
-      baseRate: 120,
-      minimumFare: 650,
-      tiers: [
-        { upToKm: 10, rateMultiplier: 1.0 },
-        { upToKm: 25, rateMultiplier: 0.9 },
-        { upToKm: 60, rateMultiplier: 0.8 },
-        { aboveKm: 60, rateMultiplier: 0.7 }
-      ]
-    },
-    Van: {
-      baseRate: 150,
-      minimumFare: 850,
-      tiers: [
-        { upToKm: 10, rateMultiplier: 1.0 },
-        { upToKm: 25, rateMultiplier: 0.88 },
-        { upToKm: 60, rateMultiplier: 0.78 },
-        { aboveKm: 60, rateMultiplier: 0.68 }
-      ]
-    },
-    SUV: {
-      baseRate: 200,
-      minimumFare: 1200,
-      tiers: [
-        { upToKm: 10, rateMultiplier: 1.0 },
-        { upToKm: 25, rateMultiplier: 0.85 },
-        { upToKm: 60, rateMultiplier: 0.75 },
-        { aboveKm: 60, rateMultiplier: 0.65 }
-      ]
-    },
-    Luxury: {
-      baseRate: 300,
-      minimumFare: 2000,
-      tiers: [
-        { upToKm: 10, rateMultiplier: 1.0 },
-        { upToKm: 25, rateMultiplier: 0.88 },
-        { upToKm: 60, rateMultiplier: 0.78 },
-        { aboveKm: 60, rateMultiplier: 0.68 }
-      ]
-    }
-  }
-}
-
-/**
- * Calculate tiered distance fare
+ * Calculate tiered distance fare with detailed breakdown
  */
 function calculateTieredDistanceFare(
   distanceKm: number,
-  config: VehiclePricingConfig
-): { fare: number; tiersApplied: FareBreakdown['tiersApplied'] } {
+  config: VehiclePricingConfig,
+  vehicleName?: string
+): { fare: number; tierBreakdowns: TierBreakdown[] } {
+  console.log('\n' + '='.repeat(80))
+  console.log(`🚖 CALCULATING FARE FOR: ${vehicleName || 'Unknown Vehicle'}`)
+  console.log('='.repeat(80))
+  console.log(`📍 Total Distance: ${distanceKm.toFixed(2)} km`)
+  console.log(`💰 Base Rate: Rs. ${config.baseRate.toFixed(2)}/km`)
+  console.log(`🎯 Minimum Fare: Rs. ${config.minimumFare?.toFixed(2) || 0}`)
+  console.log('─'.repeat(80))
+
   let totalFare = 0
   let remainingKm = distanceKm
-  const tiersApplied: FareBreakdown['tiersApplied'] = []
+  const tierBreakdowns: TierBreakdown[] = []
   let previousLimit = 0
+  let tierNumber = 1
+
+  console.log('\n📊 TIER BREAKDOWN:')
+  console.log('─'.repeat(80))
 
   for (const tier of config.tiers) {
     if (remainingKm <= 0) break
@@ -188,80 +116,123 @@ function calculateTieredDistanceFare(
     const kmInThisTier = Math.min(remainingKm, currentLimit - previousLimit)
     
     if (kmInThisTier > 0) {
-      const rate = config.baseRate * tier.rateMultiplier
-      const amount = kmInThisTier * rate
+      const effectiveRate = config.baseRate * tier.rateMultiplier
+      const tierAmount = kmInThisTier * effectiveRate
 
-      tiersApplied.push({
-        kmRange: tier.aboveKm 
-          ? `${tier.aboveKm}+ km`
-          : `${previousLimit}-${currentLimit} km`,
-        km: kmInThisTier,
-        rate: rate,
-        amount: amount
+      const tierName = tier.aboveKm 
+        ? `Tier ${tierNumber} (${tier.aboveKm}+ km)`
+        : `Tier ${tierNumber} (${previousLimit}-${currentLimit} km)`
+
+      const kmRange = tier.aboveKm 
+        ? `${tier.aboveKm}+ km`
+        : `${previousLimit}-${currentLimit} km`
+
+      // Detailed console output
+      console.log(`\n🔷 ${tierName}`)
+      console.log(`   ├─ Distance Range: ${kmRange}`)
+      console.log(`   ├─ KM in this tier: ${kmInThisTier.toFixed(2)} km`)
+      console.log(`   ├─ Base Rate: Rs. ${config.baseRate.toFixed(2)}/km`)
+      console.log(`   ├─ Multiplier: ${tier.rateMultiplier} (${((1 - tier.rateMultiplier) * 100).toFixed(0)}% discount)`)
+      console.log(`   ├─ Effective Rate: Rs. ${effectiveRate.toFixed(2)}/km`)
+      console.log(`   ├─ Calculation: ${kmInThisTier.toFixed(2)} km × Rs. ${effectiveRate.toFixed(2)}/km`)
+      console.log(`   └─ Tier Amount: Rs. ${tierAmount.toFixed(2)}`)
+
+      tierBreakdowns.push({
+        tierNumber,
+        tierName,
+        kmRange,
+        kmInTier: parseFloat(kmInThisTier.toFixed(2)),
+        baseRate: parseFloat(config.baseRate.toFixed(2)),
+        multiplier: tier.rateMultiplier,
+        effectiveRate: parseFloat(effectiveRate.toFixed(2)),
+        tierAmount: parseFloat(tierAmount.toFixed(2))
       })
 
-      totalFare += amount
+      totalFare += tierAmount
       remainingKm -= kmInThisTier
+      tierNumber++
     }
 
     previousLimit = currentLimit
   }
 
-  return { fare: totalFare, tiersApplied }
+  console.log('\n' + '─'.repeat(80))
+  console.log(`💵 SUBTOTAL (Distance-based): Rs. ${totalFare.toFixed(2)}`)
+  console.log('=' .repeat(80) + '\n')
+
+  return { fare: totalFare, tierBreakdowns }
 }
 
 /**
- * Main pricing engine function (async to support database fetching)
+ * Main pricing calculation function
  */
 export async function calculateFare(input: FareCalculationInput): Promise<FareCalculationResult> {
-  const { vehicleType, distanceKm } = input
+  const { vehicleId, vehicleType, distanceKm } = input
+
+  console.log('\n🚀 STARTING FARE CALCULATION')
+  console.log(`   Vehicle ID: ${vehicleId || 'N/A'}`)
+  console.log(`   Vehicle Type: ${vehicleType || 'N/A'}`)
+  console.log(`   Distance: ${distanceKm} km`)
 
   if (distanceKm <= 0) {
     throw new Error('Distance must be greater than 0')
   }
 
-  // Get pricing configuration from database
-  const config = await getPricingConfig(vehicleType)
+  // Fetch vehicle-specific pricing
+  let config: VehiclePricingConfig | null = null
+  
+  if (vehicleId) {
+    config = await fetchVehiclePricing(vehicleId)
+  }
+
+  if (!config) {
+    throw new Error('Pricing configuration not found')
+  }
 
   // Calculate distance fare with tiered pricing
-  const { fare: distanceFare, tiersApplied } = calculateTieredDistanceFare(
+  const { fare: distanceFare, tierBreakdowns } = calculateTieredDistanceFare(
     distanceKm,
-    config
+    config,
+    `Vehicle #${vehicleId}`
   )
 
   let totalFare = distanceFare
 
   // Apply minimum fare
   if (config.minimumFare && totalFare < config.minimumFare) {
+    console.log(`⚠️  Applying Minimum Fare: Rs. ${config.minimumFare.toFixed(2)}`)
+    console.log(`   (Calculated fare Rs. ${totalFare.toFixed(2)} < Minimum Rs. ${config.minimumFare.toFixed(2)})`)
     totalFare = config.minimumFare
   }
 
   const effectiveRatePerKm = distanceFare / distanceKm
 
+  console.log('\n' + '='.repeat(80))
+  console.log('✅ FINAL CALCULATION')
+  console.log('='.repeat(80))
+  console.log(`💰 Total Fare: Rs. ${totalFare.toFixed(2)}`)
+  console.log(`📊 Effective Rate: Rs. ${effectiveRatePerKm.toFixed(2)}/km`)
+  console.log(`🎯 Savings vs Flat Rate: Rs. ${((config.baseRate * distanceKm) - totalFare).toFixed(2)}`)
+  console.log(`📈 Discount: ${(((config.baseRate * distanceKm - totalFare) / (config.baseRate * distanceKm)) * 100).toFixed(1)}%`)
+  console.log('='.repeat(80) + '\n')
+
   return {
-    vehicleType,
+    vehicleId,
+    vehicleType: vehicleType || 'Unknown',
     distanceKm,
     fareBreakdown: {
       distanceFare: Math.round(distanceFare),
       totalFare: Math.round(totalFare),
       effectiveRatePerKm: Math.round(effectiveRatePerKm * 100) / 100,
-      tiersApplied
+      tierBreakdowns
     }
   }
 }
 
 /**
- * Clear pricing cache (call after admin updates)
+ * Get vehicle base rate
  */
-export function clearPricingCache() {
-  pricingConfigCache = null
-  cacheTimestamp = 0
-}
-
-/**
- * Get base rate for a vehicle type
- */
-export async function getBaseRate(vehicleType: VehicleType): Promise<number> {
-  const config = await getPricingConfig(vehicleType)
-  return config.baseRate
+export async function getVehicleBaseRate(vehicleId: number): Promise<number> {
+  const config = await fetchVehiclePricing(vehicleId)
+  return config?.baseRate || 0
 }
