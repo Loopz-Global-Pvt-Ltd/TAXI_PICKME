@@ -132,6 +132,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://taxisrilanka.com',
   },
+
+  verification: {
+    google: 'VUv4RmrTeTNue1hfJyek3oq_0DQiVZiK3_pv8czY79g', 
+    other: {
+      'facebook-domain-verification': 'YOUR_FB_VERIFICATION_CODE', // Optional
+    },
+  },
 }
 
 export default function RootLayout({
