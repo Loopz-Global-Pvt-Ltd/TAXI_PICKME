@@ -18,12 +18,8 @@ import ServiceLocations from "@/components/service-locations"
 import {ServiceLocationsSchema} from '@/components/seo/ServiceLocationsSchema'
 
 export const metadata: Metadata = {
-  title: {
-    default:
-      'Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver',
-    template: '%s | Taxi Sri Lanka',
-  },
-
+  title: "Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver",
+  
   description:
     'Taxi Sri Lanka is the #1 tourist transport service offering airport transfers, taxi booking, cab services, car hire with driver, three-wheel bookings, and islandwide tours. Travel safely with English-speaking drivers, fixed pricing, and 24/7 support to destinations like Colombo, Kandy, Galle, Dambulla, Sigiriya, Ella, Hikkaduwa, Mirissa, Arugam Bay, and more.',
 
@@ -74,8 +70,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://taxisrilanka.com',
     siteName: 'Taxi Sri Lanka',
-    title:
-      'Taxi Sri Lanka – Airport Transfers, Tours & Tourist Transport',
+    title: 'Taxi Sri Lanka | Airport Transfers, Tours & Tourist Transport',
     description:
       'Book trusted taxi services, airport transfers, car hire with driver, and islandwide tours in Sri Lanka. Serving tourists with safe, reliable transport and professional English-speaking drivers.',
     images: [

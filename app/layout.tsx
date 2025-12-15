@@ -8,12 +8,11 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default:
-      'Taxi Sri Lanka | Airport Transfers, Tours, Cab, Car & Driver Services',
-    template: '%s | Taxi Sri Lanka',
-  }, 
-  description: 'Taxi Sri Lanka offers trusted taxi booking, airport transfers, car hire with driver, cab and three-wheel services across Sri Lanka. We provide tourist-friendly transport to top destinations including Colombo, Kandy, Galle, Dambulla, Sigiriya, Hikkaduwa, Mirissa, Ella, Nuwara Eliya, Arugam Bay, Yala, and more with English-speaking drivers and fixed pricing.',
-
+    default: "Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver",
+    template: "%s | Taxi Sri Lanka"
+  },
+  description: "Taxi Sri Lanka is the #1 tourist transport service offering airport transfers, taxi booking, cab services, car hire with driver, three-wheel bookings, and islandwide tours.",
+  applicationName: "Taxi Sri Lanka",
   keywords: [
     // Core Services
     'taxi sri lanka',
