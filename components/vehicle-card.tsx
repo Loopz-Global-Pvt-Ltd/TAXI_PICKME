@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Star, Users, Briefcase, Fuel, Settings } from "lucide-react"
+import { Star, Users, Briefcase, Fuel, Settings , Car } from "lucide-react"
 
 interface VehicleCardProps {
   vehicle: {

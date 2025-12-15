@@ -114,8 +114,8 @@ function calculateTieredDistanceFare(
   let previousLimit = 0
   let tierNumber = 1
 
-  console.log('\n📊 TIER BREAKDOWN:')
-  console.log('─'.repeat(80))
+  // console.log('\n📊 TIER BREAKDOWN:')
+  // console.log('─'.repeat(80))
 
   for (const tier of config.tiers) {
     if (remainingKm <= 0) break

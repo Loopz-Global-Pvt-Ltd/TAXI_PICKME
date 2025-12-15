@@ -8,10 +8,14 @@ import FeaturedTours from "@/components/featured-tours"
 import Statistics from "@/components/statistics"
 import Partnerships from "@/components/partnerships"
 import SafetyCommitment from "@/components/safety-commitment"
+import DestinationsGallery from "@/components/destinations-gallery"
 import Footer from "@/components/footer"
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { Metadata } from 'next'
 import {ReviewSchema} from '@/components/seo/ReviewSchema'
+import {DestinationsSchema} from '@/components/seo/DestinationsSchema'
+import ServiceLocations from "@/components/service-locations"
+import {ServiceLocationsSchema} from '@/components/seo/ServiceLocationsSchema'
 
 export const metadata: Metadata = {
   title: {
@@ -101,23 +105,25 @@ export const metadata: Metadata = {
     canonical: 'https://taxisrilanka.com',
   },
 }
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       <ReviewSchema />
+      <DestinationsSchema />
+      <ServiceLocationsSchema />
       <Header />
       <Hero />
       <TrustBadges />
-      {/* <FeaturedTours /> */}
+      <DestinationsGallery />
+      <ServiceLocations />
       <Testimonials />
       <WhyChooseUs />
-      {/* <PopularRoutes /> */}
       <SafetyCommitment />
-      {/* <Partnerships /> */}
       <Statistics />
       <Footer />
       <WhatsAppButton 
-          phoneNumber="94777850529" // Replace with your actual WhatsApp number
+          phoneNumber="94777850529"
           message="Hello! I'm interested in learning more about DD Academy Could you please provide more information?"
           position="bottom-right"
           showTooltip={true}
