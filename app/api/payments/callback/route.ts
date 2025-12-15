@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     // Update payment status
     const paymentResult = await client.query(
       `UPDATE payments 
-       SET payment_status = $1,
+       SET status = $1,
            paid_at = $2,
            updated_at = NOW()
        WHERE onepay_transaction_id = $3
