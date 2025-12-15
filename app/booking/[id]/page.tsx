@@ -494,7 +494,7 @@ export default function BookingPage() {
                             type="tel"
                             value={formData.phone}
                             onChange={handleChange}
-                            placeholder="+94 XX XXX XXXX"
+                            placeholder="+94 +94 777 850 529"
                             required
                             disabled={bookingCreated}
                             className="mt-2"
@@ -506,7 +506,7 @@ export default function BookingPage() {
                             className="text-sm font-medium text-foreground flex items-center gap-2"
                           >
                             <Mail size={16} />
-                            Email Address (Optional)
+                            Email Address
                           </Label>
                           <Input
                             id="email"
@@ -517,6 +517,7 @@ export default function BookingPage() {
                             placeholder="your.email@example.com"
                             disabled={bookingCreated}
                             className="mt-2"
+                            required
                           />
                         </div>
                       </div>

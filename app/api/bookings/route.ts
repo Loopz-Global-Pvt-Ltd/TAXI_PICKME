@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server' 
 import { query, transaction } from '@/lib/db'
 import { z } from 'zod'
+import { sendEmail } from '@/lib/email/mailer'
+import { 
+  generateBookingConfirmationEmail, 
+  generateBookingConfirmationText,
+  generateAdminBookingNotificationEmail,
+  generateAdminBookingNotificationText 
+} from '@/lib/email/templates'
 
 const createBookingSchema = z.object({
   vehicleId: z.number().positive(),
@@ -96,7 +103,7 @@ export async function POST(request: NextRequest) {
           validatedData.totalPrice,
           validatedData.specialRequests || null,
           'pending',
-          'unpaid',
+          'unpaid'
         ]
       )
 
@@ -111,6 +118,53 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // Prepare email data
+    const emailData = {
+      bookingReference: booking.booking_reference,
+      fullName: validatedData.fullName,
+      email: validatedData.email,
+      phone: validatedData.phone,
+      pickupLocation: validatedData.pickupLocation,
+      dropoffLocation: validatedData.dropoffLocation,
+      pickupDate: validatedData.pickupDate,
+      pickupTime: validatedData.pickupTime,
+      vehicleName: booking.vehicle.name,
+      vehicleCategory: booking.vehicle.category,
+      distanceKm: validatedData.estimatedDistanceKm,
+      totalPrice: validatedData.totalPrice,
+      specialRequests: validatedData.specialRequests,
+    }
+
+    // Send emails in parallel (don't wait for them to complete)
+    Promise.all([
+      // 1. Send confirmation email to customer
+      sendEmail({
+        to: validatedData.email,
+        subject: `Booking Confirmation - ${booking.booking_reference} | Taxi Sri Lanka`,
+        html: generateBookingConfirmationEmail(emailData),
+        text: generateBookingConfirmationText(emailData),
+      }).then(() => {
+        console.log(`✅ Customer confirmation email sent to ${validatedData.email}`)
+      }).catch((error) => {
+        console.error('❌ Failed to send customer confirmation email:', error)
+      }),
+
+      // 2. Send notification email to admin
+      sendEmail({
+        to: process.env.SMTP_FROM_EMAIL || 'sritaxi@gmail.com',
+        subject: `🔔 New Booking Alert - ${booking.booking_reference} | ${validatedData.fullName}`,
+        html: generateAdminBookingNotificationEmail(emailData),
+        text: generateAdminBookingNotificationText(emailData),
+      }).then(() => {
+        console.log(`✅ Admin notification email sent to ${process.env.SMTP_FROM_EMAIL}`)
+      }).catch((error) => {
+        console.error('❌ Failed to send admin notification email:', error)
+      })
+    ]).catch((error) => {
+      console.error('❌ Email sending error:', error)
+      // Don't fail the booking if emails fail
+    })
+
     return NextResponse.json({
       success: true,
       data: booking,
@@ -120,7 +174,7 @@ export async function POST(request: NextRequest) {
         distancePrice: pricing.distancePrice,
         total: pricing.totalPrice,
       },
-      message: 'Booking created successfully',
+      message: 'Booking created successfully. Confirmation emails are being sent.',
     }, { status: 201 })
   } catch (error: any) {
     console.error('Error creating booking:', error)

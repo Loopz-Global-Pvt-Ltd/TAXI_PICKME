@@ -66,6 +66,9 @@ export default function VehicleCard({ vehicle, estimatedDistance, pricingBreakdo
               <Car className="h-20 w-20 text-muted-foreground" />
             </div>
           )}
+          <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
+            {vehicle.category}
+          </div>
         </div>
 
         {/* Vehicle Details */}
