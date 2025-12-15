@@ -65,7 +65,7 @@ export const destinations: Destination[] = [
         name: "Hikkaduwa",
         slug: "hikkaduwa",
         description: "Calm blue seas and coral reefs, the perfect snorkeling paradise",
-        imageUrl: "/images/destinations/Taxi Sri Lanka - Hikkaduwa.webp",
+        imageUrl: "/images/destinations/TaxiSriLanka-Hikkaduwa.webp",
         deals: "7 + Deals",
         location: "Southern Province",
         popularWith: ["Surfers", "Snorkelers", "Party Lovers"],
