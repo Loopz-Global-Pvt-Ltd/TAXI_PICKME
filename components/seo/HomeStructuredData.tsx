@@ -15,7 +15,7 @@ export function HomeStructuredData() {
           "description":
             "Taxi Sri Lanka provides airport transfers, taxi booking, car hire with driver, vans, three-wheel services, and islandwide tours for tourists across Sri Lanka.",
           "telephone": "+94777850529",
-          "email": "info@taxisrilanka.com",
+          "email": "sritaxi@gmail.com",
   
           "priceRange": "$$",
           "currenciesAccepted": "LKR, USD, EUR",

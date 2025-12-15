@@ -52,12 +52,12 @@ export default function Header() {
                 <span>+94 777 850 529</span>
               </motion.a>
               <motion.a
-                href="mailto:info@taxisrilanka.com"
+                href="mailto:sritaxi@gmail.com"
                 className="flex items-center gap-2 hover:text-yellow-400 transition-colors"
                 whileHover={{ scale: 1.05 }}
               >
                 <Mail size={14} />
-                <span>info@taxisrilanka.com</span>
+                <span>sritaxi@gmail.com</span>
               </motion.a>
             </div>
             <div className="flex items-center gap-4">
@@ -232,7 +232,7 @@ export default function Header() {
                       <span className="font-medium">+94 777 850 529</span>
                     </a>
                     <a
-                      href="mailto:info@taxisrilanka.com"
+                      href="mailto:sritaxi@gmail.com"
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                         isScrolled
                           ? "text-gray-700 hover:bg-gray-100"
@@ -240,7 +240,7 @@ export default function Header() {
                       }`}
                     >
                       <Mail size={18} />
-                      <span className="font-medium">info@taxisrilanka.com</span>
+                      <span className="font-medium">sritaxi@gmail.com</span>
                     </a>
                   </div>
 

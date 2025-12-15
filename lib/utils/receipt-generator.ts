@@ -233,7 +233,7 @@ export function generateReceiptHTML(booking: any, payment?: any): string {
     <p>Contact us for any questions or changes to your booking</p>
     <div class="contact-info">
       <div>📞 +94 777 850 529</div>
-      <div>✉️ info@taxisrilanka.com</div>
+      <div>✉️ sritaxi@gmail.com</div>
       <div>🌐 www.taxisrilanka.com</div>
     </div>
   </div>

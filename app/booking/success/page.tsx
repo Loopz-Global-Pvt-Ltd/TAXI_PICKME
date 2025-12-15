@@ -381,9 +381,9 @@ function BookingSuccessContent() {
                     <Phone size={16} />
                     +94 77 785 0529
                   </a>
-                  <a href="mailto:info@taxisrilanka.com" className="flex items-center gap-2 text-sm text-primary hover:underline">
+                  <a href="mailto:sritaxi@gmail.com" className="flex items-center gap-2 text-sm text-primary hover:underline">
                     <Mail size={16} />
-                    info@taxisrilanka.com
+                    sritaxi@gmail.com
                   </a>
                 </div>
               </Card>

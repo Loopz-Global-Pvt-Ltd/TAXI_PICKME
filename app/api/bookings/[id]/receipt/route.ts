@@ -466,7 +466,7 @@ function generateReceiptHTML(booking: any): string {
         </div>
         <div class="contact-item">
           <span>✉️</span>
-          <span>info@taxisrilanka.com</span>
+          <span>sritaxi@gmail.com</span>
         </div>
         <div class="contact-item">
           <span>🌐</span>
