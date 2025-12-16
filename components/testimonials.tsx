@@ -1,339 +1,266 @@
 "use client"
 
-import { Star, ChevronLeft, ChevronRight, Quote, ExternalLink, CheckCircle } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { Star, CheckCircle, User } from "lucide-react"
+import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-const TESTIMONIALS = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    country: "USA",
-    avatar: "/avatars/avatar1.jpg",
-    rating: 5,
-    text: "Excellent service! The driver was professional and took the most scenic route. Highly recommend for airport transfers. The vehicle was clean and comfortable.",
-    date: "2 weeks ago",
-    verified: true,
-    platform: "Google Reviews",
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    country: "Singapore",
-    avatar: "/avatars/avatar2.jpg",
-    rating: 5,
-    text: "Very punctual and clean vehicles. The booking process was seamless and the pricing was transparent. Our driver was knowledgeable about local attractions.",
-    date: "1 month ago",
-    verified: true,
-    platform: "TripAdvisor",
-  },
-  {
-    id: 3,
-    name: "Emma Williams",
-    country: "Australia",
-    avatar: "/avatars/avatar3.jpg",
-    rating: 5,
-    text: "Amazing experience exploring Sri Lanka! The driver knew all the best spots and was very friendly. Made our vacation truly memorable.",
-    date: "3 weeks ago",
-    verified: true,
-    platform: "Google Reviews",
-  },
-  {
-    id: 4,
-    name: "David Kumar",
-    country: "India",
-    avatar: "/avatars/avatar4.jpg",
-    rating: 5,
-    text: "Best taxi service in Sri Lanka! Professional drivers, comfortable cars, and great customer service. Will definitely use again on my next visit.",
-    date: "5 days ago",
-    verified: true,
-    platform: "Google Reviews",
-  },
-  {
-    id: 5,
-    name: "Lisa Anderson",
-    country: "UK",
-    avatar: "/avatars/avatar5.jpg",
-    rating: 5,
-    text: "Fantastic service from start to finish. The driver was waiting at the airport with a name board. Very professional and courteous throughout the journey.",
-    date: "2 months ago",
-    verified: true,
-    platform: "Booking.com",
-  },
-]
+interface TripAdvisorReview {
+  reviewer_profile?: string
+  reviewer_name: string
+  reviewer_link: string
+  review_title: string
+  review_link: string
+  review_id: string
+  review_text: string
+  review_exp: string
+  review_date: string
+  review_stars: string
+  review_helpful: string
+}
+
+interface TripAdvisorData {
+  bio: {
+    name: string
+    image: string
+    link: string
+    review_count: string
+  }
+  reviews: TripAdvisorReview[]
+}
 
 const STATS = [
-  { label: "Total Reviews", value: "1,000+" },
-  { label: "Average Rating", value: "4.9/5" },
+  { label: "Total Reviews", value: "66+" },
+  { label: "Average Rating", value: "4.8/5" },
   { label: "5-Star Reviews", value: "95%" },
-  { label: "Verified Customers", value: "98%" },
+  { label: "Verified", value: "100%" },
 ]
 
 export default function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
+  const [data, setData] = useState<TripAdvisorData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [displayCount, setDisplayCount] = useState(6) // Show 6 by default (2 rows × 3 cards)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext()
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [currentIndex])
+    fetch('/tripadvisor.json')
+      .then(res => res.json())
+      .then((jsonData: TripAdvisorData) => {
+        setData(jsonData)
+        setIsLoading(false)
+      })
+      .catch(error => {
+        console.error('Error loading reviews:', error)
+        setIsLoading(false)
+      })
+  }, [])
 
-  const handleNext = () => {
-    setDirection(1)
-    setCurrentIndex((prev) => (prev + 1) % TESTIMONIALS.length)
+  if (isLoading) {
+    return (
+      <section className="relative py-5 md:py-8 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading reviews...</p>
+        </div>
+      </section>
+    )
   }
 
-  const handlePrev = () => {
-    setDirection(-1)
-    setCurrentIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)
+  if (!data || data.reviews.length === 0) {
+    return null
   }
 
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? "100%" : "-100%",
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction > 0 ? "-100%" : "100%",
-      opacity: 0,
-    }),
-  }
+  const displayedReviews = data.reviews.slice(0, displayCount)
 
   return (
-    <section className="relative py-5 md:py-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 overflow-hidden">
+    <section className="relative py-8 md:py-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 overflow-hidden">
       {/* Background Decorations */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
+        {/* Header Section with TripAdvisor Logo */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-5"
+          className="text-center mb-12"
         >
+          {/* TripAdvisor Logo Badge */}
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 bg-yellow-100 px-6 py-3 rounded-full mb-6"
+            className="flex justify-center mb-6"
           >
-            <CheckCircle className="text-green-600" size={20} />
-            <span className="font-bold text-gray-900">Verified Reviews</span>
+            <div className="relative">
+              <Image
+                src="/images/Taxi Sri Lanka Tripadvisor.png"
+                alt="TripAdvisor Top Rated"
+                width={200}
+                height={200}
+                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain drop-shadow-2xl"
+                priority
+              />
+            </div>
           </motion.div>
 
+          {/* <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 bg-green-100 px-6 py-3 rounded-full mb-6 border-2 border-green-200"
+          >
+            <CheckCircle className="text-green-600" size={20} />
+            <span className="font-bold text-green-900">Verified TripAdvisor Reviews</span>
+          </motion.div> */}
+
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-            What Our <span className="text-yellow-500">Customers</span> Say
+            What Our <span className="text-green-600">Travelers</span> Say
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Don't just take our word for it - hear from travelers who've experienced our service
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-4">
+            Real reviews from real travelers on TripAdvisor
           </p>
+          {/* <p className="text-2xl font-bold text-green-600">
+            {data.bio.review_count} Verified Reviews
+          </p> */}
 
           {/* Rating Display */}
-          <div className="flex items-center justify-center gap-2 mb-8">
+          {/* <div className="flex items-center justify-center gap-2 mt-6">
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.1 + 0.3 }}
                 viewport={{ once: true }}
               >
-                <Star size={32} className="fill-yellow-400 text-yellow-400" />
+                <Star size={32} className="fill-green-600 text-green-600" />
               </motion.div>
             ))}
-          </div>
+          </div> */}
         </motion.div>
 
-        {/* Stats Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5"
-        >
-          {STATS.map((stat, index) => (
+        {/* Reviews Grid - 3 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {displayedReviews.map((review, index) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
+              key={review.review_id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-2xl p-6 text-center shadow-lg border-2 border-yellow-400/20"
+              className="bg-white rounded-2xl p-6 shadow-lg border-2 border-gray-100 hover:border-green-400 hover:shadow-xl transition-all duration-300"
             >
-              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                {stat.value}
+              {/* TripAdvisor Icon on Card */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-1">
+                  {[...Array(parseInt(review.review_stars))].map((_, i) => (
+                    <Star key={i} size={16} className="fill-green-600 text-green-600" />
+                  ))}
+                </div>
+                <Image
+                  src="/images/Taxi Sri Lanka Tripadvisor.png"
+                  alt="TripAdvisor"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain opacity-60"
+                />
               </div>
-              <div className="text-sm md:text-base text-gray-600 font-medium">
-                {stat.label}
+
+              {/* Reviewer Info */}
+              <div className="flex items-center gap-3 mb-4">
+                {review.reviewer_profile ? (
+                  <Image
+                    src={review.reviewer_profile}
+                    alt={review.reviewer_name}
+                    width={50}
+                    height={50}
+                    className="rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <h4 className="font-bold text-gray-900">{review.reviewer_name}</h4>
+                  <p className="text-xs text-gray-500">{review.review_date}</p>
+                </div>
               </div>
+
+              {/* Review Title */}
+              <h5 className="font-bold text-gray-900 mb-2 line-clamp-1">
+                {review.review_title}
+              </h5>
+
+              {/* Review Text */}
+              <p className="text-gray-600 text-sm leading-relaxed line-clamp-4">
+                {review.review_text}
+              </p>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* Testimonial Slider */}
-        <div className="relative">
-          {/* Main Slider Card */}
-          <div className="relative bg-white rounded-3xl shadow-2xl p-4 md:p-10 border-4 border-yellow-400 overflow-hidden min-h-[250px]">
-            {/* Quote Icon */}
-            <div className="absolute top-8 right-8 opacity-10">
-              <Quote size={120} className="text-yellow-400" />
-            </div>
-
-            <AnimatePresence initial={false} custom={direction} mode="wait">
-              <motion.div
-                key={currentIndex}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.5 },
-                }}
-                className="relative z-10"
-              >
-                <div className="flex flex-col md:flex-row gap-8 items-center">
-                  {/* Avatar Section */}
-                  {/* <div className="flex-shrink-0">
-                    <div className="relative">
-                      <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 p-1">
-                        <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-4xl font-bold text-gray-600">
-                          {TESTIMONIALS[currentIndex].name.charAt(0)}
-                        </div>
-                      </div>
-                      {TESTIMONIALS[currentIndex].verified && (
-                        <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                          <CheckCircle className="text-white" size={24} />
-                        </div>
-                      )}
-                    </div>
-                  </div> */}
-
-                  {/* Content Section */}
-                  <div className="flex-1 text-center px-13 md:text-left">
-                    {/* Stars */}
-                    <div className="flex justify-center md:justify-start gap-1 mb-2">
-                      {[...Array(TESTIMONIALS[currentIndex].rating)].map((_, i) => (
-                        <Star key={i} size={24} className="fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-
-                    {/* Review Text */}
-                    <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-3 italic">
-                      "{TESTIMONIALS[currentIndex].text}"
-                    </p>
-
-                    {/* Author Info */}
-                    <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                      <div className="flex-1">
-                        <h4 className="text-xl font-bold text-gray-900">
-                          {TESTIMONIALS[currentIndex].name}
-                        </h4>
-                        <p className="text-gray-600">
-                          {TESTIMONIALS[currentIndex].country}
-                        </p>
-                      </div>
-                      <div className="flex flex-col items-end gap-2">
-                        <span className="text-sm text-gray-500">
-                          {TESTIMONIALS[currentIndex].date}
-                        </span>
-                        <div className="flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full">
-                          <span className="text-xs font-semibold text-blue-600">
-                            {TESTIMONIALS[currentIndex].platform}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Navigation Arrows */}
-            {/* <div className="absolute top-1/2 -translate-y-1/2 left-4 right-4 flex justify-between pointer-events-none">
-              <motion.button
-                onClick={handlePrev}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="pointer-events-auto w-14 h-14 rounded-full bg-white shadow-xl border-2 border-yellow-400 flex items-center justify-center hover:bg-yellow-50 transition-all"
-              >
-                <ChevronLeft className="text-gray-900" size={28} />
-              </motion.button>
-              <motion.button
-                onClick={handleNext}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="pointer-events-auto w-14 h-14 rounded-full bg-white shadow-xl border-2 border-yellow-400 flex items-center justify-center hover:bg-yellow-50 transition-all"
-              >
-                <ChevronRight className="text-gray-900" size={28} />
-              </motion.button>
-            </div> */}
-          </div>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center gap-2 mt-8">
-            {TESTIMONIALS.map((_, index) => (
-              <motion.button
-                key={index}
-                onClick={() => {
-                  setDirection(index > currentIndex ? 1 : -1)
-                  setCurrentIndex(index)
-                }}
-                whileHover={{ scale: 1.2 }}
-                className={`h-3 rounded-full transition-all ${
-                  index === currentIndex
-                    ? "bg-yellow-400 w-12"
-                    : "bg-gray-300 w-3 hover:bg-gray-400"
-                }`}
-              />
-            ))}
-          </div>
         </div>
 
-        {/* Google Reviews CTA */}
-        {/* <motion.div
+        {/* Load More Button */}
+        {data.reviews.length > displayCount && (
+          <div className="text-center mb-8">
+            <motion.button
+              onClick={() => setDisplayCount(prev => Math.min(prev + 6, data.reviews.length))}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all"
+            >
+              Load More Reviews ({data.reviews.length - displayCount} remaining)
+            </motion.button>
+          </div>
+        )}
+
+        {/* TripAdvisor CTA */}
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="mt-16 text-center"
+          className="text-center"
         >
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-3xl p-8 md:p-12 shadow-2xl">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              See All Our Reviews on Google
-            </h3>
-            <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of satisfied customers and read authentic reviews from real travelers
-            </p>
-            <motion.a
-              href="#" // Replace with actual Google Reviews link
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-600 font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all"
-            >
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
-              </svg>
-              View Google Reviews
-              <ExternalLink size={20} />
-            </motion.a>
+          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-32 -translate-x-32"></div>
+            
+            <div className="relative z-10">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                Read More Reviews on TripAdvisor
+              </h3>
+              <p className="text-lg text-green-100 mb-8 max-w-2xl mx-auto">
+                See what other travelers say about their experience with Taxi Sri Lanka
+              </p>
+              <motion.a
+                href={data.bio.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-green-700 font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all"
+              >
+                <Image
+                  src="/images/Taxi Sri Lanka Tripadvisor.png"
+                  alt="TripAdvisor"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain"
+                />
+                View All TripAdvisor Reviews
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </motion.a>
+            </div>
           </div>
-        </motion.div> */}
+        </motion.div>
       </div>
     </section>
   )

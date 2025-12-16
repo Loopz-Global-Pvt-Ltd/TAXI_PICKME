@@ -32,7 +32,7 @@ export default function ServiceLocations() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Premium Header */}
-        <div className="text-center mb-8 sm:mb-10">
+        <div className="text-center mb-3 sm:mb-5">
           <div className="inline-flex items-center justify-center gap-2 mb-4 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full shadow-lg">
             <MapPin className="h-5 w-5 text-gray-900" />
             <span className="text-gray-900 font-bold text-sm uppercase tracking-wider">
@@ -79,7 +79,7 @@ export default function ServiceLocations() {
         </div> */}
 
         {/* Premium Tabs */}
-        <div className="flex flex-wrap gap-3 justify-center mb-12">
+        <div className="flex flex-wrap gap-3 justify-center mb-5">
           {[
             { key: "airport", label: "Airport Transfers", icon: "✈️", gradient: "from-blue-500 to-blue-600" },
             { key: "beach", label: "Beach Destinations", icon: "🏖️", gradient: "from-cyan-500 to-blue-500" },
@@ -111,7 +111,7 @@ export default function ServiceLocations() {
 
         {/* Airport Routes Section - Premium Design */}
         {activeTab === "airport" && (
-          <div className="mb-12">
+          <div className="mb-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
@@ -225,7 +225,7 @@ export default function ServiceLocations() {
             <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-white">
               Professional Taxi Service Coverage Across Sri Lanka
             </h3>
-            <div className="h-1 w-24 bg-yellow-400 rounded-full mb-6" />
+            <div className="h-1 w-24 bg-yellow-400 rounded-full mb-2" />
             <p className="text-gray-200 leading-relaxed text-lg">
               <strong className="text-yellow-400">Taxi Sri Lanka</strong> provides comprehensive premium taxi and cab services 
               to all major destinations across the island. Whether you need an <strong className="text-white">airport transfer 
