@@ -80,11 +80,11 @@ export default function OnePayButton({
     <div className="space-y-4">
       {!paymentMethod && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Choose Payment Method</h3>
+          {/* <h3 className="text-lg font-semibold text-gray-900">Choose Payment Method</h3> */}
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Pay Now Option */}
-            <button
+            {/* <button
               onClick={() => {
                 setPaymentMethod('online')
                 initializeOnlinePayment()
@@ -103,7 +103,7 @@ export default function OnePayButton({
                   </p>
                 </div>
               </div>
-            </button>
+            </button> */}
 
             {/* Pay Later Option */}
             <button

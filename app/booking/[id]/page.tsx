@@ -494,7 +494,7 @@ export default function BookingPage() {
                             type="tel"
                             value={formData.phone}
                             onChange={handleChange}
-                            placeholder="+94 +94 777 850 529"
+                            placeholder="+94 777 850 529"
                             required
                             disabled={bookingCreated}
                             className="mt-2"

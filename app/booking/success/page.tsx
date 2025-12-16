@@ -357,7 +357,7 @@ function BookingSuccessContent() {
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold">1.</span>
-                    <span>Check your phone/email for booking confirmation</span>
+                    <span>Check your email for booking confirmation</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold">2.</span>
