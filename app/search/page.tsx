@@ -288,7 +288,7 @@ export default function SearchPage() {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-12">
                   <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                  <p className="text-muted-foreground">Calculating best prices...</p>
+                  <p className="text-muted-foreground">Calculating Best Prices...</p>
                 </div>
               ) : (
                 <div className="space-y-4">
