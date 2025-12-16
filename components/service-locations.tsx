@@ -18,11 +18,11 @@ export default function ServiceLocations() {
     return matchesTab 
   })
 
-  const displayedLocations = showAll ? filteredLocations : filteredLocations.slice(0, 24)
-  const displayedAirportRoutes = showAll ? airportRoutes : airportRoutes.slice(0, 24)
+  const displayedLocations = showAll ? filteredLocations : filteredLocations.slice(0, 20)
+  const displayedAirportRoutes = showAll ? airportRoutes : airportRoutes.slice(0, 20)
 
   return (
-    <section className="py-10 sm:py-10 lg:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+    <section className="py-10 sm:py-10 lg:py-20 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
@@ -125,7 +125,7 @@ export default function ServiceLocations() {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {displayedAirportRoutes.map((route, index) => (
                 <div
                   key={`${route.slug}-${index}`}
