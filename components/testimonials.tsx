@@ -121,7 +121,7 @@ export default function Testimonials() {
             What Our <span className="text-green-600">Travelers</span> Say
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-4">
-            Real reviews from real travelers on TripAdvisor
+            Reviews From Travelers On TripAdvisor
           </p>
           {/* <p className="text-2xl font-bold text-green-600">
             {data.bio.review_count} Verified Reviews
