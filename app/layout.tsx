@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     default: "Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver",
     template: "%s | Taxi Sri Lanka"
   },
-  description: "Taxi Sri Lanka is the #1 tourist transport service offering airport transfers, taxi booking, cab services, car hire with driver, three-wheel bookings, and islandwide tours.",
-  applicationName: "Taxi Sri Lanka",
+  description: "Book reliable taxi service in Sri Lanka. Airport transfers from Colombo BIA, car hire with English-speaking driver, island-wide tours to Sigiriya, Kandy, Ella, Galle. 24/7 tourist transport with instant booking.",
+  applicationName: "Taxi Sri Lanka Tours",
   keywords: [
     // Core Services
     'taxi sri lanka',
@@ -20,6 +20,23 @@ export const metadata: Metadata = {
     'cab service sri lanka',
     'private taxi sri lanka',
     'book taxi online sri lanka',
+    'sri lanka taxi service',
+    'colombo taxi',
+    'sri lanka airport taxi',
+    'bandaranaike airport transfer',
+    'BIA airport taxi',
+    'colombo airport transfer',
+
+
+      // Tourist Destinations
+      'colombo to kandy taxi',
+      'colombo to ella taxi',
+      'colombo to galle taxi',
+      'colombo to sigiriya taxi',
+      'colombo to nuwara eliya taxi',
+      'airport to kandy taxi',
+      'airport to ella transfer',
+      'airport to sigiriya transfer',
 
     // Airport Transfers
     'sri lanka airport transfer',
@@ -56,11 +73,13 @@ export const metadata: Metadata = {
     'polonnaruwa taxi service',
 
     // Beach Destinations
-    'hikkaduwa taxi service',
-    'unawatuna taxi service',
+    'hikkaduwa taxi',
     'mirissa taxi service',
-    'bentota taxi service',
-    'weligama taxi service',
+    'unawatuna taxi',
+    'bentota taxi',
+    'arugam bay taxi',
+    'pasikuda taxi',
+    'trincomalee taxi',
 
     // Hill Country
     'ella taxi service',
@@ -83,19 +102,51 @@ export const metadata: Metadata = {
     'airport to ella taxi',
     'airport to sigiriya taxi',
     'colombo to hikkaduwa taxi',
+
+    // Tour Packages
+    'sri lanka tour packages with driver',
+    'sri lanka private driver',
+    'sri lanka chauffeur service',
+    'sri lanka day tours',
+    'sigiriya tour from colombo',
+    'kandy day tour',
+    'ella tour package',
+    'yala safari taxi',
+    'udawalawe safari transport',
+
+    // Cultural Triangle
+    'sigiriya taxi',
+    'polonnaruwa taxi',
+    'dambulla taxi',
+    'anuradhapura taxi',
+    'cultural triangle tour',
+
+    // Booking Related
+    'book taxi online sri lanka',
+    'taxi booking sri lanka',
+    'online cab booking sri lanka',
+    '24/7 taxi sri lanka',
+    'instant taxi booking',
+        
   ],
-  authors: [{ name: "Taxi Sri Lanka" }],
+  authors: [{ name: "Taxi Sri Lanka Tours" , url: "https://taxisrilanka.com"  }],
   creator: 'Taxi Sri Lanka',
-  publisher: 'Taxi Sri Lanka',
+  publisher: 'Taxi Sri Lanka Tours',
+    
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://taxisrilanka.com',
-    siteName: 'Taxi Sri Lanka',
+    siteName: 'Taxi Sri Lanka Tours',
     title:
       'Taxi Sri Lanka – Tourist Taxi, Airport Transfers & Islandwide Tours',
-    description:
-      'Reliable taxi booking, airport transfers, car hire with driver, and tourist transport across Sri Lanka. Travel safely to beaches, hill country, cultural sites, and safaris.',
+    description: 'Sri Lanka\'s #1 rated taxi service. Book airport transfers, car hire with driver, and island-wide tours. English-speaking drivers, instant booking, 24/7 service.',
     images: [
       {
         url: '/og-image.jpg',
@@ -126,10 +177,22 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
+
 
   alternates: {
     canonical: 'https://taxisrilanka.com',
+    languages: {
+      'en-US': 'https://taxisrilanka.com',
+      'en-GB': 'https://taxisrilanka.com',
+    },
   },
 
   verification: {
@@ -137,6 +200,12 @@ export const metadata: Metadata = {
     other: {
       'facebook-domain-verification': 'YOUR_FB_VERIFICATION_CODE', // Optional
     },
+  },
+
+  category: 'travel',
+  
+  other: {
+    'google-site-verification': 'VUv4RmrTeTNue1hfJyek3oq_0DQiVZiK3_pv8czY79g',
   },
 }
 
@@ -148,6 +217,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Additional SEO Tags */}
+        <link rel="canonical" href="https://taxisrilanka.com" />
+        <meta name="geo.region" content="LK" />
+        <meta name="geo.placename" content="Sri Lanka" />
+        <meta name="geo.position" content="7.8731;80.7718" />
+        <meta name="ICBM" content="7.8731, 80.7718" />
+
+         {/* Preconnect for Performance */}
+        <link rel="preconnect" href="https://maps.googleapis.com" />
+        <link rel="dns-prefetch" href="https://maps.googleapis.com" />
       <meta name="google-site-verification" content="VUv4RmrTeTNue1hfJyek3oq_0DQiVZiK3_pv8czY79g" />  
       <HomeStructuredData />
         <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
