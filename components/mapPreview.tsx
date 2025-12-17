@@ -44,7 +44,7 @@ export default function MapPreview({
 const generateNearbyDrivers = async (
   centerLat: number, 
   centerLng: number, 
-  count: number = 7
+  count: number = 6
 ): Promise<Driver[]> => {
   const drivers: Driver[] = []
   const directionsService = new google.maps.DirectionsService()
@@ -59,7 +59,7 @@ const generateNearbyDrivers = async (
   while (drivers.length < count && attempts < maxAttempts) {
     try {
       const angle = angles[attempts % angles.length] + (Math.random() - 0.5) * 20
-      const distance = 4 + Math.random() * 5 // 2-8 km away
+      const distance = 3 + Math.random() * 3 // 1-4 km away
       
       // Calculate destination point
       const destLat = centerLat + (distance / 111) * Math.cos(angle * Math.PI / 180)
@@ -177,7 +177,7 @@ const generateNearbyDrivers = async (
     // Add driver markers if pickup location exists
     if (pickupLat && pickupLng) {
       // Use async function to generate drivers on roads
-      generateNearbyDrivers(pickupLat, pickupLng, 7).then(drivers => {
+      generateNearbyDrivers(pickupLat, pickupLng, 6).then(drivers => {
         setNearbyDrivers(drivers.length)
         
         driversRef.current = drivers.map(driver => {
