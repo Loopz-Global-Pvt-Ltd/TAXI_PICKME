@@ -66,7 +66,7 @@ export default function TrustBadges() {
   }
 
   return (
-    <section className="relative py-5 md:py-10 bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-500 overflow-hidden">
+    <section className="relative py-5 md:py-10 bg-yellow-400  overflow-hidden">
       {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-white/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
@@ -92,7 +92,7 @@ export default function TrustBadges() {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-gray-900">
-            Why Choose <span className="text-white">taxisrilanka</span>
+            Why Choose <span className="text-white">Taxi Sri Lanka</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-800 max-w-3xl mx-auto">
             Your safety, comfort, and satisfaction are our top priorities

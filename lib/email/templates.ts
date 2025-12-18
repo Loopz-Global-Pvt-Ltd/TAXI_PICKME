@@ -115,7 +115,7 @@ interface BookingEmailData {
 
                   <tr>
                     <td style="color: #666666; font-size: 14px;"><strong>Distance:</strong></td>
-                    <td style="color: #333333; font-size: 14px;">📏 ${data.distanceKm} km ${isReturnTrip ? `(${data.distanceKm * 2} km round trip)` : ''}</td>
+                    <td style="color: #333333; font-size: 14px;"> ${data.distanceKm} km ${isReturnTrip ? `(${data.distanceKm * 2} km round trip)` : ''}</td>
                   </tr>
                 </table>
               </td>
@@ -386,17 +386,10 @@ export function generateAdminBookingNotificationEmail(data: BookingEmailData): s
                     <br/>🕒 ${data.pickupTime}
                   </td>
                 </tr>
-                <tr style="background-color: #ffffff;">
-                  <td style="color: #333333; font-size: 14px; padding: 8px;">
-                    <span style="background-color: ${isReturnTrip ? '#DBEAFE' : '#D1FAE5'}; color: ${isReturnTrip ? '#1E40AF' : '#065F46'}; padding: 4px 12px; border-radius: 12px; font-weight: bold;">
-                      ${isReturnTrip ? '↔️ Return Trip' : '→ One Way'}
-                    </span>
-                  </td>
-                </tr>
                 <tr>
                   <td style="color: #666666; font-size: 14px; padding: 8px;"><strong>Distance:</strong></td>
                   <td style="color: #333333; font-size: 14px; font-weight: bold; padding: 8px;">
-                    📏 ${data.distanceKm} km ${isReturnTrip ? `<span style="color: #EF4444;">(${data.distanceKm * 2} km total)</span>` : ''}
+                     ${data.distanceKm} km ${isReturnTrip ? `<span style="color: #EF4444;">(${data.distanceKm * 2} km total)</span>` : ''}
                   </td>
                 </tr>
               </table>
