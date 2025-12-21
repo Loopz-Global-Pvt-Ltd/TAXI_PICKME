@@ -16,6 +16,8 @@ import {ReviewSchema} from '@/components/seo/ReviewSchema'
 import {DestinationsSchema} from '@/components/seo/DestinationsSchema'
 import ServiceLocations from "@/components/service-locations"
 import {ServiceLocationsSchema} from '@/components/seo/ServiceLocationsSchema'
+import ImageGalleryBar from "@/components/ImageGalleryBar"
+
 
 export const metadata: Metadata = {
   title: "Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver",
@@ -112,6 +114,7 @@ export default function Home() {
       <TrustBadges />
       <DestinationsGallery />
       <ServiceLocations />
+      <ImageGalleryBar />
       <Testimonials />
       <WhyChooseUs />
       <SafetyCommitment />
