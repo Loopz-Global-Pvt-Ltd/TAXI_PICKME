@@ -92,7 +92,7 @@ export default function ImageGalleryBar() {
         }
 
         .gallery-track {
-          animation: scroll 40s linear infinite;
+          animation: scroll 100s linear infinite;
           will-change: transform;
         }
 
