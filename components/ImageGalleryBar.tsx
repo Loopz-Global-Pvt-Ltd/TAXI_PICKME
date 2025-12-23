@@ -69,7 +69,7 @@ export default function ImageGalleryBar() {
       </div>
 
       <p className="text-center text-gray-500 mt-6 text-sm">
-        Hover to pause • Discover amazing destinations across Sri Lanka
+         Discover amazing destinations across Sri Lanka
       </p>
 
       <style jsx>{`
