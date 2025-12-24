@@ -12,13 +12,13 @@ export default function Hero() {
   const slides = [
     {
       image: "/images/taxisrilanka-Slider-1.jpg",
-      title: "Sri Lanka's Premier Taxi Service",
+      title: "Sri Lanka's Premier Taxis.",
       subtitle: "Professional Drivers • Luxury Comfort • Unbeatable Rates",
       highlight: "Book Now & Save 15%",
     },
     {
       image: "/images/taxisrilanka-Slider-4.webp",
-      title: "Explore Sri Lanka In Style",
+      title: "We’ll Take You Anywhere.",
       subtitle: "Island-Wide Coverage • 24/7 Availability • Licensed & Insured",
       highlight: "Trusted by 1000+ Travelers",
     },
@@ -152,7 +152,7 @@ export default function Hero() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight"
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight"
                 >
                   {slides[currentSlide].title}
                 </motion.h1>
@@ -207,11 +207,11 @@ export default function Hero() {
             className="max-w-7xl mx-auto"
           >
             <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-4 md:p-8 border-2 border-yellow-400">
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <p className="text-gray-1000 text-xl md:text-2xl font-bold">
                   Book Your Ride Now
                 </p>
-              </div>
+              </div> */}
               <SearchForm />
             </div>
           </motion.div>

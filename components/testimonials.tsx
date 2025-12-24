@@ -96,7 +96,7 @@ export default function Testimonials() {
           >
             <div className="relative">
               <Image
-                src="/images/Taxi Sri Lanka Tours Tripadvisor.png"
+                src="/images/Taxi Sri Lanka Tripadvisor.png"
                 alt="TripAdvisor Top Rated"
                 width={200}
                 height={200}
@@ -162,7 +162,7 @@ export default function Testimonials() {
                   ))}
                 </div>
                 <Image
-                  src="/images/Taxi Sri Lanka Tours Tripadvisor.png"
+                  src="/images/Taxi Sri Lanka Tripadvisor.png"
                   alt="TripAdvisor"
                   width={24}
                   height={24}
@@ -236,7 +236,7 @@ export default function Testimonials() {
                 Read More Reviews on TripAdvisor
               </h3>
               <p className="text-lg text-green-100 mb-8 max-w-2xl mx-auto">
-                See what other travelers say about their experience with Taxi Sri Lanka Tours
+                See what other travelers say about their experience with Taxi Sri Lanka
               </p>
               <motion.a
                 href={data.bio.link}
@@ -247,7 +247,7 @@ export default function Testimonials() {
                 className="inline-flex items-center gap-3 px-8 py-4 bg-white text-green-700 font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all"
               >
                 <Image
-                  src="/images/Taxi Sri Lanka Tours Tripadvisor.png"
+                  src="/images/Taxi Sri Lanka Tripadvisor.png"
                   alt="TripAdvisor"
                   width={32}
                   height={32}

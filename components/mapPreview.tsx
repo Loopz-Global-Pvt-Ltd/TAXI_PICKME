@@ -355,7 +355,7 @@ const generateNearbyDrivers = async (
 
   if (!isLoaded) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[500px] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl">
+      <div className="flex flex-col items-center justify-center h-full min-h-[300px] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl">
         <Loader2 className="h-12 w-12 animate-spin text-yellow-500 mb-4" />
         <p className="text-gray-600 font-medium">Loading map preview...</p>
       </div>
@@ -369,7 +369,7 @@ const generateNearbyDrivers = async (
       transition={{ duration: 0.5 }}
       className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-yellow-400"
     >
-      <div ref={mapRef} className="w-full h-full min-h-[500px]" />
+      <div ref={mapRef} className="w-full h-full min-h-[300px]" />
 
       {/* Route Info Card - Top Left */}
       {distance && duration && (

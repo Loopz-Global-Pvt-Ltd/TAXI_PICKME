@@ -34,13 +34,13 @@ export default function DestinationsGallery() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center justify-center gap-2 mb-4 px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full shadow-lg animate-pulse-slow">
+          {/* <div className="inline-flex items-center justify-center gap-2 mb-4 px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full shadow-lg animate-pulse-slow">
             <Sparkles className="h-5 w-5 text-white animate-spin-slow" />
             <span className="text-white font-bold text-sm uppercase tracking-wider">
               Discover Paradise
             </span>
             <Star className="h-4 w-4 text-white fill-white" />
-          </div>
+          </div> */}
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 animate-fade-in-up">
             Explore Sri Lankan Destinations
           </h2>

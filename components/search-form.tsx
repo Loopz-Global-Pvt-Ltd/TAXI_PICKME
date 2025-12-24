@@ -163,7 +163,7 @@ export default function SearchForm() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       {/* Map Preview - Order 1 on mobile (top), Order 2 on desktop (right) */}
-      <div className="h-[300px] sm:h-[350px] lg:h-[400px] w-full rounded-lg overflow-hidden order-1 lg:order-2">
+      <div className="h-[300px] sm:h-[350px] lg:h-[320px] w-full rounded-lg overflow-hidden order-1 lg:order-2">
         <MapPreview
           pickupLat={pickupLocation.lat ?? undefined}
           pickupLng={pickupLocation.lng ?? undefined}
@@ -178,8 +178,8 @@ export default function SearchForm() {
         onSubmit={handleSearch}
         className="space-y-3 sm:space-y-4 order-2 lg:order-1"
       >
-        <div className="grid grid-cols-1 gap-1">
-          {/* Pickup Location */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {/* Pickup Date */}
           <div className="relative">
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={20} />
@@ -202,7 +202,7 @@ export default function SearchForm() {
             </Autocomplete>
           </div>
 
-          {/* Dropoff Location */}
+          {/* Pickup Time */}
           <div className="relative">
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={20} />
@@ -225,7 +225,6 @@ export default function SearchForm() {
             </Autocomplete>
           </div>
         </div>
-
         {/* Distance Information */}
         {isCalculatingDistance && (
           <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -301,7 +300,7 @@ export default function SearchForm() {
                 Calculating...
               </>
             ) : (
-              'Search Available Taxis'
+              'Search Taxis'
             )}
           </Button>
         </div>
