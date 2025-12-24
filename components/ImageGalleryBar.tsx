@@ -58,7 +58,7 @@ export default function ImageGalleryBar() {
             >
               <img
                 src={src}
-                alt={`Taxi Sri Lanka Tours gallery ${(idx % IMAGE_COUNT) + 1}`}
+                alt={`Taxi Sri Lanka gallery ${(idx % IMAGE_COUNT) + 1}`}
                 className="gallery-img rounded-xl shadow-lg object-cover"
                 loading="lazy"
                 draggable={false}
@@ -69,7 +69,7 @@ export default function ImageGalleryBar() {
       </div>
 
       <p className="text-center text-gray-500 mt-6 text-sm">
-         Discover amazing destinations across Sri Lanka
+        Hover to pause • Discover amazing destinations across Sri Lanka
       </p>
 
       <style jsx>{`

@@ -12,9 +12,72 @@ export default function ServiceLocations() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAll, setShowAll] = useState(false)
 
+  // Coordinates / addresses helper (extend as needed)
+  const AIRPORT = {
+    displayName: "Colombo Bandaranaike International Airport",
+    address:
+      "Bandaranaike International Airport (CMB), Airport and Aviation Services (Sri Lanka) (Private) Limited, Canada Friendship Rd, Katunayake, Sri Lanka",
+    lat: 7.1808,
+    lng: 79.8840,
+  }
+
+  // Build destination lookup from the serviceLocations list (do not maintain one-by-one)
+  const destinationCoords: Record<
+    string,
+    { displayName: string; address: string; lat: number | null; lng: number | null }
+  > = serviceLocations.reduce((acc, loc) => {
+    const key = loc.name
+    acc[key] = {
+      displayName: loc.name,
+      address: loc.address ?? (loc.district ? `${loc.name}, ${loc.district}` : ""),
+      lat: typeof loc.lat === "number" ? loc.lat : null,
+      lng: typeof loc.lng === "number" ? loc.lng : null,
+    }
+    return acc
+  }, {} as Record<string, { displayName: string; address: string; lat: number | null; lng: number | null }>)
+
+  // Dispatch route selection to other components (SearchForm listens)
+  const selectRoute = (routeLabel: string) => {
+    // try to find a destination key in routeLabel (e.g. "Airport to Kandy")
+    const foundKey = Object.keys(destinationCoords).find((k) =>
+      routeLabel.toLowerCase().includes(k.toLowerCase())
+    )
+
+    const dropoff = foundKey ? destinationCoords[foundKey] : null
+
+    // Build event detail
+    const detail = {
+      pickup: {
+        displayName: AIRPORT.displayName,
+        address: AIRPORT.address,
+        lat: AIRPORT.lat,
+        lng: AIRPORT.lng,
+      },
+      dropoff: dropoff
+        ? {
+            displayName: dropoff.displayName,
+            address: dropoff.address,
+            lat: dropoff.lat,
+            lng: dropoff.lng,
+          }
+        : {
+            displayName: routeLabel, // fallback: use route label as dropoff name
+            address: "",
+            lat: null,
+            lng: null,
+          },
+    }
+
+    // Dispatch custom event
+    window.dispatchEvent(new CustomEvent("selectRoute", { detail }))
+
+    // Also scroll to search form if present
+    const el = document.getElementById("search-form")
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" })
+  }
+
   const filteredLocations = serviceLocations.filter(location => {
     const matchesTab = activeTab === "all" || location.category === activeTab
-    // const matchesSearch = location.name.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesTab 
   })
 
@@ -42,41 +105,7 @@ export default function ServiceLocations() {
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Professional Taxi Service <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-yellow-500"> Across Sri Lanka</span>
           </h2>
-          {/* <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Experience premium transportation with fixed pricing, English-speaking drivers, 
-            and 24/7 availability to all major destinations across the island.
-          </p> */}
-
-          {/* Trust Badges */}
-          {/* <div className="flex flex-wrap justify-center gap-6 mt-8">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-semibold text-gray-700">Fixed Pricing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-semibold text-gray-700">Professional Drivers</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-semibold text-gray-700">24/7 Available</span>
-            </div>
-          </div> */}
         </div>
-
-        {/* Premium Search Bar */}
-        {/* <div className="max-w-3xl mx-auto mb-10">
-          <div className="relative group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400 group-focus-within:text-yellow-600 transition-colors" />
-            <input
-              type="text"
-              placeholder="Search your destination..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-16 pr-6 py-5 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500/20 focus:border-yellow-500 text-lg shadow-sm transition-all"
-            />
-          </div>
-        </div> */}
 
         {/* Premium Tabs */}
         <div className="flex flex-wrap gap-3 justify-center mb-5">
@@ -129,7 +158,11 @@ export default function ServiceLocations() {
               {displayedAirportRoutes.map((route, index) => (
                 <div
                   key={`${route.slug}-${index}`}
-                  className="group relative p-4 bg-white border-2 border-gray-100 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  onClick={() => selectRoute(route.route)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') selectRoute(route.route) }}
+                  className="group relative p-4 bg-white border-2 border-gray-100 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
                 >
                   {/* Gradient Background on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

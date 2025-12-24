@@ -1,4 +1,4 @@
-"use client"
+"use client" 
 
 import type React from "react"
 import { useState, useCallback, useEffect, useRef } from "react"
@@ -151,6 +151,44 @@ export default function SearchForm() {
     window.location.href = `/search?${queryParams.toString()}`
   }
 
+  // Listen for route selections from service-locations
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail
+      if (!detail) return
+
+      // safely set pickup and dropoff state from event detail
+      const { pickup, dropoff } = detail
+
+      if (pickup) {
+        setPickupLocation({
+          displayName: pickup.displayName || "",
+          address: pickup.address || "",
+          lat: pickup.lat ?? null,
+          lng: pickup.lng ?? null,
+        })
+      }
+
+      if (dropoff) {
+        setDropoffLocation({
+          displayName: dropoff.displayName || "",
+          address: dropoff.address || "",
+          lat: dropoff.lat ?? null,
+          lng: dropoff.lng ?? null,
+        })
+      }
+
+      // scroll the form into view
+      setTimeout(() => {
+        const el = formRef.current
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" })
+      }, 50)
+    }
+
+    window.addEventListener("selectRoute", handler as EventListener)
+    return () => window.removeEventListener("selectRoute", handler as EventListener)
+  }, [])
+
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -179,7 +217,7 @@ export default function SearchForm() {
         className="space-y-3 sm:space-y-4 order-2 lg:order-1"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          {/* Pickup Date */}
+          {/* Pickup Location */}
           <div className="relative">
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={20} />
@@ -196,13 +234,22 @@ export default function SearchForm() {
               <input
                 type="text"
                 placeholder="Where are you?"
-                defaultValue={pickupLocation.displayName}
+                value={pickupLocation.displayName}
+                onChange={(e) =>
+                  setPickupLocation((prev) => ({
+                    ...prev,
+                    displayName: e.target.value,
+                    // clear lat/lng if user edits manually
+                    lat: null,
+                    lng: null,
+                  }))
+                }
                 className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold text-sm sm:text-base"
               />
             </Autocomplete>
           </div>
 
-          {/* Pickup Time */}
+          {/* Dropoff Location */}
           <div className="relative">
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
               <MapPin className="inline mr-2" size={20} />
@@ -219,7 +266,15 @@ export default function SearchForm() {
               <input
                 type="text"
                 placeholder="Where to?"
-                defaultValue={dropoffLocation.displayName}
+                value={dropoffLocation.displayName}
+                onChange={(e) =>
+                  setDropoffLocation((prev) => ({
+                    ...prev,
+                    displayName: e.target.value,
+                    lat: null,
+                    lng: null,
+                  }))
+                }
                 className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black font-semibold placeholder:font-normal text-sm sm:text-base"
               />
             </Autocomplete>
