@@ -112,7 +112,7 @@ export default function ServiceLocations() {
         {/* Airport Routes Section - Premium Design */}
         {activeTab === "airport" && (
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
                   <Plane className="h-7 w-7 text-white" />
@@ -129,7 +129,7 @@ export default function ServiceLocations() {
               {displayedAirportRoutes.map((route, index) => (
                 <div
                   key={`${route.slug}-${index}`}
-                  className="group relative p-6 bg-white border-2 border-gray-100 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className="group relative p-4 bg-white border-2 border-gray-100 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden"
                 >
                   {/* Gradient Background on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -143,7 +143,7 @@ export default function ServiceLocations() {
                         <h4 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1 line-clamp-2">
                           {route.route}
                         </h4>
-                        <p className="text-sm text-gray-500 mb-3">Fixed pricing • 24/7 available</p>
+                        <p className="text-sm text-gray-500 ">Fixed pricing • 24/7 available</p>
                       </div>
                     </div>
                   </div>
@@ -156,7 +156,7 @@ export default function ServiceLocations() {
         {/* City/Destination Services - Premium Grid */}
         {activeTab !== "airport" && (
           <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <MapPin className="h-7 w-7 text-gray-900" />

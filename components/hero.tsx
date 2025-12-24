@@ -238,10 +238,10 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.1 + index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -5 }}
-                  className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center hover:bg-white/20 transition-all cursor-pointer"
+                  className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex items-center gap-3 hover:bg-white/20 transition-all cursor-pointer"
                 >
-                  <feature.icon className="text-yellow-500 mx-auto mb-2" size={32} />
-                  <p className="text-white text-sm font-medium leading-tight">
+                  <feature.icon className="text-yellow-400 flex-shrink-0" size={28} />
+                  <p className="text-white text-sm font-medium leading-tight text-left min-w-0">
                     {feature.text}
                   </p>
                 </motion.div>
