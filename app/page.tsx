@@ -20,17 +20,17 @@ import ImageGalleryBar from "@/components/ImageGalleryBar"
 
 
 export const metadata: Metadata = {
-  title: "Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver",
+  title: "Taxi Sri Lanka Tours | Airport Transfers, Tours, Cab & Car Hire with Driver",
   
   description:
-    'Taxi Sri Lanka is the #1 tourist transport service offering airport transfers, taxi booking, cab services, car hire with driver, three-wheel bookings, and islandwide tours. Travel safely with English-speaking drivers, fixed pricing, and 24/7 support to destinations like Colombo, Kandy, Galle, Dambulla, Sigiriya, Ella, Hikkaduwa, Mirissa, Arugam Bay, and more.',
+    'Taxi Sri Lanka Tours is the #1 tourist transport service offering airport transfers, taxi booking, cab services, car hire with driver, three-wheel bookings, and islandwide tours. Travel safely with English-speaking drivers, fixed pricing, and 24/7 support to destinations like Colombo, Kandy, Galle, Dambulla, Sigiriya, Ella, Hikkaduwa, Mirissa, Arugam Bay, and more.',
 
   keywords: [
     // Core
-    'taxi sri lanka',
+    'Taxi Sri Lanka Tours',
     'sri lanka taxi booking',
     'cab service sri lanka',
-    'tourist taxi sri lanka',
+    'tourist Taxi Sri Lanka Tours',
 
     // Airport
     'sri lanka airport transfer',
@@ -71,8 +71,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://taxisrilanka.com',
-    siteName: 'Taxi Sri Lanka',
-    title: 'Taxi Sri Lanka | Airport Transfers, Tours & Tourist Transport',
+    siteName: 'Taxi Sri Lanka Tours',
+    title: 'Taxi Sri Lanka Tours | Airport Transfers, Tours & Tourist Transport',
     description:
       'Book trusted taxi services, airport transfers, car hire with driver, and islandwide tours in Sri Lanka. Serving tourists with safe, reliable transport and professional English-speaking drivers.',
     images: [
@@ -80,14 +80,14 @@ export const metadata: Metadata = {
         url: '/images/hero-taxi.jpg',
         width: 1200,
         height: 630,
-        alt: 'Taxi Sri Lanka - Tourist Transport & Airport Transfers',
+        alt: 'Taxi Sri Lanka Tours - Tourist Transport & Airport Transfers',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Taxi Sri Lanka | Tourist Taxi & Airport Transfers',
+    title: 'Taxi Sri Lanka Tours | Tourist Taxi & Airport Transfers',
     description:
       'Reliable taxi booking, airport transfers, and tourist transport across Sri Lanka.',
     images: ['/images/hero-taxi.jpg'],

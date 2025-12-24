@@ -227,7 +227,7 @@ export default function ServiceLocations() {
             </h3>
             <div className="h-1 w-24 bg-yellow-400 rounded-full mb-2" />
             <p className="text-gray-200 leading-relaxed text-lg">
-              <strong className="text-yellow-400">Taxi Sri Lanka</strong> provides comprehensive premium taxi and cab services 
+              <strong className="text-yellow-400">Taxi Sri Lanka Tours</strong> provides comprehensive premium taxi and cab services 
               to all major destinations across the island. Whether you need an <strong className="text-white">airport transfer 
               from Colombo Airport (BIA)</strong>, a taxi to beach destinations like <strong className="text-white">Hikkaduwa, 
               Mirissa, or Arugam Bay</strong>, cultural site visits to <strong className="text-white">Sigiriya, Kandy, 

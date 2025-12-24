@@ -8,17 +8,17 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default: "Taxi Sri Lanka | Airport Transfers, Tours, Cab & Car Hire with Driver",
-    template: "%s | Taxi Sri Lanka"
+    default: "Taxi Sri Lanka Tours | Airport Transfers, Tours, Cab & Car Hire with Driver",
+    template: "%s | Taxi Sri Lanka Tours"
   },
   description: "Book reliable taxi service in Sri Lanka. Airport transfers from Colombo BIA, car hire with English-speaking driver, island-wide tours to Sigiriya, Kandy, Ella, Galle. 24/7 tourist transport with instant booking.",
-  applicationName: "Taxi Sri Lanka Tours",
+  applicationName: "Taxi Sri Lanka Tours Tours",
   keywords: [
     // Core Services
-    'taxi sri lanka',
+    'Taxi Sri Lanka Tours',
     'sri lanka taxi booking',
     'cab service sri lanka',
-    'private taxi sri lanka',
+    'private Taxi Sri Lanka Tours',
     'book taxi online sri lanka',
     'sri lanka taxi service',
     'colombo taxi',
@@ -125,13 +125,13 @@ export const metadata: Metadata = {
     'book taxi online sri lanka',
     'taxi booking sri lanka',
     'online cab booking sri lanka',
-    '24/7 taxi sri lanka',
+    '24/7 Taxi Sri Lanka Tours',
     'instant taxi booking',
         
   ],
-  authors: [{ name: "Taxi Sri Lanka Tours" , url: "https://taxisrilanka.com"  }],
-  creator: 'Taxi Sri Lanka',
-  publisher: 'Taxi Sri Lanka Tours',
+  authors: [{ name: "Taxi Sri Lanka Tours Tours" , url: "https://taxisrilanka.com"  }],
+  creator: 'Taxi Sri Lanka Tours',
+  publisher: 'Taxi Sri Lanka Tours Tours',
     
   formatDetection: {
     email: false,
@@ -143,16 +143,16 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://taxisrilanka.com',
-    siteName: 'Taxi Sri Lanka Tours',
+    siteName: 'Taxi Sri Lanka Tours Tours',
     title:
-      'Taxi Sri Lanka – Tourist Taxi, Airport Transfers & Islandwide Tours',
+      'Taxi Sri Lanka Tours – Tourist Taxi, Airport Transfers & Islandwide Tours',
     description: 'Sri Lanka\'s #1 rated taxi service. Book airport transfers, car hire with driver, and island-wide tours. English-speaking drivers, instant booking, 24/7 service.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Taxi Sri Lanka - Tourist Transport & Airport Transfers',
+        alt: 'Taxi Sri Lanka Tours - Tourist Transport & Airport Transfers',
       },
     ],
   },
@@ -170,7 +170,7 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   twitter: {
     card: 'summary_large_image',
-    title: 'Taxi Sri Lanka \'s Premier Taxi Service',
+    title: 'Taxi Sri Lanka Tours \'s Premier Taxi Service',
     description: 'Book reliable, affordable taxi services across Sri Lanka',
     images: ['/images/taxi-srilanak.png'],
   },

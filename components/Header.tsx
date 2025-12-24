@@ -106,7 +106,7 @@ export default function Header() {
                 isScrolled ? "text-gray-900" : "text-gray-900"
                 }`}
               >
-                Taxi Sri Lanka
+                Taxi Sri Lanka Tours
               </h1>
               <p
                 className={`text-[10px] sm:text-xs font-medium ${

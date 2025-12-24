@@ -35,7 +35,7 @@ interface BookingEmailData {
             <!-- Header -->
             <tr>
               <td style="background: linear-gradient(135deg, #000000 0%, #333333 100%); padding: 30px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🚖 Taxi Sri Lanka Tours</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🚖 Taxi Sri Lanka Tours Tours</h1>
                 <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Booking Confirmation</p>
               </td>
             </tr>
@@ -47,7 +47,7 @@ interface BookingEmailData {
                   <h2 style="margin: 0; font-size: 20px;">✓ Booking Confirmed!</h2>
                 </div>
                 <p style="color: #666666; margin: 20px 0 0 0; font-size: 14px;">
-                  Thank you for choosing Taxi Sri Lanka. Your booking has been confirmed.
+                  Thank you for choosing Taxi Sri Lanka Tours. Your booking has been confirmed.
                 </p>
               </td>
             </tr>
@@ -209,7 +209,7 @@ interface BookingEmailData {
             <tr>
               <td style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #E5E7EB;">
                 <p style="color: #6B7280; font-size: 12px; margin: 0 0 5px 0;">
-                  © ${new Date().getFullYear()} Taxi Sri Lanka. All rights reserved.
+                  © ${new Date().getFullYear()} Taxi Sri Lanka Tours. All rights reserved.
                 </p>
                 <p style="color: #6B7280; font-size: 12px; margin: 0;">
                   <a href="https://taxisrilanka.com" style="color: #3B82F6; text-decoration: none;">Visit our website</a>
@@ -230,7 +230,7 @@ interface BookingEmailData {
     const isReturnTrip = data.tripType === 'Return Trip'
     
     return `
-  BOOKING CONFIRMATION - TAXI SRI LANKA
+  BOOKING CONFIRMATION - Taxi Sri Lanka Tours
   ======================================
   
   ✓ Your booking has been confirmed!
@@ -274,7 +274,7 @@ interface BookingEmailData {
   Email: sritaxi@gmail.com
   Website: https://taxisrilanka.com
   
-  Thank you for choosing Taxi Sri Lanka!
+  Thank you for choosing Taxi Sri Lanka Tours!
     `.trim()
   }
 
@@ -307,7 +307,7 @@ export function generateAdminBookingNotificationEmail(data: BookingEmailData): s
           <tr>
             <td style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); padding: 30px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🔔 New Booking Alert</h1>
-              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Taxi Sri Lanka Tours - Admin Panel</p>
+              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Taxi Sri Lanka Tours Tours - Admin Panel</p>
             </td>
           </tr>
 
@@ -507,7 +507,7 @@ export function generateAdminBookingNotificationEmail(data: BookingEmailData): s
           <tr>
             <td style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #E5E7EB;">
               <p style="color: #6B7280; font-size: 12px; margin: 0 0 5px 0;">
-                This is an automated notification from Taxi Sri Lanka Booking System
+                This is an automated notification from Taxi Sri Lanka Tours Booking System
               </p>
               <p style="color: #6B7280; font-size: 12px; margin: 0;">
                 <a href="https://taxisrilanka.com/admin" style="color: #3B82F6; text-decoration: none;">Access Admin Dashboard</a>
@@ -528,7 +528,7 @@ export function generateAdminBookingNotificationText(data: BookingEmailData): st
   const isReturnTrip = data.tripType === 'Return Trip'
   
   return `
-🔔 NEW BOOKING ALERT - TAXI SRI LANKA
+🔔 NEW BOOKING ALERT - Taxi Sri Lanka Tours
 ======================================
 
 ⚠️ ACTION REQUIRED: New booking has been received!
@@ -581,6 +581,6 @@ Booking Timestamp: ${new Date().toLocaleString('en-US', {
 })}
 
 ---
-This is an automated notification from Taxi Sri Lanka Booking System
+This is an automated notification from Taxi Sri Lanka Tours Booking System
   `.trim()
 }

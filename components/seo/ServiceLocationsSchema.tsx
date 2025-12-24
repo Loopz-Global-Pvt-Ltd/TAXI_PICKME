@@ -4,7 +4,7 @@ export function ServiceLocationsSchema() {
   const service = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Taxi Sri Lanka",
+    "name": "Taxi Sri Lanka Tours",
     "image": "https://taxisrilanka.com/favicon/android-chrome-512x512.png",
     "@id": "https://taxisrilanka.com",
     "url": "https://taxisrilanka.com",

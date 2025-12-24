@@ -58,7 +58,7 @@ export default function ImageGalleryBar() {
             >
               <img
                 src={src}
-                alt={`Taxi Sri Lanka gallery ${(idx % IMAGE_COUNT) + 1}`}
+                alt={`Taxi Sri Lanka Tours gallery ${(idx % IMAGE_COUNT) + 1}`}
                 className="gallery-img rounded-xl shadow-lg object-cover"
                 loading="lazy"
                 draggable={false}

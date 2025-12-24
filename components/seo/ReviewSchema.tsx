@@ -4,7 +4,7 @@ export function ReviewSchema() {
       "@type": "Review",
       "itemReviewed": {
         "@type": "TaxiService",
-        "name": "Taxi Sri Lanka"
+        "name": "Taxi Sri Lanka Tours"
       },
       "reviewRating": {
         "@type": "Rating",

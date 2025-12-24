@@ -8,12 +8,12 @@ export function HomeStructuredData() {
         {
           "@type": "TaxiService",
           "@id": "https://taxisrilanka.com/#taxiservice",
-          "name": "Taxi Sri Lanka",
+          "name": "Taxi Sri Lanka Tours",
           "url": "https://taxisrilanka.com",
           "logo": "https://taxisrilanka.com/logo.png",
           "image": "https://taxisrilanka.com/images/service.jpg",
           "description":
-            "Taxi Sri Lanka provides airport transfers, taxi booking, car hire with driver, vans, three-wheel services, and islandwide tours for tourists across Sri Lanka.",
+            "Taxi Sri Lanka Tours provides airport transfers, taxi booking, car hire with driver, vans, three-wheel services, and islandwide tours for tourists across Sri Lanka.",
           "telephone": "+94777850529",
           "email": "sritaxi@gmail.com",
   
@@ -167,7 +167,7 @@ export function HomeStructuredData() {
         {
           "@type": "Organization",
           "@id": "https://taxisrilanka.com/#organization",
-          "name": "Taxi Sri Lanka",
+          "name": "Taxi Sri Lanka Tours",
           "url": "https://taxisrilanka.com",
           "logo": {
             "@type": "ImageObject",
@@ -188,7 +188,7 @@ export function HomeStructuredData() {
           "@type": "WebSite",
           "@id": "https://taxisrilanka.com/#website",
           "url": "https://taxisrilanka.com",
-          "name": "Taxi Sri Lanka",
+          "name": "Taxi Sri Lanka Tours",
           "publisher": {
             "@id": "https://taxisrilanka.com/#organization"
           }

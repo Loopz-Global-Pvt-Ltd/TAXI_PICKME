@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
       // 1. Send confirmation email to customer
       sendEmail({
         to: validatedData.email,
-        subject: `Booking Confirmation - ${booking.booking_reference} | Taxi Sri Lanka`,
+        subject: `Booking Confirmation - ${booking.booking_reference} | Taxi Sri Lanka Tours`,
         html: generateBookingConfirmationEmail(emailData),
         text: generateBookingConfirmationText(emailData),
       }).then(() => {
