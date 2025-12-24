@@ -3,7 +3,7 @@ import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-background py-12 md:py-16">
+    <footer className="relative bg-foreground text-background py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
@@ -67,7 +67,7 @@ export default function Footer() {
 
         <div className="border-t border-background/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <p>&copy; 2025 Taxi Sri Lanka Tours Tours. All rights reserved.</p>
+            <p>&copy; 2025 Taxi Sri Lanka Tours. All rights reserved.</p>
             <div className="flex gap-4 justify-center">
               <Link href="/terms" className="hover:opacity-80 transition">
                 Terms & Conditions
@@ -76,10 +76,29 @@ export default function Footer() {
                 Privacy Policy
               </Link>
             </div>
-            {/* <p className="text-right">Made with ❤️ for Sri Lanka</p> */}
+
+                  {/* Developed by badge (bottom-right) */}
+        <div className=" z-50">
+          <a
+            href="https://loopzglobal.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 bg-black/80 text-white px-3 py-2 rounded-lg shadow-lg hover:opacity-90 transition"
+            aria-label="Developed by Loopz Global - opens in new tab"
+          >
+            {/* Place logo at /public/images/loopz-logo.png */}
+   
+            <div className="text-xs leading-tight">
+              <div className="text-[10px] opacity-80">Developed by</div>
+              <div className="text-[12px] font-semibold">Loopz Global</div>
+            </div>
+          </a>
+        </div>
           </div>
         </div>
       </div>
+
+
     </footer>
   )
 }
