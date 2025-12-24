@@ -107,7 +107,7 @@ export default function Statistics() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-16 md:py-32 bg-gradient-to-r from-primary via-primary to-primary/95 text-primary-foreground overflow-hidden"
+      className="relative py-10 md:py-25 bg-gradient-to-r from-primary via-primary to-primary/95 text-primary-foreground overflow-hidden"
     >
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
@@ -120,9 +120,9 @@ export default function Statistics() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-8"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">By The Numbers</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-2">By The Numbers</h2>
             <p className="text-lg opacity-90">Trusted by thousands of travelers worldwide</p>
           </motion.div>
 
@@ -142,16 +142,16 @@ export default function Statistics() {
                   whileHover={{
                     scale: 1.08,
                   }}
-                  className="text-center p-6 md:p-8 rounded-xl bg-primary-foreground/5 backdrop-blur-sm border border-primary-foreground/10 transition-all cursor-pointer prefers-reduced-motion:hover:scale-100"
+                  className="text-center p-3 md:p-4 rounded-xl bg-primary-foreground/5 backdrop-blur-sm border border-primary-foreground/10 transition-all cursor-pointer prefers-reduced-motion:hover:scale-100"
                 >
                   <motion.div
-                    className="flex justify-center mb-4"
+                    className="flex justify-center mb-2"
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
                   >
                     <Icon size={40} className="opacity-90" />
                   </motion.div>
-                  <p className="text-4xl md:text-5xl font-bold mb-3">
+                  <p className="text-4xl md:text-5xl font-bold mb-2">
                     <AnimatedCounter to={stat.number} duration={2.5} />
                     {stat.suffix}
                   </p>

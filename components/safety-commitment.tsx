@@ -28,7 +28,7 @@ const COMMITMENTS = [
 
 export default function SafetyCommitment() {
   return (
-    <section className="py-16 md:py-24 bg-yellow-400">
+    <section className="py-12 md:py-16 bg-yellow-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -38,10 +38,10 @@ export default function SafetyCommitment() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Your Safety is Our Priority</h2>
-            <p className="text-lg text-gray-800 mb-8">
+            {/* <p className="text-lg text-gray-800 mb-8">
               We're committed to providing the safest and most professional transportation experience in Sri Lanka.
               Every vehicle, driver, and journey is protected by our comprehensive safety and insurance protocols.
-            </p>
+            </p> */}
 
             <div className="space-y-4">
               {COMMITMENTS.map((commitment, index) => {

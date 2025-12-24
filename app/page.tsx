@@ -111,8 +111,9 @@ export default function Home() {
       <ServiceLocationsSchema />
       <Header />
       <Hero />
-      <TrustBadges /> 
+
       <ServiceLocations />
+            <TrustBadges /> 
       <DestinationsGallery />
       <ImageGalleryBar />
       <Testimonials />
