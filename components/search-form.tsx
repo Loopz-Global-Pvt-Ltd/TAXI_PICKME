@@ -239,7 +239,7 @@ export default function SearchForm() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {/* Pickup Date */}
           <div>
             <label className="block text-sm font-medium text-black mb-2 font-semibold">
