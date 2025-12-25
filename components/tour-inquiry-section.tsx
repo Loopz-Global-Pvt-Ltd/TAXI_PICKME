@@ -4,7 +4,11 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Sparkles, MapPin, Calendar, Users, Phone, Mail, Send, CheckCircle2, Loader2, Car, Plus, X, ArrowRight, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { serviceLocations } from "@/data/service-locations" // added import
+import { serviceLocations } from "@/data/service-locations" 
+import { PiCarProfileFill   } from "react-icons/pi";
+import {TbCarSuvFilled} from "react-icons/tb";
+import { FaVanShuttle } from "react-icons/fa6";
+
 
 interface Location {
   id: string
@@ -31,37 +35,37 @@ export default function TourInquirySection() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const vehicleTypes = [
-    { 
-      id: "sedan", 
-      name: "Sedan", 
-      icon: "🚗", 
+    {
+      id: "tuktuk",
+      name: "TukTuk",
+      icon: "🛺",
       capacity: "1-3 passengers",
       pricePerDay: 80,
-      image: "/api/placeholder/300/200"
+      image: "/images/vehicle-type/TUK.png"
     },
-    { 
-      id: "suv", 
-      name: "SUV", 
-      icon: "🚙", 
-      capacity: "1-5 passengers",
+    {
+      id: "mini",
+      name: "Mini",
+      icon: <PiCarProfileFill />,
+      capacity: "1-4 passengers",
       pricePerDay: 120,
-      image: "/api/placeholder/300/200"
+      image: "/images/vehicle-type/MINI.png"
     },
-    { 
-      id: "van", 
-      name: "Luxury Van", 
-      icon: "🚐", 
-      capacity: "6-8 passengers",
+    {
+      id: "sedan",
+      name: "Sedan",
+      icon: <TbCarSuvFilled />,
+      capacity: "4-5 passengers",
       pricePerDay: 180,
-      image: "/api/placeholder/300/200"
+      image: "/images/vehicle-type/SEDAN.png"
     },
-    { 
-      id: "minibus", 
-      name: "Mini Bus", 
-      icon: "🚌", 
-      capacity: "9-14 passengers",
-      pricePerDay: 250,
-      image: "/api/placeholder/300/200"
+    {
+      id: "van",
+      name: "Van",
+      icon: <FaVanShuttle />,
+      capacity: "6-8 passengers",
+      pricePerDay: 220,
+      image: "/images/vehicle-type/VAN.png"
     },
   ]
 
@@ -203,9 +207,9 @@ export default function TourInquirySection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-3 leading-tight"
           >
-            Plan Your Perfect{" "}
+            Plan Your Personalized{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-yellow-500">
-              Multi-Day Adventure
+            Sri Lanka Route
             </span>
           </motion.h2>
 
@@ -319,7 +323,7 @@ export default function TourInquirySection() {
                                   required
                                   value={formData.name}
                                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                                  placeholder="John Smith"
+                                  placeholder="Sam Smith"
                                   className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
                                 />
                               </div>
@@ -334,7 +338,7 @@ export default function TourInquirySection() {
                                   required
                                   value={formData.phone}
                                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                                  placeholder="+94 77 123 4567"
+                                  placeholder=""
                                   className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
                                 />
                               </div>
@@ -365,7 +369,7 @@ export default function TourInquirySection() {
                                   type="text"
                                   value={formData.nationality}
                                   onChange={(e) => setFormData(prev => ({ ...prev, nationality: e.target.value }))}
-                                  placeholder="e.g., Sri Lanka / United Kingdom"
+                                  placeholder="e.g., Germany , United Kingdom"
                                   className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
                                 />
                               </div>
@@ -412,15 +416,19 @@ export default function TourInquirySection() {
                                   key={vehicle.id}
                                   type="button"
                                   onClick={() => handleVehicleChange(vehicle.id)}
-                                  className={`p-4 rounded-2xl border-2 transition-all text-center ${
-                                    formData.vehicleType === vehicle.id
-                                      ? "border-yellow-400 bg-yellow-50 shadow-lg scale-105"
-                                      : "border-gray-200 hover:border-gray-300 hover:shadow-md"
-                                  }`}
+                                  className={`p-1 rounded-2xl border-2 transition-all text-center ${
+                                  formData.vehicleType === vehicle.id
+                                    ? "border-yellow-400 bg-yellow-50 shadow-lg scale-105 cursor-pointer"
+                                    : "border-gray-200 hover:border-gray-300 hover:shadow-md hover:cursor-pointer"
+                                  } `}
                                 >
-                                  <div className="text-4xl mb-2">{vehicle.icon}</div>
+                                  <img
+                                  src={vehicle.image}
+                                  alt={vehicle.name}
+                                  className="mx-auto h-16 w-auto object-contain"
+                                  />
                                   <div className="font-bold text-gray-900 mb-1">{vehicle.name}</div>
-                                  <div className="text-xs text-gray-600 mb-2">{vehicle.capacity}</div>
+                                  <div className="text-xs text-gray-600 mb-1">{vehicle.capacity}</div>
                                 </button>
                               ))}
                             </div>
@@ -661,10 +669,10 @@ export default function TourInquirySection() {
                                     {formData.locations.filter(loc => loc.name).length} Stops
                                   </span>
                                 </div>
-                                <div className="flex justify-between">
+                                {/* <div className="flex justify-between">
                                   <span className="text-gray-300">Nationality:</span>
                                   <span className="font-bold">{formData.nationality || "-"}</span>
-                                </div>
+                                </div> */}
                                 <div className="flex justify-between">
                                   <span className="text-gray-300">Guests (A/C):</span>
                                   <span className="font-bold">{formData.adults}/{formData.children}</span>

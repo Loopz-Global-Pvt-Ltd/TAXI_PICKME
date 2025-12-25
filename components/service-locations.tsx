@@ -108,7 +108,7 @@ export default function ServiceLocations() {
         </div>
 
         {/* Premium Tabs */}
-        <div className="flex flex-wrap gap-3 justify-center mb-5">
+        {/* <div className="flex flex-wrap gap-3 justify-center mb-5">
           {[
             { key: "airport", label: "Airport Transfers", icon: "✈️", gradient: "from-blue-500 to-blue-600" },
             { key: "beach", label: "Beach Destinations", icon: "🏖️", gradient: "from-cyan-500 to-blue-500" },
@@ -136,7 +136,7 @@ export default function ServiceLocations() {
               )}
             </button>
           ))}
-        </div>
+        </div> */}
 
         {/* Airport Routes Section - Premium Design */}
         {activeTab === "airport" && (
