@@ -17,6 +17,7 @@ import {DestinationsSchema} from '@/components/seo/DestinationsSchema'
 import ServiceLocations from "@/components/service-locations"
 import {ServiceLocationsSchema} from '@/components/seo/ServiceLocationsSchema'
 import ImageGalleryBar from "@/components/ImageGalleryBar"
+import TourInquirySection from "@/components/tour-inquiry-section"
 
 
 export const metadata: Metadata = {
@@ -113,7 +114,8 @@ export default function Home() {
       <Hero />
 
       <ServiceLocations />
-            <TrustBadges /> 
+      <TourInquirySection />
+      <TrustBadges /> 
       <DestinationsGallery />
       <ImageGalleryBar />
       <Testimonials />
