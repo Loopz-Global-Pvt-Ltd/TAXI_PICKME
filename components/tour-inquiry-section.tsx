@@ -174,7 +174,7 @@ export default function TourInquirySection() {
   const canSubmit = canProceedToStep3 && formData.locations.some(loc => loc.name) && Number(formData.adults) > 0
 
   return (
-    <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+    <section className="py-6 sm:py-6 lg:py-12 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-yellow-400/10 rounded-full blur-3xl animate-pulse" />
@@ -183,15 +183,14 @@ export default function TourInquirySection() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
+        <div className="text-center mb-5 sm:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center justify-center gap-2 mb-6 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full shadow-lg"
+            className="inline-flex items-center justify-center gap-2 mb-3 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full shadow-lg"
           >
-            <Sparkles className="h-5 w-5 text-gray-900" />
             <span className="text-gray-900 font-bold text-sm uppercase tracking-wider">
               Custom Multi-Day Tours
             </span>
@@ -202,7 +201,7 @@ export default function TourInquirySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-3 leading-tight"
           >
             Plan Your Perfect{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-yellow-500">
@@ -326,7 +325,7 @@ export default function TourInquirySection() {
                             <div>
                               <label className="block text-sm font-bold text-gray-900 mb-2">
                                 <Phone className="inline h-4 w-4 mr-1" />
-                                WhatsApp / Phone Number *
+                                WhatsApp Number *
                               </label>
                               <input
                                 type="tel"
@@ -627,7 +626,7 @@ export default function TourInquirySection() {
                             <textarea
                               value={formData.comments}
                               onChange={(e) => setFormData(prev => ({ ...prev, comments: e.target.value }))}
-                              placeholder="Any special requests, pickup points, luggage info, etc."
+                              placeholder="Any special requests,pickup points, baby seats,luggage info, etc."
                               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                             />
                           </div>
@@ -703,35 +702,6 @@ export default function TourInquirySection() {
               </AnimatePresence>
             </div>
           </div>
-
-          {/* Quick Contact Below */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="mt-8 text-center"
-      >
-        <p className="text-gray-600 mb-4">Need help planning? Talk to us directly</p>
-        <div className="flex justify-center gap-4">
-          <a
-            href="tel:+94777850529"
-            className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
-          >
-            <Phone className="h-5 w-5" />
-            Call Us
-          </a>
-          <a
-            href="https://wa.me/94777850529"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
-          >
-            <MessageCircle className="h-5 w-5" />
-            WhatsApp
-          </a>
-        </div>
-      </motion.div>
 
     </motion.div>
       </div>

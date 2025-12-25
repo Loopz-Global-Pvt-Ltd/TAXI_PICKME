@@ -112,10 +112,9 @@ export default function Home() {
       <ServiceLocationsSchema />
       <Header />
       <Hero />
-
       <ServiceLocations />
       <TourInquirySection />
-      <TrustBadges /> 
+      {/* <TrustBadges />  */}
       <DestinationsGallery />
       <ImageGalleryBar />
       <Testimonials />
