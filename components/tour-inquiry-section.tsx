@@ -207,9 +207,9 @@ export default function TourInquirySection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-3 leading-tight"
           >
-            Plan Your Personalized{" "}
+            Plan Your {" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-yellow-500">
-            Sri Lanka Route
+            Personalized Route
             </span>
           </motion.h2>
 
@@ -435,32 +435,60 @@ export default function TourInquirySection() {
                           </div>
 
                           {/* Date Range */}
-                          <div className="grid sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-bold text-gray-900 mb-2">
-                                <Calendar className="inline h-4 w-4 mr-1" />
-                                Start Date *
+                              <Calendar className="inline h-4 w-4 mr-1" />
+                              Start Date *
                               </label>
                               <input
-                                type="date"
-                                required
-                                value={formData.startDate}
-                                onChange={(e) => handleDateChange('startDate', e.target.value)}
-                                min={new Date().toISOString().split("T")[0]}
-                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                              type="date"
+                              required
+                              value={formData.startDate}
+                              onChange={(e) => handleDateChange('startDate', e.target.value)}
+                              min={new Date().toISOString().split("T")[0]}
+                              className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                               />
                             </div>
                             <div>
                               <label className="block text-sm font-bold text-gray-900 mb-2">
-                                <Calendar className="inline h-4 w-4 mr-1" />
-                                End Date (optional)
+                              <Calendar className="inline h-4 w-4 mr-1" />
+                              End Date (optional)
                               </label>
                               <input
-                                type="date"
-                                value={formData.endDate}
-                                onChange={(e) => handleDateChange('endDate', e.target.value)}
-                                min={formData.startDate || new Date().toISOString().split("T")[0]}
-                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                              type="date"
+                              value={formData.endDate}
+                              onChange={(e) => handleDateChange('endDate', e.target.value)}
+                              min={formData.startDate || new Date().toISOString().split("T")[0]}
+                              className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                              />
+                            </div>
+                            </div>
+
+                           {/* Additional guest inputs (Adults/Children) and comments */}
+                          <div className="grid sm:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-bold text-gray-900 mb-2">
+                                Adults *
+                              </label>
+                              <input
+                                type="number"
+                                min={1}
+                                value={formData.adults}
+                                onChange={(e) => setFormData(prev => ({ ...prev, adults: e.target.value }))}
+                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-bold text-gray-900 mb-2">
+                                Children
+                              </label>
+                              <input
+                                type="number"
+                                min={0}
+                                value={formData.children}
+                                onChange={(e) => setFormData(prev => ({ ...prev, children: e.target.value }))}
+                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                               />
                             </div>
                           </div>
@@ -472,7 +500,7 @@ export default function TourInquirySection() {
                               animate={{ opacity: 1, y: 0 }}
                               className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-2xl p-4"
                             >
-                              <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center justify-between ">
                                 <div>
                                   <p className="text-sm text-gray-600 font-medium">Tour Duration</p>
                                   <p className="text-2xl font-bold text-gray-900">{numberOfDays} Days</p>
@@ -482,9 +510,6 @@ export default function TourInquirySection() {
                                   <p className="text-2xl font-bold text-gray-900">{vehicleTypes.find(v => v.id === formData.vehicleType)?.name || "-"}</p>
                                 </div>
                               </div>
-                              <p className="text-xs text-gray-600 text-center">
-                                Final price and services will be confirmed  our team
-                              </p>
                             </motion.div>
                           )}
 
@@ -516,12 +541,12 @@ export default function TourInquirySection() {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -20 }}
-                          className="space-y-6"
+                          className="space-y-1"
                         >
-                          <div className="text-center mb-8">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                          <div className="text-center mb-2">
+                            {/* <h3 className="text-2xl font-bold text-gray-900 mb-2">
                               Add Your Destinations
-                            </h3>
+                            </h3> */}
                             <p className="text-gray-600">Select from popular spots or add your own</p>
                           </div>
 
@@ -531,30 +556,59 @@ export default function TourInquirySection() {
                               Popular Destinations
                             </label>
                             <div className="flex flex-wrap gap-2">
-                            {popularDestinations.map((dest, idx) => {
-                              const keySafe = `${dest}`.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
-                              return (
-                                <button
-                                  key={`${keySafe}-${idx}`}
-                                  type="button"
-                                  onClick={() => {
-                                    const emptyLocation = formData.locations.find(loc => !loc.name)
-                                    if (emptyLocation) {
-                                      updateLocation(emptyLocation.id, dest)
+                           {(() => {
+                              // compute selected set on every render and also dedupe inside state update
+                              const selectedLower = formData.locations
+                                .map(l => (l.name || "").trim().toLowerCase())
+                                .filter(Boolean)
+
+                              return popularDestinations.map((dest, idx) => {
+                                const label = String(dest).trim()
+                                const normalized = label.toLowerCase()
+                                const keySafe = label.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
+                                const isSelected = selectedLower.includes(normalized)
+
+                                const handleSelect = () => {
+                                  setFormData(prev => {
+                                    // guard against duplicates using current state (race-safe)
+                                    const prevNames = prev.locations.map(l => (l.name || "").trim().toLowerCase()).filter(Boolean)
+                                    if (prevNames.includes(normalized)) return prev
+
+                                    const locations = [...prev.locations]
+                                    const emptyIndex = locations.findIndex(l => !l.name)
+                                    if (emptyIndex >= 0) {
+                                      locations[emptyIndex] = { ...locations[emptyIndex], name: label }
                                     } else {
-                                      addLocation()
-                                      setTimeout(() => {
-                                        const newLocations = [...formData.locations, { id: Date.now().toString(), name: dest }]
-                                        setFormData(prev => ({ ...prev, locations: newLocations }))
-                                      }, 0)
+                                      locations.push({ id: Date.now().toString(), name: label })
                                     }
-                                  }}
-                                  className="px-4 py-2 bg-white border-2 border-gray-200 rounded-xl hover:border-yellow-400 hover:bg-yellow-50 transition-all text-sm font-medium text-gray-700 hover:text-gray-900"
-                                >
-                                  {dest}
-                                </button>
-                              )
-                            })}
+                                    return { ...prev, locations }
+                                  })
+                                }
+
+                                return (
+                                  <button
+                                    key={`${keySafe}-${idx}`}
+                                    type="button"
+                                    onClick={handleSelect}
+                                    disabled={isSelected}
+                                    aria-pressed={isSelected}
+                                    className={`group flex items-center gap-2 p-1 rounded-xl transition-all text-sm font-medium ${
+                                      isSelected
+                                        ? "bg-gray-100 border-2 border-gray-200 text-gray-400 cursor-not-allowed"
+                                        : "bg-white border-2 border-gray-200 hover:border-yellow-400 hover:bg-yellow-50 text-gray-700 hover:text-gray-900"
+                                    }`}
+                                  >
+                                    <span className="truncate">{label}</span>
+                                    {/* UX: show add affordance on hover */}
+                                    {!isSelected && (
+                                      <span className="text-yellow-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                        +
+                                      </span>
+                                    )}
+                                  </button>
+                                )
+                              })
+                            })()}
                             </div>
                           </div>
 
@@ -604,33 +658,7 @@ export default function TourInquirySection() {
                             </button>
                           </div>
 
-                          {/* Additional guest inputs (Adults/Children) and comments */}
-                          <div className="grid sm:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-sm font-bold text-gray-900 mb-2">
-                                Adults *
-                              </label>
-                              <input
-                                type="number"
-                                min={1}
-                                value={formData.adults}
-                                onChange={(e) => setFormData(prev => ({ ...prev, adults: e.target.value }))}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-bold text-gray-900 mb-2">
-                                Children
-                              </label>
-                              <input
-                                type="number"
-                                min={0}
-                                value={formData.children}
-                                onChange={(e) => setFormData(prev => ({ ...prev, children: e.target.value }))}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
-                              />
-                            </div>
-                          </div>
+
 
                           <div>
                             <label className="block text-sm font-bold text-gray-900 mb-2">
@@ -645,7 +673,7 @@ export default function TourInquirySection() {
                           </div>
 
                           {/* Final Summary - pricing removed; show duration, nationality and guest counts */}
-                          {numberOfDays > 0 && (
+                          {/* {numberOfDays > 0 && (
                             <motion.div
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -669,17 +697,17 @@ export default function TourInquirySection() {
                                     {formData.locations.filter(loc => loc.name).length} Stops
                                   </span>
                                 </div>
-                                {/* <div className="flex justify-between">
+                                <div className="flex justify-between">
                                   <span className="text-gray-300">Nationality:</span>
                                   <span className="font-bold">{formData.nationality || "-"}</span>
-                                </div> */}
+                                </div>
                                 <div className="flex justify-between">
                                   <span className="text-gray-300">Guests (A/C):</span>
                                   <span className="font-bold">{formData.adults}/{formData.children}</span>
                                 </div>
                               </div>
                             </motion.div>
-                          )}
+                          )} */}
 
                           <div className="flex gap-3">
                             <Button
