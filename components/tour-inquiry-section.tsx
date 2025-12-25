@@ -308,62 +308,67 @@ export default function TourInquirySection() {
                           </div>
 
                           <div className="space-y-5">
-                            <div>
-                              <label className="block text-sm font-bold text-gray-900 mb-2">
-                                Your Name *
-                              </label>
-                              <input
-                                type="text"
-                                required
-                                value={formData.name}
-                                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                                placeholder="John Smith"
-                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
-                              />
+                            {/* Row 1: Name | WhatsApp (side-by-side on desktop) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                              <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2">
+                                  Your Name *
+                                </label>
+                                <input
+                                  type="text"
+                                  required
+                                  value={formData.name}
+                                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                                  placeholder="John Smith"
+                                  className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2">
+                                  <Phone className="inline h-4 w-4 mr-1" />
+                                  WhatsApp Number *
+                                </label>
+                                <input
+                                  type="tel"
+                                  required
+                                  value={formData.phone}
+                                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                                  placeholder="+94 77 123 4567"
+                                  className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
+                                />
+                              </div>
                             </div>
 
-                            <div>
-                              <label className="block text-sm font-bold text-gray-900 mb-2">
-                                <Phone className="inline h-4 w-4 mr-1" />
-                                WhatsApp Number *
-                              </label>
-                              <input
-                                type="tel"
-                                required
-                                value={formData.phone}
-                                onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                                placeholder="+94 77 123 4567"
-                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
-                              />
-                            </div>
+                            {/* Row 2: Email | Where are you from? (side-by-side on desktop) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                              <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2">
+                                  <Mail className="inline h-4 w-4 mr-1" />
+                                  Email Address *
+                                </label>
+                                <input
+                                  type="email"
+                                  required
+                                  value={formData.email}
+                                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                                  placeholder="john@example.com"
+                                  className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
+                                />
+                              </div>
 
-                            <div>
-                              <label className="block text-sm font-bold text-gray-900 mb-2">
-                                <Mail className="inline h-4 w-4 mr-1" />
-                                Email Address *
-                              </label>
-                              <input
-                                type="email"
-                                required
-                                value={formData.email}
-                                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                                placeholder="john@example.com"
-                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
-                              />
-                            </div>
-
-                            {/* Nationality / Country */}
-                            <div>
-                              <label className="block text-sm font-bold text-gray-900 mb-2">
-                                Where are you from? (Country / Nationality)
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.nationality}
-                                onChange={(e) => setFormData(prev => ({ ...prev, nationality: e.target.value }))}
-                                placeholder="e.g., Sri Lanka / United Kingdom"
-                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
-                              />
+                              <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2">
+                                  Where are you from? (Country / Nationality)
+                                </label>
+                                <input
+                                  type="text"
+                                  value={formData.nationality}
+                                  onChange={(e) => setFormData(prev => ({ ...prev, nationality: e.target.value }))}
+                                  placeholder="e.g., Sri Lanka / United Kingdom"
+                                  className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all text-base"
+                                />
+                              </div>
                             </div>
                           </div>
 
@@ -457,9 +462,9 @@ export default function TourInquirySection() {
                             <motion.div
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-2xl p-6"
+                              className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-2xl p-4"
                             >
-                              <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center justify-between mb-2">
                                 <div>
                                   <p className="text-sm text-gray-600 font-medium">Tour Duration</p>
                                   <p className="text-2xl font-bold text-gray-900">{numberOfDays} Days</p>
@@ -470,7 +475,7 @@ export default function TourInquirySection() {
                                 </div>
                               </div>
                               <p className="text-xs text-gray-600 text-center">
-                                Final price and services will be confirmed with our team
+                                Final price and services will be confirmed  our team
                               </p>
                             </motion.div>
                           )}
