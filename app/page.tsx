@@ -124,7 +124,7 @@ export default function Home() {
       <Footer />
       <WhatsAppButton 
           phoneNumber="94777850529"
-          message="Hello! I'm interested in learning more about DD Academy Could you please provide more information?"
+          message="Hello! I'm interested in learning more about Taxi Sri Lanka Could you please provide more information?"
           position="bottom-right"
           showTooltip={true}
         />

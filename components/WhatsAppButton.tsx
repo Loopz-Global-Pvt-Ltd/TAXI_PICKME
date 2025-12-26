@@ -23,7 +23,7 @@ const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-7 h-7" 
 
 const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   phoneNumber,
-  message = "Hello! I'm interested in learning more about Learnova Academy. Could you please provide me with information about your programs?",
+  message = "I'm interested in Your Tour Plans In Sri Lanka Trous.",
   position = 'bottom-right',
   showTooltip = true
 }) => {

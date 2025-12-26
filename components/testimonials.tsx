@@ -42,7 +42,7 @@ export default function Testimonials() {
   const [displayCount, setDisplayCount] = useState(6) // Show 6 by default (2 rows × 3 cards)
 
   useEffect(() => {
-    fetch('/tripadvisor.json')
+    fetch('/reviews.json')
       .then(res => res.json())
       .then((jsonData: TripAdvisorData) => {
         setData(jsonData)

@@ -57,10 +57,17 @@ export default function Footer() {
 
           <div>
             <h4 className="font-semibold mb-4">Follow Us</h4>
-            <div className="flex gap-4">
-              <Facebook size={20} className="hover:opacity-80 transition cursor-pointer" />
-              <Instagram size={20} className="hover:opacity-80 transition cursor-pointer" />
-              <Twitter size={20} className="hover:opacity-80 transition cursor-pointer" />
+            <div className="flex items-center gap-4">
+              <a
+              href="https://www.facebook.com/taxisrilanka.com.tours/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Taxi Sri Lanka Tours on Facebook - opens in new tab"
+              className="flex items-center gap-2 hover:opacity-80 transition"
+              >
+              <Facebook size={20} className="cursor-pointer" />
+              <span className="text-sm">Like us on Facebook</span>
+              </a>
             </div>
           </div>
         </div>
