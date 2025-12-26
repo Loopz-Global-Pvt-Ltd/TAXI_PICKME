@@ -190,7 +190,7 @@ export default function TourInquirySection() {
         }
   
         localStorage.setItem("inquiryConfirmationData", JSON.stringify(confirmation))
-        setIsSubmitting(false)
+        // setIsSubmitting(false)
         // setIsSubmitted(true)
         router.push("/confirmation/inquiry-confirmation")
       setTimeout(() => {

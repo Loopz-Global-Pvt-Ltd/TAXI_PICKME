@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { query } from "@/lib/db"
+import { sendEmail } from "@/lib/email/mailer" // add mailer import
+import {
+  generateInquiryGuestEmail,
+  generateInquiryGuestText,
+  generateAdminInquiryEmail,
+  generateAdminInquiryText,
+} from "@/lib/email/inquiryTemplates" // new templates file
 
 const createInquirySchema = z.object({
   fullName: z.string().min(2).max(255),
@@ -53,7 +60,73 @@ export async function POST(request: NextRequest) {
       ]
     )
 
-    return NextResponse.json({ success: true, data: result.rows[0] }, { status: 201 })
+    const saved = result.rows[0]
+
+    // Prepare email payload
+    const emailData = {
+      inquiryReference: saved.inquiry_reference || inquiryReference,
+      fullName: saved.full_name,
+      email: saved.email,
+      phone: saved.phone,
+      nationality: saved.nationality,
+      vehicleType: saved.vehicle_type,
+      startDate: saved.start_date,
+      endDate: saved.end_date,
+      adults: saved.adults,
+      children: saved.children,
+      comments: saved.comments,
+     locations: (() => {
+            const loc = saved.locations
+          if (!loc) return null
+          if (typeof loc === "string") {
+            try {
+              return JSON.parse(loc)
+            } catch {
+              // fallback to raw string if parse fails
+              return loc
+            }
+          }
+          return loc // already an object/array
+        })(),      createdAt: saved.created_at || new Date().toISOString(),
+    }
+
+    // Send emails asynchronously (don't block response)
+    Promise.all([
+      // guest email (only if email provided)
+      (async () => {
+        if (!emailData.email) return Promise.resolve(null)
+        return sendEmail({
+          to: emailData.email!,
+          subject: `Inquiry Received - ${emailData.inquiryReference} | Taxi Sri Lanka Tours`,
+          html: generateInquiryGuestEmail(emailData),
+          text: generateInquiryGuestText(emailData),
+        }).then(() => {
+          console.log(`✅ Inquiry guest email sent to ${emailData.email}`)
+        }).catch((err) => {
+          console.error('❌ Failed to send inquiry guest email:', err)
+        })
+      })(),
+
+      // admin notification
+      (async () => {
+        const adminEmail = process.env.SMTP_FROM_EMAIL || "sritaxi@gmail.com"
+        return sendEmail({
+          to: adminEmail,
+          subject: `🔔 New Inquiry - ${emailData.inquiryReference} | ${emailData.fullName}`,
+          html: generateAdminInquiryEmail(emailData),
+          text: generateAdminInquiryText(emailData),
+        }).then(() => {
+          console.log(`✅ Admin inquiry notification sent to ${adminEmail}`)
+        }).catch((err) => {
+          console.error('❌ Failed to send admin inquiry notification:', err)
+        })
+      })(),
+    ]).catch((err) => {
+      console.error('❌ Inquiry email sending error:', err)
+      // don't fail the request because of email errors
+    })
+
+    return NextResponse.json({ success: true, data: saved }, { status: 201 })
   } catch (err: any) {
     console.error("Inquiry create error:", err)
     if (err?.name === "ZodError") {
