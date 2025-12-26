@@ -8,6 +8,7 @@ import { serviceLocations } from "@/data/service-locations"
 import { PiCarProfileFill   } from "react-icons/pi";
 import {TbCarSuvFilled} from "react-icons/tb";
 import { FaVanShuttle } from "react-icons/fa6";
+import { useRouter } from "next/navigation" 
 
 
 interface Location {
@@ -16,6 +17,7 @@ interface Location {
 }
 
 export default function TourInquirySection() {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
     name: "",
@@ -145,32 +147,74 @@ export default function TourInquirySection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-
-    // Reset after 4 seconds
-    setTimeout(() => {
-      setIsSubmitted(false)
-      setCurrentStep(1)
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        nationality: "",
-        vehicleType: "",
-        startDate: "",
-        endDate: "",
-        adults: "1",
-        children: "0",
-        comments: "",
-        locations: [{ id: "1", name: "" }],
+  
+    try {
+      const payload = {
+        fullName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        nationality: formData.nationality,
+        vehicleType: formData.vehicleType,
+        startDate: formData.startDate || null,
+        endDate: formData.endDate || null,
+        adults: Number(formData.adults || 0),
+        children: Number(formData.children || 0),
+        comments: formData.comments || null,
+        locations: formData.locations.map(l => ({ id: l.id, name: l.name })),
+      }
+  
+      const res = await fetch('/api/inquiry-bookng', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       })
-      setNumberOfDays(0)
-    }, 4000)
+  
+      const result = await res.json()
+      if (!res.ok) throw new Error(result?.error || 'Failed to submit inquiry')
+  
+        const confirmation = {
+          inquiry_reference: result.data?.inquiry_reference ?? result.data?.inquiry_reference ?? `IQ-${Date.now()}`,
+          full_name: payload.fullName,
+          email: payload.email,
+          phone: payload.phone,
+          nationality: payload.nationality,
+          vehicle_type: payload.vehicleType,
+          start_date: payload.startDate,
+          end_date: payload.endDate,
+          adults: payload.adults,
+          children: payload.children,
+          comments: payload.comments,
+          locations: payload.locations,
+          created_at: result.data?.created_at || new Date().toISOString(),
+          status: result.data?.status || "new",
+        }
+  
+        localStorage.setItem("inquiryConfirmationData", JSON.stringify(confirmation))
+        setIsSubmitting(false)
+        // setIsSubmitted(true)
+        router.push("/confirmation/inquiry-confirmation")
+      setTimeout(() => {
+        setIsSubmitted(false)
+        setCurrentStep(1)
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          nationality: "",
+          vehicleType: "",
+          startDate: "",
+          endDate: "",
+          adults: "1",
+          children: "0",
+          comments: "",
+          locations: [{ id: "1", name: "" }],
+        })
+        setNumberOfDays(0)
+      }, 3500)
+    } catch (error) {
+      console.error('Submit error:', error)
+      setIsSubmitting(false)
+    }
   }
 
   const canProceedToStep2 = formData.name && formData.email && formData.phone
@@ -285,7 +329,7 @@ export default function TourInquirySection() {
                       Your tour inquiry has been submitted successfully.
                     </p>
                     <p className="text-gray-500 mb-6">
-                      Our team will contact you within 2-4 hours to discuss your custom itinerary.
+                      Our team will contact you within 24 hours to discuss your custom itinerary.
                     </p>
                     <div className="inline-flex items-center gap-2 text-sm text-green-600 font-medium">
                       <Loader2 className="h-4 w-4 animate-spin" />

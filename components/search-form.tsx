@@ -19,6 +19,8 @@ interface LocationData {
 export default function SearchForm() {
   const { isLoaded } = useMaps()
   const formRef = useRef<HTMLFormElement>(null)
+  const pickupInputRef = useRef<HTMLInputElement | null>(null)
+ const dropoffInputRef = useRef<HTMLInputElement | null>(null)
   
   const [pickupLocation, setPickupLocation] = useState<LocationData>({
     displayName: "",
@@ -152,43 +154,101 @@ export default function SearchForm() {
   }
 
   // Listen for route selections from service-locations
-  useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail
-      if (!detail) return
-
-      // safely set pickup and dropoff state from event detail
-      const { pickup, dropoff } = detail
-
-      if (pickup) {
-        setPickupLocation({
-          displayName: pickup.displayName || "",
-          address: pickup.address || "",
-          lat: pickup.lat ?? null,
-          lng: pickup.lng ?? null,
-        })
-      }
-
-      if (dropoff) {
-        setDropoffLocation({
-          displayName: dropoff.displayName || "",
-          address: dropoff.address || "",
-          lat: dropoff.lat ?? null,
-          lng: dropoff.lng ?? null,
-        })
-      }
-
-      // scroll the form into view
-      setTimeout(() => {
-        const el = formRef.current
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" })
-      }, 50)
-    }
-
-    window.addEventListener("selectRoute", handler as EventListener)
-    return () => window.removeEventListener("selectRoute", handler as EventListener)
-  }, [])
-
+    useEffect(() => {
+        const handler = (e: Event) => {
+          const detail = (e as CustomEvent).detail
+          if (!detail) return
+    
+          // support multiple shapes:
+          // 1) { pickup: "...", dropoff: "..." }
+          // 2) { pickup: { displayName, address, lat, lng }, dropoff: {...} }
+          // 3) a single string like "Airport to Kandy"
+          let pickupVal = ""
+          let dropoffVal = ""
+          let pickupLat: number | null = null
+          let pickupLng: number | null = null
+          let dropoffLat: number | null = null
+          let dropoffLng: number | null = null
+    
+          if (typeof detail === "string") {
+            // try to split "From to To"
+            const m = detail.match(/^(.*)\s+to\s+(.*)$/i)
+            if (m) {
+              pickupVal = m[1].trim()
+              dropoffVal = m[2].trim()
+            } else {
+              pickupVal = detail
+            }
+          } else if (typeof detail === "object") {
+            const maybe = (obj: any) => {
+              if (!obj) return ""
+             if (typeof obj === "string") return obj
+             return obj.displayName || obj.name || obj.address || obj.formatted_address || ""
+           }
+  
+           pickupVal = maybe(detail.pickup ?? detail.from ?? detail.pickupLocation)
+           dropoffVal = maybe(detail.dropoff ?? detail.to ?? detail.dropoffLocation)
+  
+           const readLatLng = (obj: any) => {
+             if (!obj) return { lat: null, lng: null }
+             if (typeof obj === "object" && (obj.lat !== undefined || obj.lng !== undefined)) {
+               return { lat: Number(obj.lat) || null, lng: Number(obj.lng) || null }
+             }
+             if (typeof obj === "object" && obj.geometry?.location) {
+               return { lat: obj.geometry.location.lat?.(), lng: obj.geometry.location.lng?.() }
+             }
+             return { lat: null, lng: null }
+            }
+    
+            const p = readLatLng(detail.pickup ?? detail.from ?? detail.pickupLocation)
+            pickupLat = p.lat
+            pickupLng = p.lng
+            const d = readLatLng(detail.dropoff ?? detail.to ?? detail.dropoffLocation)
+            dropoffLat = d.lat
+            dropoffLng = d.lng
+          }
+    
+          if (pickupVal) {
+            setPickupLocation({
+              displayName: pickupVal,
+              address: pickupVal,
+              lat: pickupLat ?? null,
+              lng: pickupLng ?? null,
+            })
+          }
+          if (dropoffVal) {
+            setDropoffLocation({
+              displayName: dropoffVal,
+              address: dropoffVal,
+              lat: dropoffLat ?? null,
+              lng: dropoffLng ?? null,
+            })
+          }
+    
+          // scroll and focus pickup input
+          setTimeout(() => {
+            const el = formRef.current
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "center" })
+            pickupInputRef.current?.focus()
+          }, 50)
+        }
+    
+        window.addEventListener("selectRoute", handler as EventListener)
+        window.addEventListener("routeSelected", handler as EventListener)
+        return () => {
+          window.removeEventListener("selectRoute", handler as EventListener)
+          window.removeEventListener("routeSelected", handler as EventListener)
+        }
+      }, [])
+      useEffect(() => {
+          if (typeof window !== "undefined" && (window as any).google?.maps?.places) {
+            const places = (window as any).google.maps.places
+            if ((places as any).PlaceAutocompleteElement) {
+              // recommend review/migration (silent log for devs)
+              console.info("Note: google.maps.places.PlaceAutocompleteElement is available — consider migrating from Autocomplete per Google guidance.")
+            }
+          }
+        }, [isLoaded])
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -234,6 +294,7 @@ export default function SearchForm() {
               <input
                 type="text"
                 placeholder="Where are you?"
+                ref={pickupInputRef}
                 value={pickupLocation.displayName}
                 onChange={(e) =>
                   setPickupLocation((prev) => ({
@@ -266,6 +327,7 @@ export default function SearchForm() {
               <input
                 type="text"
                 placeholder="Where to?"
+                ref={dropoffInputRef}
                 value={dropoffLocation.displayName}
                 onChange={(e) =>
                   setDropoffLocation((prev) => ({
