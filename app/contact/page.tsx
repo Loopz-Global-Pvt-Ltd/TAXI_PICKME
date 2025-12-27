@@ -1,4 +1,4 @@
-"use client"
+"use client" 
 
 import type React from "react"
 import { useState } from "react"
@@ -20,21 +20,35 @@ export default function ContactPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
+    setSubmitError(null)
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+      const body = await res.json()
+      if (!res.ok || !body?.success) {
+        throw new Error(body?.error || "Failed to send message")
+      }
       setSubmitSuccess(true)
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" })
       setTimeout(() => setSubmitSuccess(false), 5000)
-    }, 1500)
+    } catch (err: any) {
+      setSubmitError(err?.message || "An unexpected error occurred")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -144,7 +158,6 @@ export default function ContactPage() {
                       <Mail size={20} className="text-green-600 mt-1 flex-shrink-0" />
                       <div className="space-y-1">
                         <p className="text-sm font-semibold text-muted-foreground">Email</p>
-                        <a href="mailto:upultaxi@yahoo.com" className="block text-foreground hover:text-green-600 font-medium">upultaxi@yahoo.com</a>
                         <a href="mailto:sritaxi@gmail.com" className="block text-foreground hover:text-green-600 font-medium">sritaxi@gmail.com</a>
                       </div>
                     </div>
@@ -243,6 +256,12 @@ export default function ContactPage() {
                   </div>
                 )}
 
+                {submitError && (
+                  <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/20 border-2 border-red-500 dark:border-red-700 rounded-lg">
+                    <p className="text-sm text-red-800 dark:text-red-200 font-semibold">Error: {submitError}</p>
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <Label htmlFor="name" className="text-sm font-semibold text-foreground mb-2 block">Full Name *</Label>
@@ -306,19 +325,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-16 bg-white dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">Find Us on the Map</h2>
-          <div className="bg-gray-200 dark:bg-gray-800 h-96 rounded-2xl flex items-center justify-center">
-            <div className="text-center">
-              <MapPin size={64} className="text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">Map will be integrated here</p>
-              <p className="text-sm text-gray-400 mt-2">44 Mile post, Kandy Road, Dambulla, Sri Lanka</p>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       <Footer />
     </main>

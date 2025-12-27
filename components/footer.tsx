@@ -25,11 +25,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/destinations" className="hover:opacity-80 transition">
-                  Destinations
-                </Link>
-              </li>
-              <li>
                 <Link href="/faq" className="hover:opacity-80 transition">
                   FAQ
                 </Link>
@@ -75,15 +70,6 @@ export default function Footer() {
         <div className="border-t border-background/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <p>&copy; 2025 Taxi Sri Lanka Tours. All rights reserved.</p>
-            <div className="flex gap-4 justify-center">
-              <Link href="/terms" className="hover:opacity-80 transition">
-                Terms & Conditions
-              </Link>
-              <Link href="/privacy" className="hover:opacity-80 transition">
-                Privacy Policy
-              </Link>
-            </div>
-
                   {/* Developed by badge (bottom-right) */}
         <div className=" z-50">
           <a
