@@ -134,68 +134,97 @@ export default function ContactPage() {
                       <p className="text-muted-foreground">Dambulla, Sri Lanka</p>
                     </div>
                   </div>
-
-                  <div className="border-t border-border pt-4 space-y-3">
+                    <div className="border-t border-border pt-4 space-y-3">
                     <div className="flex items-start gap-3">
                       <Phone size={20} className="text-green-600 mt-1 flex-shrink-0" />
                       <div className="space-y-1">
-                        <p className="text-sm font-semibold text-muted-foreground">Telephone</p>
-                        <a href="tel:+94777850529" className="block text-foreground hover:text-green-600 font-medium">+94 (0) 77 785 0529</a>
-                        <a href="tel:+94777850829" className="block text-foreground hover:text-green-600 font-medium">+94 (0) 77 785 0829</a>
-                        <a href="tel:+94727850829" className="block text-foreground hover:text-green-600 font-medium">+94 (0) 72 785 0829</a>
+                      <p className="text-sm font-semibold text-muted-foreground">Telephone</p>
+                      <a href="tel:+94777850529" className="block text-foreground hover:text-green-600 font-medium">0777850529</a>
+                      <a href="tel:+94777850829" className="block text-foreground hover:text-green-600 font-medium">0777850829</a>
+                      <a href="tel:+94727850829" className="block text-foreground hover:text-green-600 font-medium">0727850829</a>
+                      <a href="tel:+94787850829" className="block text-foreground hover:text-green-600 font-medium">0787850829</a>
+                      <a href="tel:+94712261900" className="block text-foreground hover:text-green-600 font-medium">0712261900</a>
+                      <a href="tel:+94716565000" className="block text-foreground hover:text-green-600 font-medium">0716565000</a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Phone size={20} className="text-green-600 mt-1 flex-shrink-0" />
+                      <div className="space-y-1">
+                      <p className="text-sm font-semibold text-muted-foreground">WhatsApp</p>
+                      <a href="https://wa.me/94777850529" target="_blank" rel="noreferrer" className="block text-foreground hover:text-green-600 font-medium">0777850529</a>
+                      <a href="https://wa.me/94777850829" target="_blank" rel="noreferrer" className="block text-foreground hover:text-green-600 font-medium">0777850829</a>
+                      <a href="https://wa.me/94727850829" target="_blank" rel="noreferrer" className="block text-foreground hover:text-green-600 font-medium">0727850829</a>
+                      <a href="https://wa.me/94716565000" target="_blank" rel="noreferrer" className="block text-foreground hover:text-green-600 font-medium">0716565000</a>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Printer size={20} className="text-green-600 mt-1 flex-shrink-0" />
                       <div>
-                        <p className="text-sm font-semibold text-muted-foreground">Fax</p>
-                        <p className="text-foreground font-medium">+94 (0) 66 228 5076</p>
+                      <p className="text-sm font-semibold text-muted-foreground">Fax</p>
+                      <p className="text-foreground font-medium">+94 (0) 66 228 5076</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Mail size={20} className="text-green-600 mt-1 flex-shrink-0" />
                       <div className="space-y-1">
-                        <p className="text-sm font-semibold text-muted-foreground">Email</p>
-                        <a href="mailto:sritaxi@gmail.com" className="block text-foreground hover:text-green-600 font-medium">sritaxi@gmail.com</a>
+                      <p className="text-sm font-semibold text-muted-foreground">Email</p>
+                      <a href="mailto:sritaxi@gmail.com" className="block text-foreground hover:text-green-600 font-medium">sritaxi@gmail.com</a>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                  </Card>
+
+                  {/* Bank Details */}
+                  <Card className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-2 border-blue-200 dark:border-blue-800">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="p-3 bg-blue-600 rounded-lg">
+                    <CreditCard size={32} className="text-white" />
+                    </div>
+                    <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-2">Bank Details</h2>
+                    <p className="text-muted-foreground">For Direct Payments</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
+                      <div className="flex justify-between py-2 border-b border-border">
+                      <span className="text-muted-foreground">Account Name:</span>
+                      <span className="font-bold text-foreground">Taxi srilanka tours</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-border">
+                      <span className="text-muted-foreground">Account Number:</span>
+                      <span className="font-mono font-bold text-foreground">009010001290</span>
+                    </div>
+
+                    <div className="flex justify-between py-2">
+                      <span className="text-muted-foreground">Bank:</span>
+                      <span className="font-bold text-foreground">Sampath Bank</span>
+                    </div>
+                    </div>
+
+
+
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
+                      <div className="flex justify-between py-2 border-b border-border">
+                        <span className="text-muted-foreground">Account Name:</span>
+                        <span className="font-bold text-foreground">Taxi srilanka tours</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-border">
+                        <span className="text-muted-foreground">Account Number:</span>
+                        <span className="font-mono font-bold text-foreground">1540023570</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-muted-foreground">Bank:</span>
+                        <span className="font-bold text-foreground">Commercial Bank</span>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-
-              {/* Bank Details */}
-              <Card className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-2 border-blue-200 dark:border-blue-800">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="p-3 bg-blue-600 rounded-lg">
-                    <CreditCard size={32} className="text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-foreground mb-2">Bank Details</h2>
-                    <p className="text-muted-foreground">For Direct Payments</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 bg-white dark:bg-slate-800 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
-                  <div className="flex justify-between py-2 border-b border-border">
-                    <span className="text-muted-foreground">Account Name:</span>
-                    <span className="font-bold text-foreground">Taxisrilanka Tours</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-border">
-                    <span className="text-muted-foreground">Account Number:</span>
-                    <span className="font-mono font-bold text-foreground">8540021900</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-border">
-                    <span className="text-muted-foreground">Bank:</span>
-                    <span className="font-bold text-foreground">Commercial Bank</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-muted-foreground">Branch:</span>
-                    <span className="font-bold text-foreground">Dambulla</span>
-                  </div>
-                </div>
-              </Card>
+                  </Card>
 
               {/* Business Hours */}
               <Card className="p-8 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-2 border-green-200 dark:border-green-800">
