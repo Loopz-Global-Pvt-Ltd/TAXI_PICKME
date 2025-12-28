@@ -55,34 +55,46 @@ export default function InquiryConfirmationPage() {
     )
   }
 
+  const safeFilename = (name: string) =>
+    name
+      .replace(/[^a-zA-Z0-9._-]/g, "_")   // remove weird chars
+      .slice(0, 80);                     // keep it reasonable
+  
   const handleDownload = () => {
     const content = `INQUIRY SUBMITTED
-
-Reference: ${data.inquiry_reference}
-Name: ${data.full_name || "—"}
-Phone: ${data.phone || "—"}
-Email: ${data.email || "—"}
-Nationality: ${data.nationality || "—"}
-Vehicle type: ${data.vehicle_type || "—"}
-Start: ${data.start_date || "—"}
-End: ${data.end_date || "—"}
-Adults: ${data.adults ?? "—"}
-Children: ${data.children ?? "—"}
-Locations: ${Array.isArray(data.locations) ? data.locations.map(l => l.name ?? l).join(" > ") : "—"}
-Comments: ${data.comments || "—"}
-Submitted: ${data.created_at || new Date().toISOString()}
-
-Thank you! We will contact you shortly.
-`
-    const a = document.createElement("a")
-    a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(content)
-    a.download = `inquiry-${data.inquiry_reference}.txt`
-    a.style.display = "none"
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-  }
-
+  
+  Reference: ${data.inquiry_reference}
+  Name: ${data.full_name || "—"}
+  Phone: ${data.phone || "—"}
+  Email: ${data.email || "—"}
+  Nationality: ${data.nationality || "—"}
+  Vehicle type: ${data.vehicle_type || "—"}
+  Start: ${data.start_date || "—"}
+  End: ${data.end_date || "—"}
+  Adults: ${data.adults ?? "—"}
+  Children: ${data.children ?? "—"}
+  Locations: ${Array.isArray(data.locations) ? data.locations.map(l => l?.name ?? l).join(" > ") : "—"}
+  Comments: ${data.comments || "—"}
+  Submitted: ${data.created_at || new Date().toISOString()}
+  
+  Thank you! We will contact you shortly.
+  `;
+  
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+  
+    const a = document.createElement("a");
+    a.href = url;
+  
+    const ref = data.inquiry_reference || "unknown";
+    a.download = safeFilename(`inquiry-${ref}.txt`);
+  
+    // No appendChild (this is what Snyk is complaining about)
+    a.click();
+  
+    URL.revokeObjectURL(url);
+  };
+  
   return (
     <main className="min-h-screen bg-background">
       <Header />

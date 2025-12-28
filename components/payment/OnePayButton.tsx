@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Loader2, CreditCard, Wallet, ExternalLink } from 'lucide-react'
+import { useRouter } from "next/navigation";
 
 interface OnePayButtonProps {
   bookingId: number
@@ -17,64 +18,56 @@ interface OnePayButtonProps {
   onPayLater?: () => void
 }
 
-export default function OnePayButton({
-  bookingId,
-  amount,
-  customerData,
-  onPayLater,
-}: OnePayButtonProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState<'online' | 'later' | null>(null)
-  const initializingRef = useRef(false)
+
+export default function OnePayButton({ bookingId, amount, customerData, onPayLater }: OnePayButtonProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "later" | null>(null);
+  const initializingRef = useRef(false);
 
   const initializeOnlinePayment = async () => {
-    if (initializingRef.current) {
-      console.log('Payment already initializing, skipping...')
-      return
-    }
-
-    initializingRef.current = true
-    setIsLoading(true)
-
+    if (initializingRef.current) return;
+  
+    initializingRef.current = true;
+    setIsLoading(true);
+  
     try {
-      // Create payment via API
-      const response = await fetch('/api/payments/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/payments/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bookingId,
           amount,
           customerData,
-          redirectUrl: `${window.location.origin}/booking/success?bookingId=${bookingId}`,
+          redirectUrl: `${window.location.origin}/booking/success?bookingId=${encodeURIComponent(String(bookingId))}`,
         }),
-      })
-
-      const data = await response.json()
-
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to create payment')
-      }
-
-      console.log('Payment created successfully:', data)
-
-      // Redirect to OnePay payment page
-      const redirectUrl = data.data.onepay.gateway.redirect_url
-      window.location.href = redirectUrl
+      });
+  
+      const data = await response.json();
+  
+      if (!data.success) throw new Error(data.error || "Failed to create payment");
+  
+      // ✅ DO NOT redirect using remote URL in the browser
+      const token =
+        data?.data?.onepay?.gateway?.token ||
+        data?.data?.onepay?.token ||
+        data?.data?.paymentToken;
+  
+      if (!token) throw new Error("Missing OnePay token/reference from API");
+  
+      router.push(`/pay/onepay?token=${encodeURIComponent(String(token))}`);
     } catch (error: any) {
-      console.error('Payment initialization error:', error)
-      alert(error.message || 'Failed to initialize payment')
-      setIsLoading(false)
-      initializingRef.current = false
+      console.error("Payment initialization error:", error);
+      alert(error.message || "Failed to initialize payment");
+      setIsLoading(false);
+      initializingRef.current = false;
     }
-  }
-
+  };
   const handlePayLater = () => {
-    if (onPayLater) {
-      onPayLater()
-    } else {
-      window.location.href = `/booking/success?bookingId=${bookingId}&paymentMethod=later`
-    }
-  }
+    if (onPayLater) onPayLater();
+    else router.push(`/booking/success?bookingId=${encodeURIComponent(String(bookingId))}&paymentMethod=later`);
+  };
+
 
   return (
     <div className="space-y-4">
