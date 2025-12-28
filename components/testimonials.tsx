@@ -42,16 +42,25 @@ export default function Testimonials() {
   const [displayCount, setDisplayCount] = useState(6) // Show 6 by default (2 rows × 3 cards)
 
   useEffect(() => {
-    fetch('/data/reviews.ts')
-      .then(res => res.json())
-      .then((jsonData: TripAdvisorData) => {
-        setData(jsonData)
+    (async () => {
+      try {
+        // adjust relative path if your data file is located elsewhere
+        const mod = await import("../data/reviews")
+        // support default export or named export (e.g. export const reviews = ...)
+        const jsonData: TripAdvisorData =
+          (mod.default as TripAdvisorData) ?? (mod as unknown as TripAdvisorData)
+
+        if (jsonData && typeof jsonData === "object") {
+          setData(jsonData)
+        } else {
+          console.error("reviews module did not export TripAdvisorData:", mod)
+        }
+      } catch (error) {
+        console.error("Error loading reviews module:", error)
+      } finally {
         setIsLoading(false)
-      })
-      .catch(error => {
-        console.error('Error loading reviews:', error)
-        setIsLoading(false)
-      })
+      }
+    })()
   }, [])
 
   if (isLoading) {
@@ -70,7 +79,30 @@ export default function Testimonials() {
   }
 
   const displayedReviews = data.reviews.slice(0, displayCount)
-
+  function safeExternalHref(raw: unknown, fallback = "https://www.tripadvisor.com/") {
+    if (typeof raw !== "string") return fallback;
+  
+    const trimmed = raw.trim();
+  
+    try {
+      const url = new URL(trimmed);
+  
+      // Allow only https links
+      if (url.protocol !== "https:") return fallback;
+  
+      // Allow only TripAdvisor domains (adjust if you use a specific subdomain)
+      const host = url.hostname.toLowerCase();
+      const allowed =
+        host === "www.tripadvisor.com" ||
+        host === "tripadvisor.com" ||
+        host.endsWith(".tripadvisor.com");
+  
+      return allowed ? url.href : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  
   return (
     <section className="relative py-8 md:py-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 overflow-hidden">
       {/* Background Decorations */}
@@ -239,7 +271,7 @@ export default function Testimonials() {
                 See what other travelers say about their experience with Taxi Sri Lanka
               </p>
               <motion.a
-                href={data.bio.link}
+                href={safeExternalHref(data.bio.link)}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
