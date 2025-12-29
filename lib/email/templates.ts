@@ -199,7 +199,7 @@ interface BookingEmailData {
                   Need help? Contact us:
                 </p>
                 <p style="color: #333333; font-size: 14px; margin: 0;">
-                  📞 <strong>+94 +94 777 850 529</strong> | 
+                  📞 <strong>+94 777 850 529</strong> | 
                   📧 <strong>sritaxi@gmail.com</strong>
                 </p>
               </td>
@@ -270,7 +270,7 @@ interface BookingEmailData {
   
   CONTACT US
   ----------
-  Phone: +94 +94 777 850 529
+  Phone:  +94 777 850 529
   Email: sritaxi@gmail.com
   Website: https://taxisrilanka.com
   
