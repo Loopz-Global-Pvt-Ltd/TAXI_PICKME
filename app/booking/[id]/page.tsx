@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import OnePayButton from "@/components/payment/OnePayButton"
 import { AlertCircle, MapPin, Calendar, Users, Phone, Mail, User, Loader2, CheckCircle, Navigation, Car} from "lucide-react"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 interface Vehicle {
   id: number
@@ -39,6 +40,7 @@ export default function BookingPage() {
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
   const [isLoadingVehicle, setIsLoadingVehicle] = useState(true)
+  const { formatPrice } = useCurrency()
 
   const [tripData, setTripData] = useState({
     pickupLocation: "",
@@ -346,12 +348,12 @@ export default function BookingPage() {
                     </div>
                     <div className="flex justify-between items-center mb-4">
                       <span className="text-sm text-muted-foreground">Avg Rate</span>
-                      <span className="text-sm font-medium text-foreground">Rs. {effectiveRate.toFixed(2)}/km</span>
+                      <span className="text-sm font-medium text-foreground">{formatPrice(effectiveRate)}/km</span>
                     </div>
                     <div className="flex justify-between items-center pt-4 border-t border-border">
                       <span className="font-semibold text-foreground">Total Fare</span>
                       <span className="text-2xl font-bold text-primary">
-                        Rs. {Math.round(totalPrice).toLocaleString()}
+                        {formatPrice(Math.round(totalPrice))}
                       </span>
                     </div>
                   </div>
@@ -430,7 +432,7 @@ export default function BookingPage() {
                         Calculated with tiered rates
                       </p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">Rs. {Math.round(totalPrice).toLocaleString()}</p>
+                    <p className="text-lg font-semibold text-foreground">{formatPrice(Math.round(totalPrice))}</p>
                   </div>
 
                   {/* Total */}
@@ -439,7 +441,7 @@ export default function BookingPage() {
                       <p className="text-lg font-bold text-foreground">Total Amount</p>
                       <p className="text-xs text-muted-foreground">All inclusive</p>
                     </div>
-                    <p className="text-2xl font-bold text-primary">Rs. {Math.round(totalPrice).toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-primary">{formatPrice(Math.round(totalPrice))}</p>
                   </div>
                 </div>
               </Card>

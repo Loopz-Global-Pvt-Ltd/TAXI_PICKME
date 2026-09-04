@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Star, Users, Briefcase, Fuel, Settings , Car } from "lucide-react"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 interface VehicleCardProps {
   vehicle: {
@@ -42,6 +43,7 @@ export default function VehicleCard({ vehicle, estimatedDistance, pricingBreakdo
   const totalPrice = vehicle.estimatedTotalPrice || pricingBreakdown?.totalFare || (vehicle.price_per_km * distance)
   const effectiveRate = pricingBreakdown?.effectiveRatePerKm || vehicle.price_per_km
   const savings = pricingBreakdown?.savings || 0
+  const { formatPrice } = useCurrency()
 
   // Build query params for booking page
   const bookingParams = new URLSearchParams({
@@ -126,7 +128,7 @@ export default function VehicleCard({ vehicle, estimatedDistance, pricingBreakdo
             <div>
               <div className="flex items-baseline gap-2">
                 <p className="text-2xl font-bold text-primary">
-                  Rs. {totalPrice.toLocaleString()}
+                  {formatPrice(totalPrice)}
                 </p>
                 {/* {savings > 0 && (
                   <span className="text-sm text-green-600 font-medium">

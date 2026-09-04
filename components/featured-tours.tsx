@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { MapPin, Clock, Camera } from "lucide-react"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 const TOURS = [
   {
@@ -12,7 +13,7 @@ const TOURS = [
     days: "3 Days",
     highlights: "Ancient fortress, cultural temples, tea plantations",
     image: "/sigiriya-rock-fortress-sri-lanka-landscape.jpg",
-    price: "Rs 8,500",
+    price: 8500,
     popular: true,
   },
   {
@@ -22,7 +23,7 @@ const TOURS = [
     days: "4 Days",
     highlights: "Whale watching, beaches, mountain views",
     image: "/sri-lanka-coastal-views-sea-beaches-sunset-tourism.jpg",
-    price: "Rs 11,200",
+    price: 11200,
     popular: true,
   },
   {
@@ -32,12 +33,13 @@ const TOURS = [
     days: "2 Days",
     highlights: "Tea plantations, scenic trains, colonial towns",
     image: "/nuwara-eliya-tea-plantations-mountains-sri-lanka.jpg",
-    price: "Rs 6,800",
+    price: 6800,
     popular: false,
   },
 ]
 
 export default function FeaturedTours() {
+  const { formatPrice } = useCurrency()
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,7 +93,7 @@ export default function FeaturedTours() {
                     <Camera size={16} className="flex-shrink-0 mt-0.5" /> {tour.highlights}
                   </p>
                   <div className="mt-auto pt-4 border-t border-border">
-                    <p className="text-2xl font-bold text-secondary mb-4">{tour.price}</p>
+                    <p className="text-2xl font-bold text-secondary mb-4">{formatPrice(tour.price)}</p>
                     <Link href={`/search?destination=${tour.destinations}`}>
                       <motion.button
                         whileHover={{ scale: 1.05 }}

@@ -1,13 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, X, Car, Phone, Mail, Star, Shield , BookCheck } from "lucide-react"
+import { Menu, X, Car, Phone, Mail, Star, Shield , BookCheck, DollarSign } from "lucide-react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { currency, setCurrency } = useCurrency()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -144,6 +146,21 @@ export default function Header() {
                   </Link>
                 </motion.div>
               ))}
+              
+              {/* Currency Selector Desktop */}
+              <div className="relative group flex items-center">
+                <select 
+                  className={`bg-transparent font-bold cursor-pointer outline-none ${
+                    isScrolled ? "text-gray-900" : "text-gray-900"
+                  }`}
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as 'USD'|'EUR'|'LKR')}
+                >
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="LKR">LKR (Rs)</option>
+                </select>
+              </div>
             </nav>
 
             {/* CTA Button - Desktop */}
@@ -242,6 +259,22 @@ export default function Header() {
                       <Mail size={18} />
                       <span className="font-medium">sritaxi@gmail.com</span>
                     </a>
+                    
+                    {/* Currency Selector Mobile */}
+                    <div className={`flex items-center justify-between px-4 py-3 rounded-lg ${
+                        isScrolled ? "bg-gray-50" : "bg-gray-900/5"
+                    }`}>
+                      <span className="font-semibold text-gray-700">Currency</span>
+                      <select 
+                        className="bg-transparent font-bold text-gray-900 outline-none"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value as 'USD'|'EUR'|'LKR')}
+                      >
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="LKR">LKR (Rs)</option>
+                      </select>
+                    </div>
                   </div>
 
                   {/* Mobile CTA */}

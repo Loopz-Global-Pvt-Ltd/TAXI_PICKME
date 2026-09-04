@@ -4,6 +4,7 @@ import Link from "next/link"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 import { ArrowRight } from "lucide-react"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 const ROUTES = [
   {
@@ -12,7 +13,7 @@ const ROUTES = [
     to: "Galle",
     image: "/scenic-road-to-galle-sri-lanka-beaches.jpg",
     distance: "145 km",
-    price: "Rs 3,500",
+    price: 3500,
   },
   {
     id: 2,
@@ -20,7 +21,7 @@ const ROUTES = [
     to: "Kandy",
     image: "/kandy-cultural-triangle-temple-sri-lanka.jpg",
     distance: "115 km",
-    price: "Rs 2,800",
+    price: 2800,
   },
   {
     id: 3,
@@ -28,7 +29,7 @@ const ROUTES = [
     to: "Sigiriya",
     image: "/sigiriya-rock-fortress-sri-lanka-landscape.jpg",
     distance: "180 km",
-    price: "Rs 4,200",
+    price: 4200,
   },
   {
     id: 4,
@@ -36,11 +37,12 @@ const ROUTES = [
     to: "Nuwara Eliya",
     image: "/nuwara-eliya-tea-plantations-mountains-sri-lanka.jpg",
     distance: "200 km",
-    price: "Rs 4,800",
+    price: 4800,
   },
 ]
 
 export default function PopularRoutes() {
+  const { formatPrice } = useCurrency()
   const sectionRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -141,7 +143,7 @@ export default function PopularRoutes() {
                         viewport={{ once: true }}
                         className="text-lg font-bold text-secondary"
                       >
-                        {route.price}
+                        From {formatPrice(route.price)}
                       </motion.p>
                     </div>
                   </div>

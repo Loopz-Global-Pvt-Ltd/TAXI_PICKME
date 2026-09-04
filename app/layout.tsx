@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { MapsProvider } from "@/components/providers/maps-provider"
+import { CurrencyProvider } from "@/contexts/CurrencyContext"
 import { HomeStructuredData } from '@/components/seo/HomeStructuredData'
 import Script from 'next/script'
 
@@ -154,7 +155,9 @@ export default function RootLayout({
           `}
         </Script>
 
-        <MapsProvider>{children}</MapsProvider>
+        <CurrencyProvider>
+          <MapsProvider>{children}</MapsProvider>
+        </CurrencyProvider>
       </body>
     </html>
   )

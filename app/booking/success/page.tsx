@@ -20,6 +20,7 @@ import {
   Home,
   AlertCircle
 } from "lucide-react"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 function BookingSuccessContent() {
   const searchParams = useSearchParams()
@@ -29,6 +30,7 @@ function BookingSuccessContent() {
   const [bookingData, setBookingData] = useState<any>(null)
   const [paymentData, setPaymentData] = useState<any>(null)
   const [error, setError] = useState<string>("")
+  const { formatPrice } = useCurrency()
 
   const bookingId = searchParams.get('bookingId')
   const paymentMethod = searchParams.get('paymentMethod')
@@ -314,7 +316,7 @@ function BookingSuccessContent() {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Average Rate</span>
                     <span className="text-foreground font-medium">
-                      Rs. {effectiveRate.toFixed(2)}/km
+                      {formatPrice(effectiveRate)}/km
                     </span>
                   </div>
                   <div className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 p-2 rounded">
@@ -325,7 +327,7 @@ function BookingSuccessContent() {
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-semibold text-foreground">Total Fare</span>
                   <span className="text-2xl font-bold text-primary">
-                    Rs. {Math.round(totalPrice).toLocaleString()}
+                    {formatPrice(Math.round(totalPrice))}
                   </span>
                 </div>
 

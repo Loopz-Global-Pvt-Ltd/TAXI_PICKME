@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { AlertCircle, Lock, CreditCard, Wallet, Smartphone } from "lucide-react"
+import { useCurrency } from "@/contexts/CurrencyContext"
 
 interface BookingData {
   vehicle: {
@@ -44,6 +45,8 @@ export default function PaymentPage() {
     expiryDate: "",
     cvv: "",
   })
+  
+  const { formatPrice, currency, rates } = useCurrency()
 
   useEffect(() => {
     const stored = localStorage.getItem("bookingData")
@@ -255,7 +258,7 @@ export default function PaymentPage() {
                       }
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg font-semibold rounded-lg"
                     >
-                      {isProcessing ? "Processing Payment..." : `Pay Rs. ${bookingData.totalPrice.toLocaleString()}`}
+                      {isProcessing ? "Processing Payment..." : `Pay ${formatPrice(bookingData.totalPrice)}`}
                     </Button>
                   </form>
                 )}
@@ -376,7 +379,7 @@ export default function PaymentPage() {
                 <div className="space-y-3 mb-6 pb-6 border-b border-border">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Daily Rate</span>
-                    <span className="text-foreground">Rs. {bookingData.vehicle.price.toLocaleString()}</span>
+                    <span className="text-foreground">{formatPrice(bookingData.vehicle.price)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Number of Days</span>
@@ -391,7 +394,7 @@ export default function PaymentPage() {
                 {/* Total */}
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-foreground font-semibold">Total Amount</span>
-                  <span className="text-3xl font-bold text-primary">Rs. {bookingData.totalPrice.toLocaleString()}</span>
+                  <span className="text-3xl font-bold text-primary">{formatPrice(bookingData.totalPrice)}</span>
                 </div>
 
                 <p className="text-xs text-muted-foreground text-center">*Fuel and insurance included</p>

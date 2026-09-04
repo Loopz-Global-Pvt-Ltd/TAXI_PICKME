@@ -57,9 +57,15 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now()
     const reference = `TPM-${timestamp}-${bookingId}`
 
+    // Convert amount to LKR for OnePay
+    const { getExchangeRates } = await import('@/lib/currency/sync')
+    const rates = await getExchangeRates()
+    const lkrRate = rates.LKR || 300
+    const amountInLKR = amount * lkrRate
+
     // Create OnePay checkout
     const onePayResponse = await createOnePayCheckout({
-      amount: Number(amount.toFixed(2)),
+      amount: Number(amountInLKR.toFixed(2)),
       reference,
       customer_first_name: customerData?.firstName || booking.full_name.split(' ')[0] || 'Customer',
       customer_last_name: customerData?.lastName || booking.full_name.split(' ').slice(1).join(' ') || 'Name',
